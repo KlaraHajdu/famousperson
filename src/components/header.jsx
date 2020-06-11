@@ -1,40 +1,46 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import StartGameMenu from './startGameMenu.jsx';
+import React from "react";
+import { useContext } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import styled from "styled-components";
+import { HowToPlayModalOpenContext } from "./contextProviders/HowToPlayModalOpenProvider";
+import HowToPlay from "./howToPlay"; 
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    textAlign: 'center',
-  },
-}));
+const Styles = styled.div`
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    #collapsible-nav-dropdown {
+        color: darkgrey;
+    }
 
-export default function ButtonAppBar() {
-  const classes = useStyles();
+    .nav-link {
+        color: darkgrey;
+    }
+`;
 
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" style={{ backgroundColor: 'rgba(199, 201, 195, 0.3)', boxShadow: 'none', color: 'white'}}>
-        <Toolbar>
-          <Button color="inherit" >
-            How to play
-          </Button>
-          <Typography variant="h6" className={classes.title}>
-            Famous person guessing game
-          </Typography>
-          <StartGameMenu/>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+export default function Header() {
+    const [howToPlayModalOpen, setHowToPlayModalOpen] = useContext(HowToPlayModalOpenContext);
+
+    const clickOpenHowToPlayModal = () => {
+        console.log("Clicked");
+        console.log(howToPlayModalOpen);
+        setHowToPlayModalOpen(true);
+        console.log(howToPlayModalOpen);
+    };
+
+    return (
+        <Styles>
+            <Navbar expand="lg">
+                <Navbar.Brand>Famous person guessing game</Navbar.Brand>
+                <Nav.Link onClick={clickOpenHowToPlayModal}>How to play</Nav.Link>
+                <NavDropdown title="Play" id="collapsible-nav-dropdown">
+                    <NavDropdown.Item href="#start-a-game">Start a new game as a game master</NavDropdown.Item>
+                    <NavDropdown.Item href="#join-a-game">Join a game</NavDropdown.Item>
+                </NavDropdown>
+            </Navbar>
+            <HowToPlay/>
+        </Styles>
+    );
 }
