@@ -25,10 +25,10 @@ export default function HowToPlay() {
                 size="lg"
                 show={howToPlayModalOpen}
                 onHide={() => setHowToPlayModalOpen(false)}
-                aria-labelledby="example-modal-sizes-title-lg"
+                aria-labelledby="how-to-play-modal"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">How to play the game</Modal.Title>
+                    <Modal.Title id="how-to-play-modal">How to play the game</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="modal-background-color">
