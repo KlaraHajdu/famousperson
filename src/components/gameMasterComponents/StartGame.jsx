@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import styled from "styled-components";
+import { dbRefobject } from "../../database.js";
 
 const Styles = styled.div`
     .container {
@@ -14,6 +15,27 @@ const Styles = styled.div`
 `;
 
 export default function StartGame() {
+
+    const [name, setName] = useState("");
+
+    const saveName = (e) => {
+        setName(e.target.value);
+    }
+    
+    const generateId = () => {
+        return Math.floor(Math.random() * 10000);
+    };
+        
+    const createNewGame = () => {
+        if (name !== "") {
+            const randomId = generateId();
+            dbRefobject.ref("games").push({
+                gameMaster: name,
+                gameId: randomId
+              });
+        }
+    }
+
     return (
         <Styles>
             <Container>
@@ -21,9 +43,9 @@ export default function StartGame() {
                 <Form>
                     <Form.Group controlId="formGameMasterName">
                         <Form.Label>Your name</Form.Label>
-                        <Form.Control type="text" placeholder="Your name that will appear during the game" />
+                        <Form.Control onChange={saveName} type="text" placeholder="Your name that will appear during the game" />
                     </Form.Group>
-                    <Button variant="warning" type="submit">
+                    <Button variant="warning" type="submit" onClick={createNewGame}>
                         Start a new game
                     </Button>
                 </Form>
