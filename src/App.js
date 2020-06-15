@@ -7,7 +7,6 @@ import GamePhases from "./components/GamePhases.jsx";
 import { dbRefobject } from "./database.js";
 
 function App() {
-    console.log(dbRefobject);
 
     return (
         <div className="App">
