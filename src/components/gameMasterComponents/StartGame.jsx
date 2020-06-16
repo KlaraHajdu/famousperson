@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import styled from "styled-components";
-import { appFirebase } from "../../database.js";
+import { dbRefobject } from "../../database.js";
 import { GameContext } from "../contextProviders/GameProvider";
 import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import { gamePhases } from "../../gamePhasesObject";
@@ -49,7 +49,9 @@ export default function StartGame() {
                 gameMaster: name,
                 gameId: gameId,
             };
-            appFirebase.databaseApi.create("games", body, handleNewGameCreation);
+            //appFirebase.databaseApi.create("games", body, handleNewGameCreation);
+            dbRefobject.ref("games").push(body);
+
         }
     };
 
