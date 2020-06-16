@@ -17,30 +17,31 @@ export let appFirebase = {};
     firebase.initializeApp(firebaseConfig);
     appFirebase = firebase;
     console.log(appFirebase);
-    
+
     function fnCreate(path, body, callback) {
         if (!path || !body) return;
-        //appFirebase.database.ref(path).set(body, callback);
+        //appFirebase.database().ref(path).set(body, callback);
         let bodyNew = {
-            name: "feri",
+            name: "newnow",
             gameId: 123,
         };
-        appFirebase.database.ref("games").push(bodyNew);
-    };
+        //appFirebase.database().ref("games").set(bodyNew);
+        firebase.database().ref().push(bodyNew);
+    }
 
     const fnRead = (path, successFunction, errorFunction) => {
         if (!path) return;
-        appFirebase.database.ref(path).on("value").then(successFunction, errorFunction);
+        appFirebase.database().ref(path).on("value").then(successFunction, errorFunction);
     };
 
     const fnUpdate = (path, body, callback) => {
         if (!path || !body) return;
-        appFirebase.database.ref(path).update(body, callback);
+        appFirebase.database().ref(path).update(body, callback);
     };
 
     const fnDelete = (path, callback) => {
         if (!path) return;
-        appFirebase.database.ref(path).remove(callback);
+        appFirebase.database().ref(path).remove(callback);
     };
 
     appFirebase.databaseApi = {
