@@ -7,14 +7,7 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 import { appFirebase } from "../database.js";
 
-const Styles = styled.div`
-  .container {
-    padding: 10px 40px;
-    background-color: rgba(255, 255, 255, 0.9);
-  }
-  table {
-  }
-`;
+
 
 function WaitingRoom() {
   const game = useContext(GameContext)[0];
@@ -46,8 +39,9 @@ function WaitingRoom() {
   appFirebase.databaseApi.readOn(`games/${game.gameId}/players`, handleResult);
 
   return (
-    <Styles>
-      <Container>
+    <Container>
+      <Container className="fixer">
+        
         <h2>
           Waiting room <Badge variant='secondary'>{game.gameId}</Badge>
         </h2>
@@ -68,7 +62,8 @@ function WaitingRoom() {
         </Table>
         <Button variant='warning'>Start game</Button>
       </Container>
-    </Styles>
+      </Container>
+
   );
 }
 

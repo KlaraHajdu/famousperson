@@ -2,20 +2,10 @@ import React, { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import styled from "styled-components";
 import { GameContext } from "./contextProviders/GameProvider";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
 import { gamePhases } from "../gamePhasesObject";
-
-const Styles = styled.div`
-    .container {
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 30, 30, 30, 30;
-        margin: 100;
-        border-radius: 3px;
-    }
-`;
 
 function JoinGame() {
     const setGame = useContext(GameContext)[1];
@@ -52,21 +42,24 @@ function JoinGame() {
     };
 
     const handleJoinGame = () => {
-        if (!ownName) setError("Cannot be empty!");
+        if (!ownName) setError("Please write your name");
         if (gameId && ownName) verifyGameId(`games/${gameId}`);
     };
 
     return (
-        <Styles>
-            <Container>
+        <Container>
+            <Container className="fixer">
                 <h4>Join a game</h4>
                 <Form>
                     <Form.Group controlId="formPlayerName">
-                        <Form.Label>Your name {error && <div style={{ color: "red", fontSize:"8" }}> {error}</div>}</Form.Label>
+                        <Form.Label>
+                            Your name {error && <div style={{ color: "red", fontSize: "8" }}> {error}</div>}
+                        </Form.Label>
                         <Form.Control
                             onChange={saveOwnName}
                             type="text"
                             placeholder="Your name that will appear during the game"
+                            style={{ width: "500px" }}
                         />
                     </Form.Group>
                     <Form.Group controlId="formGameID">
@@ -76,6 +69,7 @@ function JoinGame() {
                             value={gameId}
                             type="text"
                             placeholder="The game ID you received from the game master"
+                            style={{ width: "500px" }}
                         />
                     </Form.Group>
                     <Button variant="warning" onClick={handleJoinGame}>
@@ -83,7 +77,7 @@ function JoinGame() {
                     </Button>
                 </Form>
             </Container>
-        </Styles>
+        </Container>
     );
 }
 
