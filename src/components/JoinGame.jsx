@@ -49,7 +49,7 @@ function JoinGame() {
     };
 
     const verifyGameId = (path) => {
-        appFirebase.databaseApi.checkIfExists(path, checkSnapshot);
+        appFirebase.databaseApi.readOnce(path, checkSnapshot);
     };
 
     const handleJoinGame = () => {
