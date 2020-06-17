@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { GameContext } from "./contextProviders/GameProvider";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
@@ -10,15 +10,20 @@ import { appFirebase } from "../database.js";
 
 
 function WaitingRoom() {
-  const game = useContext(GameContext)[0];
+  const [game, setGame] = useContext(GameContext);
   const [players, setPlayers] = useState([]);
 
-  const handleResult = (snapshot) => {
+
+  const handleMasterNameResult = (snapshot) => {
+        const masterName = snapshot.val();
+      setGame({...game, gameMaster: masterName });
+  };
+
+  const handlePlayersResult = (snapshot) => {
     if (
       snapshot.val() &&
       JSON.stringify(snapshot.val()) !== JSON.stringify(players)
     ) {
-      console.log(snapshot.val());
       setPlayers(snapshot.val());
     }
   };
@@ -31,12 +36,21 @@ function WaitingRoom() {
     }
   };
 
-  appFirebase.databaseApi.create(
-    `games/${game.gameId}/players/${game.ownName}`,
-    true,
-    actAfterAddNewPlayer
-  );
-  appFirebase.databaseApi.readOn(`games/${game.gameId}/players`, handleResult);
+  const handleMasterNameError = (err) => {
+      console.log(err);
+      alert("Something went wrong :(");
+}
+
+  useEffect(() => {
+    appFirebase.databaseApi.create(
+        `games/${game.gameId}/players/${game.ownName}`,
+        true,
+        actAfterAddNewPlayer
+      );
+      appFirebase.databaseApi.readOnce(`games/${game.gameId}/gameMaster`, handleMasterNameResult, handleMasterNameError);
+      appFirebase.databaseApi.readOn(`games/${game.gameId}/players`, handlePlayersResult);
+  }, [])
+
 
   return (
     <Container>
@@ -47,6 +61,7 @@ function WaitingRoom() {
         </h2>
         <h4>Game master: {game.gameMaster}</h4>
         <Table striped bordered hover variant='dark'>
+            {console.log(game)}
           <thead>
             <tr>
               <th>Players</th>
