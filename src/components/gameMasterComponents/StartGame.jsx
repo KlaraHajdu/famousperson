@@ -7,6 +7,7 @@ import { appFirebase } from "../../database.js";
 import { GameContext } from "../contextProviders/GameProvider";
 import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import { gamePhases } from "../../gamePhasesObject";
+import { getRandomNumberFromTo } from "../../util/randomUtil.js";
 
 const Styles = styled.div`
   .container {
@@ -19,11 +20,7 @@ const Styles = styled.div`
 
 export default function StartGame() {
   const [name, setName] = useState("");
-
-  const generateId = () => {
-    return Math.floor(Math.random() * 10000);
-  };
-  const gameId = generateId();
+  const [gameId, setGameId] = useState(null);
 
   const setGame = useContext(GameContext)[1];
 
@@ -37,14 +34,35 @@ export default function StartGame() {
     if (!!err) {
       console.log(err);
     } else {
-      console.log("Successfully created");
+      console.log("Game is successfully created");
       setGame({ gameMaster: name, gameId: gameId });
       setGamePhase(gamePhases.waitingRoom);
     }
   };
 
+  const handleIdCheckError = (err) => {
+      alert('Something went wrong :(');
+      console.log(err);
+
+  };
+
+  const isGameIdAlreadyExists = (snapshot) => {
+    return !!snapshot.val()
+  };
+
+  const generateId = () => {
+    let gameId;    
+      do {
+        gameId = getRandomNumberFromTo(1000, 10000)
+      }
+      while (appFirebase.databaseApi.readOnce(`games/${gameId}`, isGameIdAlreadyExists, handleIdCheckError)) ;
+      setGameId(gameId);
+  };
+
+
   const createNewGame = () => {
     if (name !== "") {
+      generateId();
       let body = {
         gameMaster: name,
       };

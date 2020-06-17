@@ -22,12 +22,21 @@ export let appFirebase = {};
     appFirebase.database().ref(path).set(body, callback);
   }
 
-  const fnRead = (path, successFunction, errorFunction) => {
+  const fnReadOn = (path, successFunction, errorFunction) => {
     if (!path) return;
     appFirebase
       .database()
       .ref(path)
       .on("value")
+      .then(successFunction, errorFunction);
+  };
+
+  const fnReadOnce = (path, successFunction, errorFunction) => {
+    if (!path) return;
+    appFirebase
+      .database()
+      .ref(path)
+      .once("value")
       .then(successFunction, errorFunction);
   };
 
@@ -43,7 +52,8 @@ export let appFirebase = {};
 
   appFirebase.databaseApi = {
     create: fnCreate,
-    read: fnRead,
+    readOn: fnReadOn,
+    readOnce: fnReadOnce,
     delete: fnDelete,
     update: fnUpdate,
   };
