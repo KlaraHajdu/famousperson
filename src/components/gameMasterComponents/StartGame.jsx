@@ -20,7 +20,7 @@ const Styles = styled.div`
 
 export default function StartGame() {
   const [name, setName] = useState("");
-  const [gameId, setGameId] = useState(null);
+  let gameId;
 
   const setGame = useContext(GameContext)[1];
 
@@ -41,32 +41,40 @@ export default function StartGame() {
   };
 
   const handleIdCheckError = (err) => {
-      alert('Something went wrong :(');
-      console.log(err);
-
+    alert("Something went wrong :(");
+    console.log(err);
   };
 
   const isGameIdAlreadyExists = (snapshot) => {
-    return !!snapshot.val()
+    return !!snapshot.val();
   };
 
   const generateId = () => {
-    let gameId;    
-      do {
-        gameId = getRandomNumberFromTo(1000, 10000)
-      }
-      while (appFirebase.databaseApi.readOnce(`games/${gameId}`, isGameIdAlreadyExists, handleIdCheckError)) ;
-      setGameId(gameId);
+    let generatedId;
+    do {
+      generatedId = getRandomNumberFromTo(1000, 10000);
+    } while (
+      appFirebase.databaseApi.readOnce(
+        `games/${generatedId}`,
+        isGameIdAlreadyExists,
+        handleIdCheckError
+      )
+    );
+    gameId = generatedId;
   };
-
 
   const createNewGame = () => {
     if (name !== "") {
       generateId();
       let body = {
         gameMaster: name,
+        players: [name],
       };
-    appFirebase.databaseApi.create(`games/${gameId}`, body, handleNewGameCreation);
+      appFirebase.databaseApi.create(
+        `games/${gameId}`,
+        body,
+        handleNewGameCreation
+      );
     }
   };
 

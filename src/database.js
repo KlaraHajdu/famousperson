@@ -22,13 +22,12 @@ export let appFirebase = {};
     appFirebase.database().ref(path).set(body, callback);
   }
 
-  const fnReadOn = (path, successFunction, errorFunction) => {
+  const fnReadOn = (path, callback) => {
     if (!path) return;
     appFirebase
       .database()
       .ref(path)
-      .on("value")
-      .then(successFunction, errorFunction);
+      .on("value", callback)
   };
 
   const fnReadOnce = (path, successFunction, errorFunction) => {
