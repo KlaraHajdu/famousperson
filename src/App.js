@@ -27,17 +27,16 @@ const GlobalStyle = createGlobalStyle`
 function App() {
     return (
         <div className="App">
-                <GameProvider>
-                    <GamePhaseProvider>
-                        <HowToPlayModalOpenProvider>
-                            <Header />
-                        </HowToPlayModalOpenProvider>
-                        <GamePhases />
-            <GlobalStyle/>
+            <GameProvider>
+                <GamePhaseProvider>
+                    <HowToPlayModalOpenProvider>
+                        <Header />
+                    </HowToPlayModalOpenProvider>
+                    <GamePhases />
 
-                    
-                    </GamePhaseProvider>
-                </GameProvider>
+                    <GlobalStyle />
+                </GamePhaseProvider>
+            </GameProvider>
         </div>
     );
 }
