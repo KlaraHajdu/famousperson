@@ -1,7 +1,9 @@
-import React from 'react';
+import React from "react";
 import StartGame from "./components/gameMasterComponents/StartGame";
 import JoinGame from "./components/JoinGame";
 import WaitingRoom from "./components/WaitingRoom";
+import AddNames from "./components/AddNames";
+import PlayGame from "./components/PlayGame";
 
 export const gamePhases = {
     startGame: {
@@ -11,6 +13,12 @@ export const gamePhases = {
         component: <JoinGame />,
     },
     waitingRoom: {
-        component: <WaitingRoom/>,
-    }
+        component: <WaitingRoom />,
+    },
+    addNames: {
+        component: <AddNames />,
+    },
+    playGame: {
+        component: <PlayGame />,
+    },
 };

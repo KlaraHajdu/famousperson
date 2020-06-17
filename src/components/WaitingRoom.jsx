@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { appFirebase } from "../database.js";
+import AddNames from "./AddNames";
 
 function WaitingRoom() {
     const [game, setGame] = useContext(GameContext);
@@ -69,7 +70,8 @@ function WaitingRoom() {
                     </Table>
                     <Button variant="warning">Start game</Button>
                 </Container>
-            </Container>
+        </Container>
+        <AddNames/>
         </React.Fragment>
     );
 }
