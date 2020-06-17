@@ -30,6 +30,19 @@ function WaitingRoom() {
     }
   };
 
+  const actAfterAddNewPlayer = (err) => {
+    if (!!err) {
+      console.log(err);
+    } else {
+      console.log("Player added successfully");
+    }
+  };
+
+  appFirebase.databaseApi.create(
+    `games/${game.gameId}/players/${game.ownName}`,
+    true,
+    actAfterAddNewPlayer
+  );
   appFirebase.databaseApi.readOn(`games/${game.gameId}/players`, handleResult);
 
   return (
@@ -46,7 +59,7 @@ function WaitingRoom() {
             </tr>
           </thead>
           <tbody>
-            {players.map((player, index) => (
+            {Object.keys(players).map((player, index) => (
               <tr key={index}>
                 <td>{player}</td>
               </tr>

@@ -39,7 +39,6 @@ function JoinGame() {
 
     const checkSnapshot = (snapshot) => {
         if (!!snapshot.val() === true) {
-            console.log(snapshot.val());
             setGame({ gameId: gameId, ownName: ownName });
             setGamePhase(gamePhases.waitingRoom);
         } else {

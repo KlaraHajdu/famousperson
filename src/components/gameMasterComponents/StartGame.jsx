@@ -35,7 +35,7 @@ export default function StartGame() {
       console.log(err);
     } else {
       console.log("Game is successfully created");
-      setGame({ gameMaster: name, gameId: gameId });
+      setGame({ gameMaster: name, gameId: gameId, ownName: name });
       setGamePhase(gamePhases.waitingRoom);
     }
   };
@@ -68,7 +68,6 @@ export default function StartGame() {
       generateId();
       let body = {
         gameMaster: name,
-        players: [name],
       };
       appFirebase.databaseApi.create(
         `games/${gameId}`,
