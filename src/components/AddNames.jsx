@@ -46,8 +46,9 @@ function AddNames() {
     };
 
     const actAfterGetTeams = (snapshot) => {
-        const team = snapshot.val().greenTeam.includes(game.OwnName) ? "greenTeam" : "blueTeam";
+        const team = snapshot.val().greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
         setGame({ ...game, ownTeam: team });
+        console.log("from actafterGetTeams after setGame!:   " + game.ownTeam);
     };
 
     const setOwnTeam = () => {
@@ -56,16 +57,27 @@ function AddNames() {
 
     const handleSubmitName = () => {
         if (nameToSubmit) {
+            console.log("from handlesubmitname");
             appFirebase.databaseApi.create(`games/${game.gameId}/names/${nameToSubmit}`, true, actAfterNameAdded);
             appFirebase.databaseApi.create(`games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`, true);
         }
     };
 
     useEffect(() => {
+        console.log("useeffect 1 triggered");
         setOwnTeam();
+        console.log("from useeffect 1 team: " + game.ownTeam);
+    }, [game.ownTeam]);
+
+    useEffect(() => {
+        console.log("useeffect 2 triggered");
+        //setOwnTeam();
+        
         appFirebase.databaseApi.readOn(`games/${game.gameId}/names`, handleNamesResult);
-        appFirebase.databaseApi.readOn(`games/${game.gameId}/${game.ownTeam}Names`, handleTeamNamesResult);
-    }, []);
+        console.log("now comes the readon own team, ownTeam: " + game.ownTeam);
+        if (game.ownTeam)
+            appFirebase.databaseApi.readOn(`games/${game.gameId}/${game.ownTeam}Names`, handleTeamNamesResult);
+    }, [game.ownTeam]);
 
     if (teamNamesNumber === 5)
         return (
