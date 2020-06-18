@@ -8,7 +8,7 @@ import { appFirebase } from "../database.js";
 import { gamePhases } from "../gamePhasesObject";
 
 function AddNames() {
-    const game = useContext(GameContext)[0];
+    const [game, setGame] = useContext(GameContext);
 
     const [nameToSubmit, setNameToSubmit] = useState("");
 
@@ -31,6 +31,7 @@ function AddNames() {
 
     const handleTeamNamesResult = (snapshot) => {
         if (snapshot.val()) {
+            console.log("from handle team names result: " + Object.keys(snapshot.val()));
             setTeamNamesNumber(Object.keys(snapshot.val()).length);
         }
     };
@@ -40,19 +41,21 @@ function AddNames() {
             if (Object.keys(snapshot.val()).length === 10) {
                 setGamePhase(gamePhases.playGame);
             }
+            console.log("from handle all names result: " + Object.keys(snapshot.val()));
         }
     };
 
     const handleSubmitName = () => {
         if (nameToSubmit) {
             appFirebase.databaseApi.create(`games/${game.gameId}/names/${nameToSubmit}`, true, actAfterNameAdded);
-            appFirebase.databaseApi.create(`games/${game.gameId}/blue/${nameToSubmit}`, true);
+            appFirebase.databaseApi.create(`games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`, true);
         }
     };
-
+    
     useEffect(() => {
+        setGame({...game, ownTeam : "blue"});
         appFirebase.databaseApi.readOn(`games/${game.gameId}/names`, handleNamesResult);
-        appFirebase.databaseApi.readOn(`games/${game.gameId}/blue/`, handleTeamNamesResult);
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/${game.ownTeam}Names`, handleTeamNamesResult);
     }, []);
 
     if (teamNamesNumber === 5)
