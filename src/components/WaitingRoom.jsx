@@ -3,16 +3,8 @@ import { GameContext } from "./contextProviders/GameProvider";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Badge from "react-bootstrap/Badge";
-import styled from "styled-components";
 import { appFirebase } from "../database.js";
 import WaitingRoomGameMasterPart from "./gameMasterComponents/WaitingRoomGameMasterPart";
-
-const Styles = styled.div`
-  .container {
-    padding: 10px 40px;
-    background-color: rgba(255, 255, 255, 0.9);
-  }
-`;
 
 function WaitingRoom() {
   const [game, setGame] = useContext(GameContext);
@@ -20,7 +12,8 @@ function WaitingRoom() {
   const handlePlayersResult = (snapshot) => {
     if (
       snapshot.val() &&
-      JSON.stringify(Object.keys(snapshot.val())) !== JSON.stringify(game.players)
+      JSON.stringify(Object.keys(snapshot.val())) !==
+        JSON.stringify(game.players)
     ) {
       setGame({ ...game, players: Object.keys(snapshot.val()) });
     }
@@ -67,8 +60,8 @@ function WaitingRoom() {
   }, []);
 
   return (
-    <Styles>
-      <Container>
+    <Container>
+      <Container className='fixer'>
         <div>
           <h2>
             Waiting room <Badge variant='secondary'>{game.gameId}</Badge>
@@ -97,7 +90,7 @@ function WaitingRoom() {
         </div>
         {game.ownName === game.gameMaster && <WaitingRoomGameMasterPart />}
       </Container>
-    </Styles>
+    </Container>
   );
 }
 
