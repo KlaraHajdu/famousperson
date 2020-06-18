@@ -33,7 +33,6 @@ function App() {
                         <Header />
                     </HowToPlayModalOpenProvider>
                     <GamePhases />
-
                     <GlobalStyle />
                 </GamePhaseProvider>
             </GameProvider>

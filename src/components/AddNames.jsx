@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { GameContext } from "./contextProviders/GameProvider";
+import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
 import { gamePhases } from "../gamePhasesObject";
 
@@ -11,7 +12,7 @@ function AddNames() {
 
     const [nameToSubmit, setNameToSubmit] = useState("");
 
-    const setGamePhase = useContext(GameContext)[1];
+    const setGamePhase = useContext(GamePhaseContext)[1];
 
     const [teamNamesNumber, setTeamNamesNumber] = useState("0");
 
@@ -59,6 +60,9 @@ function AddNames() {
             <Container>
                 <Container className="fixer">
                     <div>Please wait for the other team to finish uploading their names</div>
+                    <Button variant="warning" onClick={() => setGamePhase(gamePhases.playGame)}>
+                        Open the playGame component
+                    </Button>
                 </Container>
             </Container>
         );
