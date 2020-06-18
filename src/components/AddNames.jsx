@@ -5,6 +5,7 @@ import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
 import { gamePhases } from "../gamePhasesObject";
 import NameInputForm from "./NameInputForm";
+import TeamList from "./TeamList";
 
 function AddNames() {
   const NUMBER_OF_NAMES_TO_START_GAME  = 10;
@@ -29,29 +30,31 @@ function AddNames() {
       );
   }
 
-  const setOwnTeam = (snapshot) => {
-      console.log(snapshot.val().greenTeam);
-    const team = snapshot.val().greenTeam.includes(game.ownName)
+  const setTeamInfos = (snapshot) => {
+    const teams = snapshot.val();
+    const ownTeam = teams.greenTeam.includes(game.ownName)
       ? "greenTeam"
       : "blueTeam";
-    setGame({ ...game, ownTeam: team });
+    console.log(teams)
+    setGame({ ...game, ownTeam, teams });
   };
 
-  const findOwnTeam = () => {
+  const getTeams = () => {
     appFirebase.databaseApi.readOnce(
       `games/${game.gameId}/teams`,
-      setOwnTeam
+      setTeamInfos
     );
   };
 
   useEffect(() => {
-    findOwnTeam();
+    getTeams();
     followHowManyNamesAdded();
   }, []);
 
   return (
     <Container>
       <Container className='fixer'>
+        <TeamList/>
        <NameInputForm nameNumber={NUMBER_OF_NAMES_TO_START_GAME} />
       </Container>
     </Container>
