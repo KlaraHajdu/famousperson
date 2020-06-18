@@ -79,7 +79,6 @@ function WaitingRoom() {
                     {game.ownName === game.gameMaster && <WaitingRoomGameMasterPart />}
                 </Container>
             </Container>
-            <AddNames />
         </React.Fragment>
     );
 }

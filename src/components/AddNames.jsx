@@ -14,7 +14,7 @@ function AddNames() {
 
     const setGamePhase = useContext(GamePhaseContext)[1];
 
-    const [teamNamesNumber, setTeamNamesNumber] = useState("0");
+    const [teamNamesNumber, setTeamNamesNumber] = useState(0);
 
     const saveNameToSubmit = (e) => {
         setNameToSubmit(e.target.value);
@@ -45,15 +45,24 @@ function AddNames() {
         }
     };
 
+    const actAfterGetTeams = (snapshot) => {
+        const team = snapshot.val().greenTeam.includes(game.OwnName) ? "greenTeam" : "blueTeam";
+        setGame({ ...game, ownTeam: team });
+    };
+
+    const setOwnTeam = () => {
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, actAfterGetTeams);
+    };
+
     const handleSubmitName = () => {
         if (nameToSubmit) {
             appFirebase.databaseApi.create(`games/${game.gameId}/names/${nameToSubmit}`, true, actAfterNameAdded);
             appFirebase.databaseApi.create(`games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`, true);
         }
     };
-    
+
     useEffect(() => {
-        setGame({...game, ownTeam : "blue"});
+        setOwnTeam();
         appFirebase.databaseApi.readOn(`games/${game.gameId}/names`, handleNamesResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/${game.ownTeam}Names`, handleTeamNamesResult);
     }, []);
