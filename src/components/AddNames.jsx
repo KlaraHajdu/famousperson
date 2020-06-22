@@ -46,12 +46,11 @@ function AddNames() {
     const ownTeam = teams.greenTeam.includes(game.ownName)
       ? "greenTeam"
       : "blueTeam";
-    console.log(teams)
     setGame({ ...game, ownTeam, teams });
   };
 
   const getTeams = () => {
-    appFirebase.databaseApi.readOnce(
+    appFirebase.databaseApi.readOn(
       `games/${game.gameId}/teams`,
       setTeamInfos
     );
