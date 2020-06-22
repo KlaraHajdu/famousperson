@@ -5,23 +5,15 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import { GameContext } from "../contextProviders/GameProvider";
 import { shuffle } from "../../util/randomUtil";
 import { appFirebase } from "../../database.js";
-import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
-import { gamePhases } from "../../gamePhasesObject";
 
 export default function WaitingRoomGameMasterPart() {
   const game = useContext(GameContext)[0];
-  const setGamePhase = useContext(GamePhaseContext)[1];
-
-  const setNamesPhase = () => {
-    setGamePhase(gamePhases.addNames);
-  }
 
   const actAfterTeamsAdded = (err) => {
     if (!!err) {
       console.log(err);
     } else {
       console.log("Teams added successfully");
-      setNamesPhase();
     }
   };
 
@@ -30,7 +22,6 @@ export default function WaitingRoomGameMasterPart() {
       console.log(err);
     } else {
       console.log("Phase changes successfully");
-      setNamesPhase();
     }
   };
 

@@ -22,10 +22,11 @@ function WaitingRoom() {
     }
   };
 
-
   const handleGamePhaseResult = (snapshot) => {
-    if (snapshot.val() === "addNames") {
-      setGamePhase(gamePhases.addNames);
+    const DBGamePhase = snapshot.val();
+    if (DBGamePhase !== game.gamePhase) {
+      setGame({...game, gamePhase: DBGamePhase})
+      setGamePhase(gamePhases[DBGamePhase]);
     }
   };
 
@@ -44,6 +45,7 @@ function WaitingRoom() {
       players: Object.keys(DBGame.players),
       gameId: game.gameId,
       ownName: game.ownName,
+      gamePhase: DBGame.gamePhase
     });
   };
 

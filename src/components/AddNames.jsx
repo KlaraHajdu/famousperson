@@ -1,21 +1,32 @@
 import React, { useContext, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import { GameContext } from "./contextProviders/GameProvider";
-import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
-import { gamePhases } from "../gamePhasesObject";
 import NameInputForm from "./NameInputForm";
 import TeamList from "./TeamList";
 
 function AddNames() {
   const NUMBER_OF_NAMES_TO_START_GAME  = 10;
   const [game, setGame] = useContext(GameContext);
-  const setGamePhase = useContext(GamePhaseContext)[1];
+
+  const actAfterSettingPlayGamePhase = (err) => {
+    if (!!err) {
+      console.log(err);
+    } else {
+      console.log("Play game phase was set successfully");
+    }
+  }
+
+  const setPlayGamePhaseInDB = () => {
+    appFirebase.databaseApi.update(
+      `games/${game.gameId}`, {gamePhase : "playGame"}, actAfterSettingPlayGamePhase
+    )
+  }
 
   const handleNamesResult = (snapshot) => {
     if (snapshot.val()) {
       if (Object.keys(snapshot.val()).length === NUMBER_OF_NAMES_TO_START_GAME) {
-        setGamePhase(gamePhases.playGame);
+        setPlayGamePhaseInDB();
       }
       console.log(
         "from follow how many names added: " + Object.keys(snapshot.val())
@@ -48,7 +59,7 @@ function AddNames() {
 
   useEffect(() => {
     getTeams();
-    followHowManyNamesAdded();
+    if (game.ownName === game.gameMaster) followHowManyNamesAdded();
   }, []);
 
   return (
