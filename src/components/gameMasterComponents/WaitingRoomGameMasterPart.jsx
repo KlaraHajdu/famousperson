@@ -25,6 +25,15 @@ export default function WaitingRoomGameMasterPart() {
     }
   };
 
+  const actAfterSetGamePhase = (err) => {
+    if (!!err) {
+      console.log(err);
+    } else {
+      console.log("Phase changes successfully");
+      setNamesPhase();
+    }
+  };
+
   const formTeams = () => {
     const shuffledPlayers = shuffle(game.players);
     const middle = Math.ceil(game.players.length / 2);
@@ -35,6 +44,11 @@ export default function WaitingRoomGameMasterPart() {
       `games/${game.gameId}/teams`,
       { blueTeam, greenTeam },
       actAfterTeamsAdded
+    );
+    appFirebase.databaseApi.create(
+      `games/${game.gameId}/gamePhase`,
+      "addNames",
+      actAfterSetGamePhase
     );
   };
 

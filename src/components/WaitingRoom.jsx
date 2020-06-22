@@ -5,9 +5,12 @@ import Badge from "react-bootstrap/Badge";
 import { appFirebase } from "../database.js";
 import WaitingRoomGameMasterPart from "./gameMasterComponents/WaitingRoomGameMasterPart";
 import PlayersTable from "./PlayersTable";
+import { gamePhases } from "../gamePhasesObject";
+import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 
 function WaitingRoom() {
   const [game, setGame] = useContext(GameContext);
+  const setGamePhase = useContext(GamePhaseContext)[1];
 
   const handlePlayersResult = (snapshot) => {
     if (
@@ -16,6 +19,13 @@ function WaitingRoom() {
         JSON.stringify(game.players)
     ) {
       setGame({ ...game, players: Object.keys(snapshot.val()) });
+    }
+  };
+
+
+  const handleGamePhaseResult = (snapshot) => {
+    if (snapshot.val() === "addNames") {
+      setGamePhase(gamePhases.addNames);
     }
   };
 
@@ -56,6 +66,10 @@ function WaitingRoom() {
     appFirebase.databaseApi.readOn(
       `games/${game.gameId}/players`,
       handlePlayersResult
+    );
+    appFirebase.databaseApi.readOn(
+      `games/${game.gameId}/gamePhase`,
+      handleGamePhaseResult
     );
   }, []);
 
