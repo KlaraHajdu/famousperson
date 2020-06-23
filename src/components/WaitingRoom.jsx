@@ -41,16 +41,14 @@ function WaitingRoom() {
     };
     const checkIfPlayerIsPartOfTeam = () => {
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, (snapshot) => {
-            if (snapshot.val().greenTeam.includes(game.ownName) || snapshot.val().blueTeam.includes(game.ownName))
-                return true;
-            else return false;
+        return snapshot.val().greenTeam.includes(game.ownName) || snapshot.val().blueTeam.includes(game.ownName)
         });
     };
 
     const handleGamePhaseResult = (snapshot) => {
         const DBGamePhase = snapshot.val();
         console.log("from handlegamephaseresult DBgamephase" + DBGamePhase + " game.gamephase: " + game.gamePhase);
-        if ((DBGamePhase === "addNames" && checkIfPlayerIsPartOfTeam()) || DBGamePhase === "playGame") {
+        if ((DBGamePhase === "addNames" && !checkIfPlayerIsPartOfTeam()) || DBGamePhase === "playGame") {
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
         }
         if (DBGamePhase === "playGame" && game.gamePhase !== "playGame") {
