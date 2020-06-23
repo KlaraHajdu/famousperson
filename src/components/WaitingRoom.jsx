@@ -39,13 +39,21 @@ function WaitingRoom() {
             actAfterNewPlayerAdded
         );
     };
+    const checkIfPlayerIsPartOfTeam = () => {
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, (snapshot) => {
+            if (snapshot.val().greenTeam.includes(game.ownName) || snapshot.val().blueTeam.includes(game.ownName))
+                return true;
+            else return false;
+        });
+    };
 
     const handleGamePhaseResult = (snapshot) => {
         const DBGamePhase = snapshot.val();
-        if (DBGamePhase === "addNames" || DBGamePhase === "playGame") {
+        console.log("from handlegamephaseresult DBgamephase" + DBGamePhase + " game.gamephase: " + game.gamePhase);
+        if ((DBGamePhase === "addNames" && checkIfPlayerIsPartOfTeam()) || DBGamePhase === "playGame") {
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
         }
-        if (DBGamePhase === "playGame") {
+        if (DBGamePhase === "playGame" && game.gamePhase !== "playGame") {
             appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
         }
         if (DBGamePhase !== game.gamePhase) {
@@ -82,8 +90,6 @@ function WaitingRoom() {
         appFirebase.databaseApi.create(`games/${game.gameId}/players/${game.ownName}`, true, actAfterAddNewPlayer);
         appFirebase.databaseApi.readOnce(`games/${game.gameId}`, handleGameData, handleReadGameDataError);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/players`, handlePlayersResult);
-        appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
-
         appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
     }, []);
 
