@@ -26,7 +26,7 @@ function WaitingRoom() {
 
     const actAfterNewPlayerAdded = (err) => {
         if (!!err) console.log(err);
-        else console.log("New player added to team");
+        else console.log("New player added to team: " + game.ownName);
     };
 
     const addNewPlayerToTeams = (snapshot) => {
@@ -39,21 +39,35 @@ function WaitingRoom() {
             actAfterNewPlayerAdded
         );
     };
-    const checkIfPlayerIsPartOfTeam = () => {
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, (snapshot) => {
-            if (snapshot.val().greenTeam.includes(game.ownName) || snapshot.val().blueTeam.includes(game.ownName))
-                return true;
-            else return false;
-        });
+    const checkIfPlayerIsPartOfTeam = async () => {
+        let playerIsPart;
+        try {
+            let teamsSnapshot = await appFirebase.database().ref(`games/${game.gameId}/teams`).once("value");
+            playerIsPart =
+                teamsSnapshot.val().greenTeam.includes(game.ownName) ||
+                teamsSnapshot.val().blueTeam.includes(game.ownName);
+        } catch (err) {
+            console.log(err);
+        }
+        return playerIsPart;
     };
 
-    const handleGamePhaseResult = (snapshot) => {
+    const handleGamePhaseResult = async (snapshot) => {
         const DBGamePhase = snapshot.val();
-        console.log("from handlegamephaseresult DBgamephase" + DBGamePhase + " game.gamephase: " + game.gamePhase);
-        if ((DBGamePhase === "addNames" && checkIfPlayerIsPartOfTeam()) || DBGamePhase === "playGame") {
+
+        if (DBGamePhase === "addNames") {
+            let playerIsInTeam = await checkIfPlayerIsPartOfTeam();
+            if (!playerIsInTeam) {
+                appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
+            }
+        }
+
+        if (DBGamePhase === "playGame") {
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
         }
-        if (DBGamePhase === "playGame" && game.gamePhase !== "playGame") {
+
+        if (DBGamePhase === "playGame" || DBGamePhase === "addNames") {
+            appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, setTeamInfos);
             appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
         }
         if (DBGamePhase !== game.gamePhase) {

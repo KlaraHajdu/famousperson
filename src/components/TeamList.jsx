@@ -10,8 +10,8 @@ export default function TeamList() {
       <h5>Teams</h5>
       {game.teams && (
         <div className='team-tables-container'>
-          {Object.keys(game.teams).map((team) => (
-            <div className='team-table-container'>
+          {Object.keys(game.teams).map((team, index) => (
+            <div className='team-table-container' key={index}>
               <PlayersTable
                 color={team === "greenTeam" ? "success" : "primary"}
                 title={team === "greenTeam" ? "Green" : "Blue"}
