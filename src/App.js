@@ -13,6 +13,11 @@ const GlobalStyle = createGlobalStyle`
         position: relative;
         left: 50%;
         width: 600px;}
+    .container.grid {
+        float: left;
+        position: relative;
+        left: 0%;
+        width: 100%;} 
     .container.fixer{
         float: left;
         position: relative;
