@@ -27,6 +27,13 @@ const GlobalStyle = createGlobalStyle`
         margin: 3em 3em 3em 0em;
         border-radius: 10px;
     }
+    .team-data{
+        margin: 3em auto;
+        width: 80%;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2em;
+        border-radius: 10px;
+    }
     .team-table-container {
         display: inline-block;
         padding: 10px;

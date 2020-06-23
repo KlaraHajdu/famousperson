@@ -27,29 +27,25 @@ function PlayGame() {
     }, []);
 
     return (
-        <Container className="grid">
             <Row>
                 <Col xs={12} md={3}>
-                    <Container>
+                    <div className="team-data">
                         blue team container
-                    </Container>
+                    </div>
                 </Col>
                 <Col xs={12} md={6}>
-                    <Container>
-                       
-                            <h4>Play the game</h4>
-                            <div>Now the {teamOnTurn} team is guessing</div>
-                            <div>It is {playerOnTurn}'s turn now</div>
-                        
-                    </Container>
+                    <div className="team-data">
+                        <h4>Play the game</h4>
+                        <div>Now the {teamOnTurn} team is guessing</div>
+                        <div>It is {playerOnTurn}'s turn now</div>
+                    </div>
                 </Col>
                 <Col xs={12} md={3}>
-                    <Container>
+                    <div className="team-data">
                         green team container
-                    </Container>
+                    </div>
                 </Col>
             </Row>
-        </Container>
     );
 }
 
