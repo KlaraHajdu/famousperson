@@ -85,7 +85,6 @@ export default function NameInputForm(props) {
                 value={nameToSubmit}
                 type='text'
                 placeholder='Someone to be guessed in the game'
-                style={{ width: "500px" }}
               />
             </Form.Group>
             <Button variant='warning' onClick={submitName}>

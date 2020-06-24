@@ -4,6 +4,7 @@ import { GameContext } from "./contextProviders/GameProvider";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PhaseHeader from "./PhaseHeader.jsx";
+import TeamContainer from "./TeamContainer.jsx";
 
 function PlayGame() {
     const [game, setGame] = useContext(GameContext);
@@ -29,7 +30,7 @@ function PlayGame() {
         <div>
             <Row>
                 <Col xs={12} md={3}>
-                    <div className="team-data">blue team container</div>
+                    <TeamContainer team="blueTeam"/>
                 </Col>
                 <Col xs={12} md={6}>
                     <div className="team-data">
@@ -39,7 +40,7 @@ function PlayGame() {
                     </div>
                 </Col>
                 <Col xs={12} md={3}>
-                    <div className="team-data">green team container</div>
+                <TeamContainer team="greenTeam"/>
                 </Col>
             </Row>
         </div>
