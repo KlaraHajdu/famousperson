@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
 import { GameContext } from "./contextProviders/GameProvider";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
@@ -47,37 +46,35 @@ function JoinGame() {
     };
 
     return (
-        <Container>
-            <Container className="fixer">
-                <h4>Join a game</h4>
-                <Form>
-                    <Form.Group controlId="formPlayerName">
-                        <Form.Label>
-                            Your name {error && <div style={{ color: "red", fontSize: "8" }}> {error}</div>}
-                        </Form.Label>
-                        <Form.Control
-                            onChange={saveOwnName}
-                            type="text"
-                            placeholder="Your name that will appear during the game"
-                            style={{ width: "500px" }}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="formGameID">
-                        <Form.Label>Game ID</Form.Label>
-                        <Form.Control
-                            onChange={saveGameId}
-                            value={gameId}
-                            type="text"
-                            placeholder="The game ID you received from the game master"
-                            style={{ width: "500px" }}
-                        />
-                    </Form.Group>
-                    <Button variant="warning" onClick={handleJoinGame}>
-                        Join the game
-                    </Button>
-                </Form>
-            </Container>
-        </Container>
+        <div className="main-tile">
+            <h4>Join a game</h4>
+            <Form>
+                <Form.Group controlId="formPlayerName">
+                    <Form.Label>
+                        Your name {error && <div style={{ color: "red", fontSize: "8" }}> {error}</div>}
+                    </Form.Label>
+                    <Form.Control
+                        onChange={saveOwnName}
+                        type="text"
+                        placeholder="Your name that will appear during the game"
+                        style={{ width: "100%" }}
+                    />
+                </Form.Group>
+                <Form.Group controlId="formGameID">
+                    <Form.Label>Game ID</Form.Label>
+                    <Form.Control
+                        onChange={saveGameId}
+                        value={gameId}
+                        type="text"
+                        placeholder="The game ID you received from the game master"
+                        style={{ width: "100%" }}
+                    />
+                </Form.Group>
+                <Button variant="warning" onClick={handleJoinGame}>
+                    Join the game
+                </Button>
+            </Form>
+        </div>
     );
 }
 

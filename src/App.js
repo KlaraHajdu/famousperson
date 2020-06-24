@@ -8,18 +8,17 @@ import { GameProvider } from "./components/contextProviders/GameProvider";
 import GamePhases from "./components/GamePhases.jsx";
 
 const GlobalStyle = createGlobalStyle`
-    .container {
-        float: left;
-        position: relative;
-        left: 50%;
-        width: 600px;}
-    .container.fixer{
-        float: left;
-        position: relative;
-        left: -50%;
+    .main-tile {
+        margin: 3em auto;
+        width: 40%;
         background-color: rgba(255, 255, 255, 0.9);
         padding: 2em;
-        margin: 3em 3em 3em 0em;
+        border-radius: 10px;} 
+    .team-data{
+        margin: 3em auto;
+        width: 80%;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2em;
         border-radius: 10px;
     }
     .team-table-container {

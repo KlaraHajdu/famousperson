@@ -7,7 +7,6 @@ body, html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url('./static/diff_nat_background.jpg');
-  height: 100%;
   background-position: bottom;
   background-attachment: fixed;
   background-size: cover;
