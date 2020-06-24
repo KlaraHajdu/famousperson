@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { GameContext } from "./contextProviders/GameProvider";
 import Container from "react-bootstrap/Container";
-import Badge from "react-bootstrap/Badge";
 import { appFirebase } from "../database.js";
 import WaitingRoomGameMasterPart from "./gameMasterComponents/WaitingRoomGameMasterPart";
 import PlayersTable from "./PlayersTable";
 import { gamePhases } from "../gamePhasesObject";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
+import PhaseHeader from "./PhaseHeader";
 
 function WaitingRoom() {
     const [game, setGame] = useContext(GameContext);
@@ -111,13 +111,7 @@ function WaitingRoom() {
         <React.Fragment>
             <Container>
                 <Container className="fixer">
-                    <div>
-                        <h2>
-                            Waiting room <Badge variant="secondary">{game.gameId}</Badge>
-                        </h2>
-                        <h5>Game master: {game.gameMaster}</h5>
-                        <hr />
-                    </div>
+                    <PhaseHeader title="Waiting room"/>
                     <div>
                         <h5>Joined players</h5>
                         <PlayersTable title={"Players"} content={game.players} />

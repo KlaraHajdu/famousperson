@@ -4,10 +4,11 @@ import { GameContext } from "./contextProviders/GameProvider";
 import { appFirebase } from "../database.js";
 import NameInputForm from "./NameInputForm";
 import TeamList from "./TeamList";
+import PhaseHeader from "./PhaseHeader";
 
 function AddNames() {
     const NUMBER_OF_NAMES_TO_START_GAME = 10;
-    const [game, setGame] = useContext(GameContext);
+    const game = useContext(GameContext)[0];
 
     const actAfterSettingPlayGamePhase = (err) => {
         if (!!err) {
@@ -41,7 +42,7 @@ function AddNames() {
         <Container>
             <Container className="fixer">
                 <TeamList />
-                <hr />
+                <PhaseHeader title="Add names to the game"/>
                 <NameInputForm nameNumber={NUMBER_OF_NAMES_TO_START_GAME} />
             </Container>
         </Container>
