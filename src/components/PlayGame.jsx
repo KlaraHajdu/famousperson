@@ -1,13 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import Container from "react-bootstrap/Container";
 import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import PhaseHeader from "./PhaseHeader.jsx";
 
 function PlayGame() {
-    //const [game, setGame] = useContext(GameContext);
-    const [game, setGame] = useState({ gameMaster: "GameM" });
+    const [game, setGame] = useContext(GameContext);
 
     const [teamOnTurn, setTeamOnTurn] = useState("");
 
@@ -34,7 +33,7 @@ function PlayGame() {
                 </Col>
                 <Col xs={12} md={6}>
                     <div className="team-data">
-                        <h4>Play the game</h4>
+                        <PhaseHeader title="Guessing"/>
                         <div>Now the {teamOnTurn} team is guessing</div>
                         <div>It is {playerOnTurn}'s turn now</div>
                     </div>

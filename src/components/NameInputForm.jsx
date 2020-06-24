@@ -70,9 +70,7 @@ export default function NameInputForm(props) {
   }, [game.ownTeam]);
 
   return (
-    <React.Fragment>
-      <h4>Add names to the game</h4>
-      {teamNamesNumber === nameNumber / 2 ? (
+      teamNamesNumber === nameNumber / 2 ? (
         <div>
           <p>Your team already submitted {nameNumber / 2} names.</p>
           <p>Please wait for the other team to finish uploading their names.</p>
@@ -95,7 +93,6 @@ export default function NameInputForm(props) {
             </Button>
           </Form>
         </div>
-      )}
-    </React.Fragment>
+      )
   );
 }
