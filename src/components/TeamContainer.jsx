@@ -11,7 +11,7 @@ export default function TeamContainer(props) {
                 backgroundColor: props.team === "greenTeam" ? "rgba(147, 179, 84, 0.8)" : "rgba(170, 209, 240, 0.8)",
             }}
         >
-            <div>Members: {game.teams && game.teams.blueTeam.join(", ")}</div>
+            <div>Members: {game.teams && game.teams[props.team].join(", ")}</div>
 
             <div>Score: {game.blueTeamScore && game.blueTeamScore}</div>
         </div>
