@@ -38,13 +38,11 @@ function AddNames() {
     }, []);
 
     return (
-        <Container>
-            <Container className="fixer">
-                <TeamList />
-                <hr />
-                <NameInputForm nameNumber={NUMBER_OF_NAMES_TO_START_GAME} />
-            </Container>
-        </Container>
+        <div className="main-tile">
+            <TeamList />
+            <hr />
+            <NameInputForm nameNumber={NUMBER_OF_NAMES_TO_START_GAME} />
+        </div>
     );
 }
 

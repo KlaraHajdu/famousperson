@@ -27,11 +27,10 @@ function PlayGame() {
     }, []);
 
     return (
+        <div>
             <Row>
                 <Col xs={12} md={3}>
-                    <div className="team-data">
-                        blue team container
-                    </div>
+                    <div className="team-data">blue team container</div>
                 </Col>
                 <Col xs={12} md={6}>
                     <div className="team-data">
@@ -41,11 +40,10 @@ function PlayGame() {
                     </div>
                 </Col>
                 <Col xs={12} md={3}>
-                    <div className="team-data">
-                        green team container
-                    </div>
+                    <div className="team-data">green team container</div>
                 </Col>
             </Row>
+        </div>
     );
 }
 

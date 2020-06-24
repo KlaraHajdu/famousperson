@@ -108,24 +108,20 @@ function WaitingRoom() {
     }, []);
 
     return (
-        <React.Fragment>
-            <Container>
-                <Container className="fixer">
-                    <div>
-                        <h2>
-                            Waiting room <Badge variant="secondary">{game.gameId}</Badge>
-                        </h2>
-                        <h5>Game master: {game.gameMaster}</h5>
-                        <hr />
-                    </div>
-                    <div>
-                        <h5>Joined players</h5>
-                        <PlayersTable title={"Players"} content={game.players} />
-                    </div>
-                    {game.ownName === game.gameMaster && <WaitingRoomGameMasterPart />}
-                </Container>
-            </Container>
-        </React.Fragment>
+        <div className="main-tile">
+            <div>
+                <h2>
+                    Waiting room <Badge variant="secondary">{game.gameId}</Badge>
+                </h2>
+                <h5>Game master: {game.gameMaster}</h5>
+                <hr />
+            </div>
+            <div>
+                <h5>Joined players</h5>
+                <PlayersTable title={"Players"} content={game.players} />
+            </div>
+            {game.ownName === game.gameMaster && <WaitingRoomGameMasterPart />}
+        </div>
     );
 }
 
