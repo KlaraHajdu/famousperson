@@ -58,7 +58,7 @@ function JoinGame() {
                         onChange={saveOwnName}
                         type="text"
                         placeholder="Your name that will appear during the game"
-                        style={{ width: "500px" }}
+                        style={{ width: "100%" }}
                     />
                 </Form.Group>
                 <Form.Group controlId="formGameID">
@@ -68,7 +68,7 @@ function JoinGame() {
                         value={gameId}
                         type="text"
                         placeholder="The game ID you received from the game master"
-                        style={{ width: "500px" }}
+                        style={{ width: "100%" }}
                     />
                 </Form.Group>
                 <Button variant="warning" onClick={handleJoinGame}>
