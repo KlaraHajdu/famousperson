@@ -28,7 +28,7 @@ function JoinGame() {
 
     const checkSnapshot = (snapshot) => {
         if (!!snapshot.val()) {
-            setGame({ gameId: gameId, ownName: ownName, gamePhase: "waitingRoom" });
+            setGame({ gameId: gameId, ownName: ownName, gamePhase: "waitingRoom", gameMaster: snapshot.val().gameMaster });
             setGamePhase(gamePhases.waitingRoom);
         } else {
             alert("Wrong ID!");

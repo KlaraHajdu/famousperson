@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PhaseHeader from "./PhaseHeader.jsx";
 import TeamContainer from "./TeamContainer.jsx";
+import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
 
 function PlayGame() {
     const [game, setGame] = useContext(GameContext);
@@ -45,11 +46,11 @@ function PlayGame() {
                     <TeamContainer team="blueTeam" />
                 </Col>
                 <Col xs={12} md={6}>
-                    <div className="team-data">
-                        <PhaseHeader title="Guessing" />
-                        <div>Now the {game.teamOnTurn} team is guessing</div>
-                        <div>It is {game.playerOnTurn}'s turn now</div>
-                    </div>
+                    <MiddleContainerInThreeColumns>
+                        <PhaseHeader title="Guessing"/>
+                        <div>Now the {teamOnTurn} team is guessing</div>
+                        <div>It is {playerOnTurn}'s turn now</div>
+                    </MiddleContainerInThreeColumns>
                 </Col>
                 <Col xs={12} md={3}>
                     <TeamContainer team="greenTeam" />

@@ -111,32 +111,11 @@ function WaitingRoom() {
     }
   };
 
-  const handleGameData = (snapshot) => {
-    const DBGame = snapshot.val();
-    setGame({
-      gameMaster: DBGame.gameMaster,
-      players: Object.keys(DBGame.players),
-      gameId: game.gameId,
-      ownName: game.ownName,
-      gamePhase: DBGame.gamePhase,
-    });
-  };
-
-  const handleReadGameDataError = (err) => {
-    console.log(err);
-    alert("Something went wrong :(");
-  };
-
   useEffect(() => {
     appFirebase.databaseApi.create(
       `games/${game.gameId}/players/${game.ownName}`,
       true,
       actAfterAddNewPlayer
-    );
-    appFirebase.databaseApi.readOnce(
-      `games/${game.gameId}`,
-      handleGameData,
-      handleReadGameDataError
     );
     appFirebase.databaseApi.readOn(
       `games/${game.gameId}/players`,
