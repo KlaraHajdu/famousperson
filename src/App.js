@@ -22,6 +22,14 @@ const GlobalStyle = createGlobalStyle`
         margin: 3em 3em 3em 0em;
         border-radius: 10px;
     }
+    .team-table-container {
+        display: inline-block;
+        padding: 10px;
+        min-width: 150px
+    }
+    .team-tables-container {
+        text-align: center;
+    }
 `;
 
 function App() {

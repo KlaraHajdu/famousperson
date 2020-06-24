@@ -1,114 +1,48 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import { GameContext } from "./contextProviders/GameProvider";
-import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
-import { gamePhases } from "../gamePhasesObject";
+import NameInputForm from "./NameInputForm";
+import TeamList from "./TeamList";
 
 function AddNames() {
+    const NUMBER_OF_NAMES_TO_START_GAME = 10;
     const [game, setGame] = useContext(GameContext);
 
-    const [nameToSubmit, setNameToSubmit] = useState("");
-
-    const setGamePhase = useContext(GamePhaseContext)[1];
-
-    const [teamNamesNumber, setTeamNamesNumber] = useState(0);
-
-    const saveNameToSubmit = (e) => {
-        setNameToSubmit(e.target.value);
-    };
-
-    const actAfterNameAdded = (err) => {
+    const actAfterSettingPlayGamePhase = (err) => {
         if (!!err) {
             console.log(err);
         } else {
-            console.log("Name added successfully");
-            setNameToSubmit("");
+            console.log("Play game phase was set successfully");
         }
     };
 
-    const handleTeamNamesResult = (snapshot) => {
-        if (snapshot.val()) {
-            console.log("from handle team names result: " + Object.keys(snapshot.val()));
-            setTeamNamesNumber(Object.keys(snapshot.val()).length);
-        }
+    const setPlayGamePhaseInDB = () => {
+        appFirebase.databaseApi.update(`games/${game.gameId}`, { gamePhase: "playGame" }, actAfterSettingPlayGamePhase);
     };
 
     const handleNamesResult = (snapshot) => {
         if (snapshot.val()) {
-            if (Object.keys(snapshot.val()).length === 10) {
-                setGamePhase(gamePhases.playGame);
+            if (Object.keys(snapshot.val()).length === NUMBER_OF_NAMES_TO_START_GAME) {
+                setPlayGamePhaseInDB();
             }
-            console.log("from handle all names result: " + Object.keys(snapshot.val()));
         }
     };
 
-    const actAfterGetTeams = (snapshot) => {
-        const team = snapshot.val().greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
-        setGame({ ...game, ownTeam: team });
-        console.log("from actafterGetTeams after setGame!:   " + game.ownTeam);
-    };
-
-    const setOwnTeam = () => {
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, actAfterGetTeams);
-    };
-
-    const handleSubmitName = () => {
-        if (nameToSubmit) {
-            console.log("from handlesubmitname");
-            appFirebase.databaseApi.create(`games/${game.gameId}/names/${nameToSubmit}`, true, actAfterNameAdded);
-            appFirebase.databaseApi.create(`games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`, true);
-        }
-    };
-
-    useEffect(() => {
-        console.log("useeffect 1 triggered");
-        setOwnTeam();
-        console.log("from useeffect 1 team: " + game.ownTeam);
-    }, [game.ownTeam]);
-
-    useEffect(() => {
-        console.log("useeffect 2 triggered");
-        //setOwnTeam();
-        
+    const followHowManyNamesAdded = () => {
         appFirebase.databaseApi.readOn(`games/${game.gameId}/names`, handleNamesResult);
-        console.log("now comes the readon own team, ownTeam: " + game.ownTeam);
-        if (game.ownTeam)
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/${game.ownTeam}Names`, handleTeamNamesResult);
-    }, [game.ownTeam]);
+    };
 
-    if (teamNamesNumber === 5)
-        return (
-            <Container>
-                <Container className="fixer">
-                    <div>Please wait for the other team to finish uploading their names</div>
-                    <Button variant="warning" onClick={() => setGamePhase(gamePhases.playGame)}>
-                        Open the playGame component
-                    </Button>
-                </Container>
-            </Container>
-        );
+    useEffect(() => {
+        if (game.ownName === game.gameMaster) followHowManyNamesAdded();
+    }, []);
+
     return (
         <Container>
             <Container className="fixer">
-                <h4>Add names to the game</h4>
-                <div>Your team has added {teamNamesNumber} names so far</div>
-                <Form>
-                    <Form.Group controlId="formPlayerName">
-                        <Form.Control
-                            onChange={saveNameToSubmit}
-                            value={nameToSubmit}
-                            type="text"
-                            placeholder="Someone to be guessed in the game"
-                            style={{ width: "500px" }}
-                        />
-                    </Form.Group>
-                    <Button variant="warning" onClick={handleSubmitName}>
-                        Submit name
-                    </Button>
-                </Form>
+                <TeamList />
+                <hr />
+                <NameInputForm nameNumber={NUMBER_OF_NAMES_TO_START_GAME} />
             </Container>
         </Container>
     );

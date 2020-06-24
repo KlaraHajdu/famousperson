@@ -8,7 +8,6 @@ import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import { gamePhases } from "../../gamePhasesObject";
 import { getRandomNumberFromTo } from "../../util/randomUtil.js";
 
-
 export default function StartGame() {
   const [name, setName] = useState("");
   let gameId;
@@ -26,7 +25,7 @@ export default function StartGame() {
       console.log(err);
     } else {
       console.log("Game is successfully created");
-      setGame({ gameMaster: name, gameId: gameId, ownName: name, players: [] });
+      setGame({ gameMaster: name, gameId: gameId, ownName: name, players: [], gamePhase: "waitingRoom"});
       setGamePhase(gamePhases.waitingRoom);
     }
   };
@@ -59,6 +58,7 @@ export default function StartGame() {
       generateId();
       let body = {
         gameMaster: name,
+        gamePhase: "waitingRoom"
       };
       appFirebase.databaseApi.create(
         `games/${gameId}`,
@@ -69,25 +69,23 @@ export default function StartGame() {
   };
 
   return (
-    //<Styles>
-          <Container>
-              <Container className="fixer">
+    <Container>
+      <Container className='fixer'>
         <h4>Start a new game as a game master</h4>
         <Form>
-        <Form.Group controlId='formGameMasterName'>
+          <Form.Group controlId='formGameMasterName'>
             <Form.Label>Your name</Form.Label>
             <Form.Control
               onChange={saveName}
               type='text'
               placeholder='Your name that will appear during the game'
-              />
+            />
           </Form.Group>
           <Button variant='warning' onClick={createNewGame}>
             Start a new game
           </Button>
         </Form>
-        </Container>
       </Container>
-    //</Styles>
-    );
+    </Container>
+  );
 }
