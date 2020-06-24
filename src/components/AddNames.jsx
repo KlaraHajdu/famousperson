@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import Container from "react-bootstrap/Container";
 import { GameContext } from "./contextProviders/GameProvider";
 import { appFirebase } from "../database.js";
 import NameInputForm from "./NameInputForm";

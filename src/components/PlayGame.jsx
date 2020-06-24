@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import Container from "react-bootstrap/Container";
 import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
 import Row from "react-bootstrap/Row";
@@ -7,8 +6,7 @@ import Col from "react-bootstrap/Col";
 import PhaseHeader from "./PhaseHeader.jsx";
 
 function PlayGame() {
-    //const [game, setGame] = useContext(GameContext);
-    const [game, setGame] = useState({ gameMaster: "GameM" });
+    const [game, setGame] = useContext(GameContext);
 
     const [teamOnTurn, setTeamOnTurn] = useState("");
 

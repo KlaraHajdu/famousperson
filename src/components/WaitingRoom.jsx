@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { GameContext } from "./contextProviders/GameProvider";
-import Container from "react-bootstrap/Container";
 import { appFirebase } from "../database.js";
 import WaitingRoomGameMasterPart from "./gameMasterComponents/WaitingRoomGameMasterPart";
 import PlayersTable from "./PlayersTable";
