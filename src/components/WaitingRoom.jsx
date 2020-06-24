@@ -17,7 +17,9 @@ function WaitingRoom() {
       JSON.stringify(Object.keys(snapshot.val())) !==
         JSON.stringify(game.players)
     ) {
-      setGame({ ...game, players: Object.keys(snapshot.val()) });
+        console.log(game.gameMaster);
+        setGame({ ...game, players: Object.keys(snapshot.val()) });
+        console.log(game.gameMaster);
     }
   };
 
@@ -143,7 +145,8 @@ function WaitingRoom() {
     appFirebase.databaseApi.readOn(
       `games/${game.gameId}/gamePhase`,
       handleGamePhaseResult
-    );
+      );
+      console.log("from waiting room use effect " + game.gameMaster);
   }, []);
 
   return (
