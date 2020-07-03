@@ -29,14 +29,8 @@ function PlayGame() {
             appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
         }
         appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult);
-        appFirebase.databaseApi.readOn(
-            `games/${game.gameId}/greenTeamTurnIndex`,
-            handleGreenPlayerOnTurnIndexResult
-        );
-        appFirebase.databaseApi.readOn(
-            `games/${game.gameId}/blueTeamTurnIndex`,
-            handleBluePlayerOnTurnIndexResult
-        );
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult);
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult);
     }, []);
 
     return (
@@ -47,9 +41,9 @@ function PlayGame() {
                 </Col>
                 <Col xs={12} md={6}>
                     <MiddleContainerInThreeColumns>
-                        <PhaseHeader title="Guessing"/>
-                        <div>Now the {teamOnTurn} team is guessing</div>
-                        <div>It is {playerOnTurn}'s turn now</div>
+                        <PhaseHeader title="Guessing" />
+                        <div>Now the {game.teamOnTurn} team is guessing</div>
+                        <div>It is {game.playerOnTurn}'s turn now</div>
                     </MiddleContainerInThreeColumns>
                 </Col>
                 <Col xs={12} md={3}>
