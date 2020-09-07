@@ -9,14 +9,14 @@ import TeamContainer from "./TeamContainer";
 import { MiddleContainerInThreeColumns } from "../static/myStyle";
 
 function AddNames() {
-  const NUMBER_OF_NAMES_TO_START_GAME = 10;
+  const NUMBER_OF_NAMES_TO_START_GAME = 4;
   const game = useContext(GameContext)[0];
 
   const actAfterSettingPlayGamePhase = (err) => {
     if (!!err) {
       console.log(err);
     } else {
-      console.log("Play game phase was set successfully");
+      console.log("Play game phase was set successfully in db");
     }
   };
 

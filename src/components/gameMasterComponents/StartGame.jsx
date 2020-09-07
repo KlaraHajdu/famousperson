@@ -24,7 +24,7 @@ export default function StartGame() {
             console.log(err);
         } else {
             console.log("Game is successfully created");
-            setGame({ gameMaster: name, gameId: gameId, ownName: name, players: [], gamePhase: "waitingRoom" });
+            setGame({ gameMaster: name, gameId: gameId, ownName: name, players: [] });
             setGamePhase(gamePhases.waitingRoom);
         }
     };

@@ -21,7 +21,7 @@ export default function WaitingRoomGameMasterPart() {
     if (!!err) {
       console.log(err);
     } else {
-      console.log("Phase changes successfully");
+      console.log("Phase changed successfully");
     }
   };
 
