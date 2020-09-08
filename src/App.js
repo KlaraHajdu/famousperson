@@ -5,18 +5,24 @@ import { HowToPlayModalOpenProvider } from "./components/contextProviders/HowToP
 import { GamePhaseProvider } from "./components/contextProviders/GamePhaseProvider";
 import { GameProvider } from "./components/contextProviders/GameProvider";
 import GamePhases from "./components/GamePhases.jsx";
-import {GlobalStyle} from "./static/myStyle"
+import { GlobalStyle } from "./static/myStyle";
+import { GreenTeamPlayerProvider } from "./components/contextProviders/GreenTeamPlayerProvider";
+import { BlueTeamPlayerProvider } from "./components/contextProviders/BlueTeamPlayerProvider";
 
 function App() {
     return (
         <div className="App">
             <GameProvider>
                 <GamePhaseProvider>
-                    <HowToPlayModalOpenProvider>
-                        <Header />
-                    </HowToPlayModalOpenProvider>
-                    <GamePhases />
-                    <GlobalStyle />
+                    <GreenTeamPlayerProvider>
+                        <BlueTeamPlayerProvider>
+                            <HowToPlayModalOpenProvider>
+                                <Header />
+                            </HowToPlayModalOpenProvider>
+                            <GamePhases />
+                            <GlobalStyle />
+                        </BlueTeamPlayerProvider>
+                    </GreenTeamPlayerProvider>
                 </GamePhaseProvider>
             </GameProvider>
         </div>

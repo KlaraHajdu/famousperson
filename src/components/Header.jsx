@@ -66,7 +66,6 @@ export default function Header() {
     }
 
     useEffect(() => {
-        console.log(game);
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
     }, [game]);
