@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useEffect, useCallback } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -46,26 +46,15 @@ export default function Header() {
         setGamePhase(gamePhases.joinGame);
     };
 
-    const handleGamePhaseResult = async (snapshot) => {
+    const handleGamePhaseResult = useCallback((snapshot) => {
         const DBGamePhase = snapshot.val();
 
-        if (DBGamePhase !== game.gamePhase) {
+        if (game? DBGamePhase !== game.gamePhase : false) {
             setGamePhase(gamePhases[DBGamePhase]);
         }
-    };
+    });
 
-    const joinDummyGameAsGameMaster = async () => {
-        let gameIsSet = await setMasterGame();
-
-        if (gameIsSet) {
-            console.log(game);
-            setGamePhase(gamePhases.playGame);
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
-        }
-    };
-
-    const setMasterGame = async () => {
-        console.log("in setMasterGame");
+    function joinDummyGameAsGameMaster() {
         setGame({
             ownName: "Master",
             gameId: 8795,
@@ -74,49 +63,30 @@ export default function Header() {
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
         });
 
-        if (game) {
-            console.log("game exists");
-            return true;
-        }
-    };
+    }
 
-    const joinDummyGameAsPlayer1 = async () => {
-        let gameIsSet = await setPlayer1Game();
+    useEffect(() => {
+        console.log(game);
+        appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
+        
+    }, [game]);
 
-        if (gameIsSet) {
-            console.log(game);
-            setGamePhase(gamePhases.playGame);
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
-        }
-    };
+    
 
-    const setPlayer1Game = async () => {
+    const joinDummyGameAsPlayer1 =  () => {
+
         setGame({
             ownName: "Player1",
             gameId: 8795,
             ownTeam: "blueTeam",
             gameMaster: "Master",
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-        });
-
-        if (game) {
-            console.log("game exists");
-            return true;
-        }
+        }); 
     };
 
-    const joinDummyGameAsPlayer2 = async () => {
-        let gameIsSet = await setPlayer2Game();
+   
 
-        if (gameIsSet) {
-            console.log(game);
-            setGamePhase(gamePhases.playGame);
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
-        }
-    };
-
-    const setPlayer2Game = async () => {
-        console.log("in setMasterGame");
+    const joinDummyGameAsPlayer2 =  () => {
         setGame({
             ownName: "Player2",
             gameId: 8795,
@@ -124,25 +94,11 @@ export default function Header() {
             gameMaster: "Master",
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
         });
-
-        if (game) {
-            console.log("game exists");
-            return true;
-        }
     };
 
-    const joinDummyGameAsPlayer3 = async () => {
-        let gameIsSet = await setPlayer3Game();
+   
 
-        if (gameIsSet) {
-            console.log(game);
-            setGamePhase(gamePhases.playGame);
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
-        }
-    };
-
-    const setPlayer3Game = async () => {
-        console.log("in setMasterGame");
+    const joinDummyGameAsPlayer3 =  () => {  
         setGame({
             ownName: "Player3",
             gameId: 8795,
@@ -150,12 +106,8 @@ export default function Header() {
             gameMaster: "Master",
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
         });
-
-        if (game) {
-            console.log("game exists");
-            return true;
-        }
     };
+
 
     return (
         <Styles>
