@@ -3,7 +3,9 @@ import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
 import { BlueTeamPlayerIndexContext } from "./contextProviders/BlueTeamPlayerProvider";
 import { GreenTeamPlayerIndexContext } from "./contextProviders/GreenTeamPlayerProvider";
+import { RoundContext } from "./contextProviders/RoundProvider";
 import Row from "react-bootstrap/Row";
+import Badge from "react-bootstrap/Badge";
 import Col from "react-bootstrap/Col";
 import PhaseHeader from "./PhaseHeader.jsx";
 import TeamContainer from "./TeamContainer.jsx";
@@ -14,6 +16,7 @@ function PlayGame() {
     const [game, setGame] = useContext(GameContext);
     const [blueTeamPlayerIndex, setBlueTeamPlayerIndex] = useContext(BlueTeamPlayerIndexContext);
     const [greenTeamPlayerIndex, setGreenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
+    const [round, setRound] = useContext(RoundContext);
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
         setGame({ ...game, teamOnTurn: snapshot.val() });
@@ -51,18 +54,15 @@ function PlayGame() {
                 </Col>
                 <Col xs={12} md={6}>
                     <MiddleContainerInThreeColumns>
-                        <PhaseHeader title="Explain in detail" />
+                        <PhaseHeader title="" more={ round === 1? "Explain in detail" : round ===2? "Explain in one word": "Pantomime" } />
                         <div>
                             The{" "}
-                            <span
-                                style={{
-                                    fontWeight: "bold",
-                                    color: game.teamOnTurn === "greenTeam" ? "green" : "blue",
-                                }}
+                            <Badge variant={game.teamOnTurn === "greenTeam" ? "success": "primary" }
+                               
                             >
                                 {" "}
                                 {game.teamOnTurn == "greenTeam" ? "green" : "blue"} team{" "}
-                            </span>{" "}
+                            </Badge>{" "}
                             is guessing. It is{" "}
                             <span style={{ fontWeight: "bold" }}>
                                 {" "}

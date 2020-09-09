@@ -15,7 +15,7 @@ export default function PhaseHeader(props) {
           <Col>
             <h6>
                 Game Id:{" "}
-                <Badge variant="warning" style={{}}>
+                <Badge variant="secondary" style={{}}>
                     {game.gameId}
                 </Badge>{" "}
             </h6>
@@ -27,8 +27,8 @@ export default function PhaseHeader(props) {
           </Col>
         </Row>
             <hr />
-
-            <h3>{props.title}</h3>
+        <h3>{props.title}</h3>
+        <h3>{props.more}</h3>
             <hr />
         </div>
     );

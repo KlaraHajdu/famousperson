@@ -8,21 +8,24 @@ import GamePhases from "./components/GamePhases.jsx";
 import { GlobalStyle } from "./static/myStyle";
 import { GreenTeamPlayerProvider } from "./components/contextProviders/GreenTeamPlayerProvider";
 import { BlueTeamPlayerProvider } from "./components/contextProviders/BlueTeamPlayerProvider";
+import { RoundProvider } from "./components/contextProviders/RoundProvider";
 
 function App() {
     return (
         <div className="App">
             <GameProvider>
                 <GamePhaseProvider>
-                    <GreenTeamPlayerProvider>
-                        <BlueTeamPlayerProvider>
-                            <HowToPlayModalOpenProvider>
-                                <Header />
-                            </HowToPlayModalOpenProvider>
-                            <GamePhases />
-                            <GlobalStyle />
-                        </BlueTeamPlayerProvider>
-                    </GreenTeamPlayerProvider>
+                    <RoundProvider>
+                        <GreenTeamPlayerProvider>
+                            <BlueTeamPlayerProvider>
+                                <HowToPlayModalOpenProvider>
+                                    <Header />
+                                </HowToPlayModalOpenProvider>
+                                <GamePhases />
+                                <GlobalStyle />
+                            </BlueTeamPlayerProvider>
+                        </GreenTeamPlayerProvider>
+                    </RoundProvider>
                 </GamePhaseProvider>
             </GameProvider>
         </div>

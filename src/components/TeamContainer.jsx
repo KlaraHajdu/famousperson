@@ -12,7 +12,7 @@ export default function TeamContainer(props) {
           ? gameTheme.greenBackgroundColor
           : gameTheme.blueBackgroundColor
       }
-      titleColor={props.team === "greenTeam" ? "green" : "blue"}
+      titleColor= "white"
     >
       <h4>{props.team === "greenTeam" ? "Green team" : "Blue team"}</h4>
       <div>Members: {game.teams && game.teams[props.team].join(", ")}</div>
