@@ -41,7 +41,7 @@ function PlayGame() {
         appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult); //setGame
         appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult); //setBluePlayer
         appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); //setGreenplayer
-    }, []);
+    }, []); //ha save-re automatikusan formázza, akkor berakja a dependency arrayba az összes fenti függvényt és objektumot és folyton újrarenderelődik... 
 
     return (
         <div>
@@ -51,17 +51,19 @@ function PlayGame() {
                 </Col>
                 <Col xs={12} md={6}>
                     <MiddleContainerInThreeColumns>
-                        <PhaseHeader title="Guessing" />
+                        <PhaseHeader title="Explain in detail" />
                         <div>
-                            Now the{" "}
-                            <span style={{ fontWeight: "bold" }}>
+                            The{" "}
+                            <span
+                                style={{
+                                    fontWeight: "bold",
+                                    color: game.teamOnTurn === "greenTeam" ? "green" : "blue",
+                                }}
+                            >
                                 {" "}
                                 {game.teamOnTurn == "greenTeam" ? "green" : "blue"} team{" "}
                             </span>{" "}
-                            is guessing
-                        </div>
-                        <div>
-                            It is{" "}
+                            is guessing. It is{" "}
                             <span style={{ fontWeight: "bold" }}>
                                 {" "}
                                 {game.teamOnTurn &&
@@ -69,7 +71,7 @@ function PlayGame() {
                                         game.teamOnTurn === "greenTeam" ? greenTeamPlayerIndex : blueTeamPlayerIndex
                                     ]}
                             </span>
-                            's turn now
+                            's turn now.
                         </div>
                     </MiddleContainerInThreeColumns>
                 </Col>
