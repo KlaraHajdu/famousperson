@@ -28,7 +28,7 @@ export default function PlayerOnTurn() {
                     )}
                 </Col>
             </Row>
-           {(20 > counter && counter > 0)?  <GuessWord/> : ""}
+           {((20 >= counter && counter > 0) && turnStarted)?  <GuessWord/> : ""}
             <div style={{ color: "orange", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <h1>{counter > 0 ? counter : "Time is up!"}</h1>
             </div>
