@@ -9,6 +9,7 @@ import { GlobalStyle } from "./static/myStyle";
 import { GreenTeamPlayerProvider } from "./components/contextProviders/GreenTeamPlayerProvider";
 import { BlueTeamPlayerProvider } from "./components/contextProviders/BlueTeamPlayerProvider";
 import { RoundProvider } from "./components/contextProviders/RoundProvider";
+import { ScoreProvider } from "./components/contextProviders/ScoreProvider.jsx";
 
 function App() {
     return (
@@ -16,15 +17,17 @@ function App() {
             <GameProvider>
                 <GamePhaseProvider>
                     <RoundProvider>
-                        <GreenTeamPlayerProvider>
-                            <BlueTeamPlayerProvider>
-                                <HowToPlayModalOpenProvider>
-                                    <Header />
-                                </HowToPlayModalOpenProvider>
-                                <GamePhases />
-                                <GlobalStyle />
-                            </BlueTeamPlayerProvider>
-                        </GreenTeamPlayerProvider>
+                        <ScoreProvider>
+                            <GreenTeamPlayerProvider>
+                                <BlueTeamPlayerProvider>
+                                    <HowToPlayModalOpenProvider>
+                                        <Header />
+                                    </HowToPlayModalOpenProvider>
+                                    <GamePhases />
+                                    <GlobalStyle />
+                                </BlueTeamPlayerProvider>
+                            </GreenTeamPlayerProvider>
+                        </ScoreProvider>
                     </RoundProvider>
                 </GamePhaseProvider>
             </GameProvider>
