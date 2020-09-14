@@ -8,33 +8,41 @@ import { useEffect, useContext } from "react";
 import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
 import { RoundContext } from "./contextProviders/RoundProvider";
+import { ScoreContext } from "./contextProviders/ScoreProvider";
 
-export default function GuessWord() {
+
+export default function GuessWord(props) {
     const [word, setWord] = useState();
     const [guessed, setGuessed] = useState();
-    const [score, setScore] = useState();
+    const [score, setScore] = useContext(ScoreContext);
     const [game, setGame] = useContext(GameContext);
     const [round, setRound] = useContext(RoundContext);
 
+
     const selectRandomWord = (snapshot) => {
-        let words = snapshot.val();
-        let randomId = Math.floor(Math.random() * Object.keys(words).length);
-        console.log(randomId);
-        console.log(words);
-        setWord(Object.keys(words)[randomId]);
-        console.log(word && word);
+        
+        if (snapshot.val() !== null) {
+            let words = snapshot.val();
+            let randomId = Math.floor(Math.random() * Object.keys(words).length);
+            setWord(Object.keys(words)[randomId]);
+            let updateO = {};
+            updateO[Object.keys(words)[randomId]] = null;
+            appFirebase.databaseApi.update(`games/${game.gameId}/${round}round`,
+            updateO,
+            updateDone
+            );
+        }
+        else props.endRound();
     };
     const updateDone = (err) => {
         if (!!err) {
             console.log(err);
         } else {
-            console.log("Score successfully updated in db");
+            console.log("Score /names successfully updated in db");
         }
     };
     const scoreWordGuessed = () => {
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/scores/${game.ownTeam}Score`, (snapshot) => {
-            console.log(game.ownTeam);
-            console.log(snapshot.val());
             if (game.ownTeam === "greenTeam") {
                 appFirebase.databaseApi.update(
                     `games/${game.gameId}/scores/`,
@@ -52,7 +60,7 @@ export default function GuessWord() {
 
     useEffect(() => {
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round}round`, selectRandomWord);
-    }, []);
+    }, [score]);
 
     useEffect(() => {}, [score]);
 

@@ -36,14 +36,13 @@ function PlayGame() {
     });
 
     const handleScoreResult = (snapshot) => {
-        console.log(snapshot.val());
         setScore(snapshot.val());
-        console.log(score);
     }
 
     const createStartDataDB = useCallback(() => {
         appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
         appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
+        appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
             appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
         );
