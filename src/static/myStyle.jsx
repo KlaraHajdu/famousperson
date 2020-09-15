@@ -3,7 +3,7 @@ import styled, { createGlobalStyle }  from "styled-components";
 export const gameTheme = {
     whiteBackgroundColor: "rgba(255, 255, 255, 0.9)",
     greenBackgroundColor: "rgba(147, 179, 84, 0.8)",
-    blueBackgroundColor: "rgba(170, 209, 240, 0.8)"
+    blueBackgroundColor: "rgba(101, 168, 247, 0.6)"
 }
 
 export const GlobalStyle = createGlobalStyle`
@@ -43,6 +43,6 @@ export const TeamContainerInThreeColumns = styled.div`
         margin-top: 10px
     };
     & h4 {
-        color: ${props => props.titleColor}
+        color:white
     }
 `
