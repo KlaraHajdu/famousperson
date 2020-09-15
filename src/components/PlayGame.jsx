@@ -92,7 +92,6 @@ function PlayGame() {
 
     useEffect(() => {
         if (game.ownName === game.gameMaster) {
-            console.log("The game master creates the data");
             createStartDataDB();
         }
         appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult); //setGame

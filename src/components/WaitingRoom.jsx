@@ -63,16 +63,7 @@ function WaitingRoom() {
         }
           appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, setTeamInfos); //kell ez is???
           appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
-          console.log("Setteaminfos is called");
         }
-
-        // if (DBGamePhase === "playGame") { // csak azért, h új játékost hozzáadjunk a playgameben
-        //     appFirebase.databaseApi.readOnce(
-        //         `games/${game.gameId}/teams`,
-        //         //addNewPlayerToTeams kellene egy checkIfPlayer vizsgálat!
-        //         actAfterSwitchedToPlayGame
-        //     );
-        // }
 
         if (DBGamePhase !== game.gamePhase) {
             setGamePhase(gamePhases[DBGamePhase]);
