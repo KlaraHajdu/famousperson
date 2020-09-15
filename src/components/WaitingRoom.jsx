@@ -78,9 +78,6 @@ function WaitingRoom() {
         }
     };
 
-    const actAfterSwitchedToPlayGame = () => {
-        console.log("Successfully changed to playgame phase in db");
-    };
 
     useEffect(() => {
         appFirebase.databaseApi.create(`games/${game.gameId}/players/${game.ownName}`, true, actAfterAddNewPlayer);

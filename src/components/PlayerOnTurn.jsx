@@ -29,9 +29,6 @@ export default function PlayerOnTurn(props) {
 
     const endRound = () => {
         setTurnStarted(false);
-        console.log("round:")
-        console.log(round);
-        console.log(round === 3);
         if (round === 3) {
             setGamePhase(gamePhases.endGame);
             let updatePhase = {};

@@ -13,10 +13,9 @@ import { ScoreContext } from "./contextProviders/ScoreProvider";
 
 export default function GuessWord(props) {
     const [word, setWord] = useState();
-    const [guessed, setGuessed] = useState();
-    const [score, setScore] = useContext(ScoreContext);
-    const [game, setGame] = useContext(GameContext);
-    const [round, setRound] = useContext(RoundContext);
+    const score = useContext(ScoreContext)[0];
+    const game = useContext(GameContext)[0];
+    const round = useContext(RoundContext)[0];
 
 
     const selectRandomWord = (snapshot) => {
