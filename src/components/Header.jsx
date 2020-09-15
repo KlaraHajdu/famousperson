@@ -72,7 +72,9 @@ export default function Header() {
     
     useEffect(() => {
         
-        appFirebase.databaseApi.update(`games/${game? game.gameId: 0}`, { gamePhase: "playGame" }, updateDone); 
+        if (game && game.gameId === 8795) {
+            appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone); 
+        }
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
     }, [game && game.gameId]);
