@@ -103,8 +103,8 @@ function PlayGame() {
     ]); //ha save-re automatikusan formázza, akkor berakja a dependency arrayba az összes fenti függvényt és objektumot és folyton újrarenderelődik...
 
     return (
-        <div>
-            <Row>
+        <div >
+            <Row style={{width:"100vw"}}>
                 <Col xs={12} md={3}>
                     <TeamContainer team="blueTeam" />
                 </Col>
