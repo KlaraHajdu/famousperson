@@ -46,22 +46,6 @@ export default function WaitingRoomGameMasterPart() {
   return (
     <React.Fragment>
       <hr />
-      <div>
-        <h5>Team division</h5>
-        <ToggleButtonGroup
-          type='radio'
-          name='team-generator-method'
-          defaultValue={1}
-        >
-          <ToggleButton variant='secondary' value={1}>
-            Generate random teams
-          </ToggleButton>
-          <ToggleButton variant='secondary' value={2}>
-            Select team members
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </div>
-      <hr />
       {game.players && game.players.length > 3 && (
         <div>
           <Button onClick={formTeams} variant='warning'>
