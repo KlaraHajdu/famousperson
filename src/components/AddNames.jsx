@@ -51,7 +51,7 @@ function AddNames() {
 
   return (
     <div>
-      <Row>
+      <Row style={{width:"100vw"}}>
         <Col xs={12} md={3}>
           <TeamContainer team='blueTeam' />
         </Col>
