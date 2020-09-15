@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
 import { BlueTeamPlayerIndexContext } from "./contextProviders/BlueTeamPlayerProvider";
@@ -19,7 +19,7 @@ function PlayGame() {
     const [blueTeamPlayerIndex, setBlueTeamPlayerIndex] = useContext(BlueTeamPlayerIndexContext);
     const [greenTeamPlayerIndex, setGreenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
     const [round, setRound] = useContext(RoundContext);
-    const [score, setScore] = useContext(ScoreContext);
+    const setScore = useContext(ScoreContext)[1];
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
         setGame({ ...game, teamOnTurn: snapshot.val() });
