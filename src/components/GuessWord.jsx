@@ -60,6 +60,7 @@ export default function GuessWord(props) {
 
     useEffect(() => {
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round}round`, selectRandomWord);
+        console.log("Guessword mounted")
     }, [score]);
 
     useEffect(() => {}, [score]);

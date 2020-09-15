@@ -54,6 +54,11 @@ export default function Header() {
         }
     });
 
+    const updateDone = (err) => {
+        if (!!err) console.log(err);
+        else console.log("Gamephase set to playGame in DB");
+    }
+
     function joinDummyGameAsGameMaster() {
         setGame({
             ownName: "Master",
@@ -64,11 +69,13 @@ export default function Header() {
         });
 
     }
-
+    
     useEffect(() => {
+        
+        appFirebase.databaseApi.update(`games/${game? game.gameId: 0}`, { gamePhase: "playGame" }, updateDone); 
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
-    }, [game]);
+    }, [game && game.gameId]);
 
     
 

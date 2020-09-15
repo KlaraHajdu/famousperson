@@ -4,6 +4,7 @@ import JoinGame from "./components/JoinGame";
 import WaitingRoom from "./components/WaitingRoom";
 import AddNames from "./components/AddNames";
 import PlayGame from "./components/PlayGame";
+import EndGame from "./components/EndGame";
 
 export const gamePhases = {
     startGame: {
@@ -20,5 +21,8 @@ export const gamePhases = {
     },
     playGame: {
         component: <PlayGame />,
+    },
+    endGame: {
+        component: <EndGame />,
     },
 };

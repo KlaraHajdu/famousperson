@@ -39,10 +39,44 @@ function PlayGame() {
         setScore(snapshot.val());
     }
 
+    const handleRoundResult = (snapshot) => {
+        setRound(snapshot.val());
+    }
+
+    const updateDone = (err) => {
+
+        if (!!err) console.log(err)
+        else console.log("Update of team on turn /playerindex made successfully");
+    }
+
+    const endTurn = () => {
+        let nextTeam = game.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
+        let updateO = {};
+        updateO["teamOnTurn"] = nextTeam;
+        appFirebase.databaseApi.update(`games/${game.gameId}`,
+            updateO,
+            updateDone
+        );
+
+        if (game.ownTeam === "greenTeam") {
+            appFirebase.databaseApi.update(
+                `games/${game.gameId}/greenTeamTurnIndex/`,
+                { greenTeamScore: +greenTeamPlayerIndex+ 1 },
+                updateDone
+            );
+        } else
+            appFirebase.databaseApi.update(
+                `games/${game.gameId}/scores/`,
+                { blueTeamScore: + blueTeamPlayerIndex + 1 },
+                updateDone
+            );
+    }
+
     const createStartDataDB = useCallback(() => {
         appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
         appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
         appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
+        appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
             appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
         );
@@ -58,12 +92,14 @@ function PlayGame() {
 
     useEffect(() => {
         if (game.ownName === game.gameMaster) {
+            console.log("The game master creates the data");
             createStartDataDB();
         }
         appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult); //setGame
         appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult); //setBluePlayer
         appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); //setGreenplayer
         appFirebase.databaseApi.readOn(`games/${game.gameId}/scores`, handleScoreResult); //setScores
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/round`, handleRoundResult); //setRound
     }, [
     ]); //ha save-re automatikusan formázza, akkor berakja a dependency arrayba az összes fenti függvényt és objektumot és folyton újrarenderelődik...
 
@@ -108,7 +144,7 @@ function PlayGame() {
                                     game.teamOnTurn === "greenTeam"
                                         ? greenTeamPlayerIndex || 0
                                         : blueTeamPlayerIndex || 1
-                                ] && <PlayerOnTurn />}
+                                ] && <PlayerOnTurn endTurn={ endTurn } />}
                         </div>
                     </MiddleContainerInThreeColumns>
                 </Col>
