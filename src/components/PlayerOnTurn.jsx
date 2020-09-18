@@ -11,6 +11,7 @@ import { GreenTeamPlayerIndexContext } from "./contextProviders/GreenTeamPlayerP
 import { RoundContext } from "./contextProviders/RoundProvider";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { gamePhases } from "../gamePhasesObject";
+import SVGCircle from "./SVGCircle";
 
 export default function PlayerOnTurn(props) {
     const [counter, setCounter] = useState(20);
@@ -20,12 +21,11 @@ export default function PlayerOnTurn(props) {
     const [greenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
     const [round] = useContext(RoundContext);
     const setGamePhase = useContext(GamePhaseContext)[1];
-    
-    const updateDone = (err) => {
 
-        if (!!err) console.log(err)
+    const updateDone = (err) => {
+        if (!!err) console.log(err);
         else console.log("Update of team on turn /playerindex /gamePhase made successfully");
-    }
+    };
 
     const endRound = () => {
         setTurnStarted(false);
@@ -33,71 +33,77 @@ export default function PlayerOnTurn(props) {
             setGamePhase(gamePhases.endGame);
             let updatePhase = {};
             updatePhase["gamePhase"] = "endGame";
-            appFirebase.databaseApi.update(`games/${game.gameId}`,
-                {gamePhase: "endGame"},
-                updateDone);
+            appFirebase.databaseApi.update(`games/${game.gameId}`, { gamePhase: "endGame" }, updateDone);
         }
         let updateRound = {};
-        updateRound["round"] = +round+1;
-        appFirebase.databaseApi.update(`games/${game.gameId}`,
-        updateRound,
-        updateDone
-    );
+        updateRound["round"] = +round + 1;
+        appFirebase.databaseApi.update(`games/${game.gameId}`, updateRound, updateDone);
         let nextTeam = game.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
-        appFirebase.databaseApi.update(`games/${game.gameId}`,
-            updateO,
-            updateDone
-        );
+        appFirebase.databaseApi.update(`games/${game.gameId}`, updateO, updateDone);
 
         if (game.ownTeam === "greenTeam") {
             appFirebase.databaseApi.update(
                 `games/${game.gameId}/`,
-                { greenTeamTurnIndex: +greenTeamPlayerIndex+ 1 },
+                { greenTeamTurnIndex: +greenTeamPlayerIndex + 1 },
                 updateDone
             );
         } else
             appFirebase.databaseApi.update(
                 `games/${game.gameId}/`,
-                { blueTeamTurnIndex: + blueTeamPlayerIndex + 1 },
+                { blueTeamTurnIndex: +blueTeamPlayerIndex + 1 },
                 updateDone
             );
-
-        
-    }
+    };
 
     useEffect(() => {
+        console.log(counter);
         let unmounted = false;
         if (!unmounted) {
-
             if (counter === 0) props.endTurn();
             counter > 0 && turnStarted && setTimeout(() => setCounter(counter - 1), 1000);
         }
-        return () => {unmounted = true}
-    }, [turnStarted, counter]);
+        return () => {
+            unmounted = true;
+        };
+    }, [counter]);
+
+    // const mapNumber = (number, in_min, in_max, out_min, out_max) => {
+    //     return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+    // };
+    // const counterRadius = mapNumber(20, 60, 0, 0, 360);
+
 
     return (
         <div>
             <Row>
                 <Col>It is your turn!</Col>
                 <Col style={{ height: 60 }}>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
-                    {turnStarted ? (
-                        ""
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        {turnStarted ? (
+                            ""
                         ) : (
                             <Button style={{ width: 140 }} onClick={() => setTurnStarted(true)}>
-                            Start your turn
-                        </Button>
-                    )}
+                                Start your turn
+                            </Button>
+                        )}
                     </div>
                 </Col>
             </Row>
-            {((20 >= counter && counter > 0) && turnStarted) ? <GuessWord endRound={endRound} /> : ""}
+            {20 >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
             <div style={{ color: "orange", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <h1>{counter > 0 ? counter : "Time is up!"}</h1>
             </div>
+
+            {/* <div>
+                {counter && (
+                    <div className="countdown-item">
+                        <SVGCircle radius={counterRadius} />
+                        {counter}
+                    </div>
+                )}
+            </div> */}
         </div>
     );
 }
