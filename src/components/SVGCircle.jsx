@@ -1,7 +1,7 @@
 import React from "react";
+import { SVGCircleStyle } from "../static/myStyle";
 
 export default function SVGCircle(props) {
-
     const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
         var angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
 
@@ -23,8 +23,13 @@ export default function SVGCircle(props) {
     };
 
     return (
-        <svg className="countdown-svg">
-            <path style= {{fill:"none", stroke:"#333", strokeWidth:"4"}} d={describeArc(50, 50, 48, 0, props.radius)} />
-        </svg>
+        <SVGCircleStyle>
+            <svg className="countdown-svg">
+                <path
+                    style={{ fill: "none", stroke: "orange", strokeWidth: "4" }}
+                    d={describeArc(50, 50, 48, 0, props.radius)}
+                />
+            </svg>
+        </SVGCircleStyle>
     );
 }

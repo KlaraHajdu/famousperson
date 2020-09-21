@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { CounterStyle, CountdownItemStyle } from "../static/myStyle";
 import GuessWord from "./GuessWord";
 import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
@@ -57,28 +58,29 @@ export default function PlayerOnTurn(props) {
             );
     };
 
+    const mapNumber = (number, in_min, in_max, out_min, out_max) => {
+        return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+    };
+
+    let counterRadius = mapNumber(counter, 60, 0, 0, 360);
+
     useEffect(() => {
         console.log(counter);
         let unmounted = false;
         if (!unmounted) {
             if (counter === 0) props.endTurn();
             counter > 0 && turnStarted && setTimeout(() => setCounter(counter - 1), 1000);
+            counterRadius = mapNumber(counter, 60, 0, 0, 360);
         }
         return () => {
             unmounted = true;
         };
-    }, [counter]);
-
-    // const mapNumber = (number, in_min, in_max, out_min, out_max) => {
-    //     return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
-    // };
-    // const counterRadius = mapNumber(20, 60, 0, 0, 360);
-
+    }, [turnStarted, counter]);
 
     return (
         <div>
             <Row>
-                <Col>It is your turn!</Col>
+                <Col><h4>It is your turn!</h4></Col>
                 <Col style={{ height: 60 }}>
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         {turnStarted ? (
@@ -91,19 +93,23 @@ export default function PlayerOnTurn(props) {
                     </div>
                 </Col>
             </Row>
-            {20 >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
-            <div style={{ color: "orange", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <h1>{counter > 0 ? counter : "Time is up!"}</h1>
-            </div>
-
-            {/* <div>
-                {counter && (
-                    <div className="countdown-item">
-                        <SVGCircle radius={counterRadius} />
-                        {counter}
-                    </div>
-                )}
-            </div> */}
+            <Row className="justify-content-md-center">
+                {20 >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
+            </Row>
+            <Row className="justify-content-md-center">
+                <div>
+                    {counter && (
+                        <div>
+                            <CountdownItemStyle>
+                                <SVGCircle radius={counterRadius} />
+                                <CounterStyle>
+                                    <h1>{counter}</h1>
+                                </CounterStyle>
+                            </CountdownItemStyle>
+                        </div>
+                    )}
+                </div>
+            </Row>
         </div>
     );
 }

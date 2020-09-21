@@ -60,7 +60,7 @@ export default function GuessWord(props) {
     useEffect(() => {
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round}round`, selectRandomWord);
         console.log("Guessword mounted")
-    }, [score]);
+    }, [ score]);
 
     useEffect(() => {}, [score]);
 
@@ -68,12 +68,14 @@ export default function GuessWord(props) {
         <Row>
             <Col>
                 <h2>
-                    <Badge variant="warning">{word}</Badge>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf:"center" }}>
+                        <Badge style={{ height: 36 }}  variant="warning">{word}</Badge>
+                        </div>
                 </h2>
             </Col>
             <Col>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <Button onClick={scoreWordGuessed}>Guessed</Button>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf:"center" }}>
+                    <Button style={{ height: 36 }} onClick={scoreWordGuessed}>Guessed</Button>
                 </div>
             </Col>
         </Row>

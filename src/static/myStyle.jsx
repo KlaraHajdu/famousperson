@@ -1,10 +1,10 @@
-import styled, { createGlobalStyle }  from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const gameTheme = {
     whiteBackgroundColor: "rgba(255, 255, 255, 0.9)",
     greenBackgroundColor: "rgba(147, 179, 84, 0.8)",
-    blueBackgroundColor: "rgba(101, 168, 247, 0.6)"
-}
+    blueBackgroundColor: "rgba(101, 168, 247, 0.6)",
+};
 
 export const GlobalStyle = createGlobalStyle`
 .main-tile {
@@ -35,14 +35,29 @@ export const MiddleContainerInThreeColumns = styled.div`
 export const TeamContainerInThreeColumns = styled.div`
     margin: 3em auto;
     width: 80%;
-    background-color: ${props => props.backgroundColor};
+    background-color: ${(props) => props.backgroundColor};
     padding: 2em;
     border-radius: 10px;
+    color: white;
     & div {
-        color: white;
-        margin-top: 10px
-    };
-    & h4 {
-        color:white
+        margin-top: 10px;
     }
-`
+`;
+
+export const CountdownItemStyle = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+`;
+
+export const SVGCircleStyle = styled.div`
+    width: 100px;
+    height: 100px;
+`;
+
+export const CounterStyle = styled.div`
+    position: absolute;
+    color: orange;
+`;
