@@ -59,17 +59,36 @@ function PlayGame() {
         );
 
         if (game.ownTeam === "greenTeam") {
+            if (greenTeamPlayerIndex === game.teams.greenTeam.length-1) {
+                appFirebase.databaseApi.update(
+                    `games/${game.gameId}/`,
+                    { greenTeamTurnIndex: 0 },
+                    updateDone
+                );
+            }
+            else {
             appFirebase.databaseApi.update(
-                `games/${game.gameId}/greenTeamTurnIndex/`,
-                { greenTeamScore: +greenTeamPlayerIndex+ 1 },
+                `games/${game.gameId}/`,
+                { greenTeamTurnIndex: +greenTeamPlayerIndex+ 1 },
+                
                 updateDone
             );
-        } else
+        }
+        } else {
+            if (blueTeamPlayerIndex === game.teams.blueTeam.length-1) {
+                appFirebase.databaseApi.update(
+                    `games/${game.gameId}/`,
+                    { blueTeamTurnIndex: 0 },
+                    updateDone
+                    );
+            }
+            else
             appFirebase.databaseApi.update(
-                `games/${game.gameId}/scores/`,
-                { blueTeamScore: + blueTeamPlayerIndex + 1 },
+                `games/${game.gameId}/`,
+                { blueTeamTurnIndex: + blueTeamPlayerIndex + 1 },
                 updateDone
-            );
+                );
+            }
     }
 
     const createStartDataDB = useCallback(() => {
