@@ -45,17 +45,26 @@ export default function PlayerOnTurn(props) {
         appFirebase.databaseApi.update(`games/${game.gameId}`, updateO, updateDone);
 
         if (game.ownTeam === "greenTeam") {
-            appFirebase.databaseApi.update(
-                `games/${game.gameId}/`,
-                { greenTeamTurnIndex: +greenTeamPlayerIndex + 1 },
-                updateDone
-            );
-        } else
-            appFirebase.databaseApi.update(
-                `games/${game.gameId}/`,
-                { blueTeamTurnIndex: +blueTeamPlayerIndex + 1 },
-                updateDone
-            );
+            if (greenTeamPlayerIndex === game.teams.greenTeam.length - 1) {
+                appFirebase.databaseApi.update(`games/${game.gameId}/`, { greenTeamTurnIndex: 0 }, updateDone);
+            } else {
+                appFirebase.databaseApi.update(
+                    `games/${game.gameId}/`,
+                    { greenTeamTurnIndex: +greenTeamPlayerIndex + 1 },
+
+                    updateDone
+                );
+            }
+        } else {
+            if (blueTeamPlayerIndex === game.teams.blueTeam.length - 1) {
+                appFirebase.databaseApi.update(`games/${game.gameId}/`, { blueTeamTurnIndex: 0 }, updateDone);
+            } else
+                appFirebase.databaseApi.update(
+                    `games/${game.gameId}/`,
+                    { blueTeamTurnIndex: +blueTeamPlayerIndex + 1 },
+                    updateDone
+                );
+        }
     };
 
     const mapNumber = (number, in_min, in_max, out_min, out_max) => {
@@ -80,7 +89,9 @@ export default function PlayerOnTurn(props) {
     return (
         <div>
             <Row>
-                <Col><h4>It is your turn!</h4></Col>
+                <Col>
+                    <h4>It is your turn!</h4>
+                </Col>
                 <Col style={{ height: 60 }}>
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         {turnStarted ? (
