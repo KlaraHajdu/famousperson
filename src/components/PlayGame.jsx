@@ -14,12 +14,14 @@ import PlayerOnTurn from "./PlayerOnTurn";
 import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
 import { useCallback } from "react";
 
+
 function PlayGame() {
     const [game, setGame] = useContext(GameContext);
     const [blueTeamPlayerIndex, setBlueTeamPlayerIndex] = useContext(BlueTeamPlayerIndexContext);
     const [greenTeamPlayerIndex, setGreenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
     const [round, setRound] = useContext(RoundContext);
     const setScore = useContext(ScoreContext)[1];
+
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
         setGame({ ...game, teamOnTurn: snapshot.val() });
@@ -99,11 +101,14 @@ function PlayGame() {
         appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); //setGreenplayer
         appFirebase.databaseApi.readOn(`games/${game.gameId}/scores`, handleScoreResult); //setScores
         appFirebase.databaseApi.readOn(`games/${game.gameId}/round`, handleRoundResult); //setRound
+
+
     }, [
     ]); //ha save-re automatikusan formázza, akkor berakja a dependency arrayba az összes fenti függvényt és objektumot és folyton újrarenderelődik...
 
+
+
     return (
-        <div >
             <Row style={{width:"100vw"}}>
                 <Col xs={12} md={3}>
                     <TeamContainer team="blueTeam" />
@@ -114,12 +119,12 @@ function PlayGame() {
                             title=""
                             more={
                                 round === 1
-                                    ? "1st round: Explain in detail"
+                                ? "1st round: Explain in detail"
                                     : round === 2
                                     ? "2nd round: explain with one word"
                                     : "3rd round: pantomime"
                             }
-                        />
+                            />
                         <div>
                             The{" "}
                             <Badge variant={game.teamOnTurn === "greenTeam" ? "success" : "primary"}>
@@ -141,8 +146,8 @@ function PlayGame() {
                             {game.ownName ===
                                 game.teams[game.teamOnTurn || "greenTeam"][
                                     game.teamOnTurn === "greenTeam"
-                                        ? greenTeamPlayerIndex || 0
-                                        : blueTeamPlayerIndex || 1
+                                    ? greenTeamPlayerIndex || 0
+                                    : blueTeamPlayerIndex || 1
                                 ] && <PlayerOnTurn endTurn={ endTurn } />}
                         </div>
                     </MiddleContainerInThreeColumns>
@@ -151,7 +156,6 @@ function PlayGame() {
                     <TeamContainer team="greenTeam" />
                 </Col>
             </Row>
-        </div>
     );
 }
 
