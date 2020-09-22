@@ -50,6 +50,13 @@ function PlayGame() {
         sessionStorage.setItem("round", snapshot.val())
     }
 
+    const handleDelete = (err) => {
+        if (!!err) {
+            console.log(err)
+        }
+        else console.log("Successfully removed");
+    }
+
     const updateDone = (err) => {
 
         if (!!err) console.log(err)
@@ -114,6 +121,12 @@ function PlayGame() {
         );
         appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
         appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");
+        if (game.gameId !== 8795) {
+            appFirebase.databaseApi.delete(`games/${game.gameId}/players`, handleDelete);
+            appFirebase.databaseApi.delete(`games/${game.gameId}/blueTeamNames`, handleDelete)
+            appFirebase.databaseApi.delete(`games/${game.gameId}/greenTeamNames`, handleDelete)
+        }
+
     });
 
     useEffect(() => {
