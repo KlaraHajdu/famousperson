@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
 import { GameContext } from "../contextProviders/GameProvider";
 import { shuffle } from "../../util/randomUtil";
 import { appFirebase } from "../../database.js";

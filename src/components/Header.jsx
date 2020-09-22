@@ -80,7 +80,7 @@ export default function Header() {
         }
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
-    }, [game && game.gameId]);
+    }, [game.gameId]);
 
     
 
