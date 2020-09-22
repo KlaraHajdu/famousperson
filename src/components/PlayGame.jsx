@@ -12,7 +12,6 @@ import PhaseHeader from "./PhaseHeader.jsx";
 import TeamContainer from "./TeamContainer.jsx";
 import PlayerOnTurn from "./PlayerOnTurn";
 import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
-import { useCallback } from "react";
 
 
 function PlayGame() {
@@ -23,22 +22,22 @@ function PlayGame() {
     const setScore = useContext(ScoreContext)[1];
 
 
-    const handleTeamOnTurnResult = useCallback((snapshot) => {
+    const handleTeamOnTurnResult = (snapshot) => {
         setGame({ ...game, teamOnTurn: snapshot.val() });
         sessionStorage.setItem("teamOnTurn", snapshot.val());
-    });
+    };
 
-    const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
+    const handleGreenPlayerOnTurnIndexResult = (snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         setGreenTeamPlayerIndex(playerOnTurnIndex);
         sessionStorage.setItem("greenTeamPlayerIndex", playerOnTurnIndex);
-    });
+    };
 
-    const handleBluePlayerOnTurnIndexResult = useCallback((snapshot) => {
+    const handleBluePlayerOnTurnIndexResult = (snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         setBlueTeamPlayerIndex(playerOnTurnIndex);
         sessionStorage.setItem("blueTeamPlayerIndex", playerOnTurnIndex);
-    });
+    };
 
     const handleScoreResult = (snapshot) => {
         let scores = snapshot.val()
@@ -105,7 +104,7 @@ function PlayGame() {
             }
     }
 
-    const createStartDataDB = useCallback(() => {
+    const createStartDataDB = () => {
         appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
         appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
         appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
@@ -127,7 +126,7 @@ function PlayGame() {
             appFirebase.databaseApi.delete(`games/${game.gameId}/greenTeamNames`, handleDelete)
         }
 
-    });
+    };
 
     useEffect(() => {
         if (game.ownName === game.gameMaster) {
