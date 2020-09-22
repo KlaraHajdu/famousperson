@@ -14,6 +14,7 @@ function WaitingRoom() {
     const handlePlayersResult = (snapshot) => {
         if (snapshot.val() && JSON.stringify(Object.keys(snapshot.val())) !== JSON.stringify(game.players)) {
             setGame({ ...game, players: Object.keys(snapshot.val()) });
+            sessionStorage.setItem("players", Object.keys(snapshot.val()));
             console.log("setGame: players set");
         }
     };
@@ -22,6 +23,9 @@ function WaitingRoom() {
         const teams = snapshot.val(); 
         const ownTeam = teams.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
         setGame({ ...game, ownTeam, teams });
+        sessionStorage.setItem("ownTeam", ownTeam);
+        sessionStorage.setItem("greenTeam", teams["greenTeam"]);
+        sessionStorage.setItem("blueTeam", teams["blueTeam"]);
     };
 
     const actAfterNewPlayerAdded = (err) => {
@@ -52,6 +56,7 @@ function WaitingRoom() {
         return playerIsPart;
     };
 
+
     const handleGamePhaseResult = async (snapshot) => {
         const DBGamePhase = snapshot.val();
 
@@ -65,8 +70,9 @@ function WaitingRoom() {
           appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
         }
 
-        if (DBGamePhase !== game.gamePhase) {
+        if (DBGamePhase && DBGamePhase !== game.gamePhase) {
             setGamePhase(gamePhases[DBGamePhase]);
+            sessionStorage.setItem("gamePhase", DBGamePhase);
         }
     };
 

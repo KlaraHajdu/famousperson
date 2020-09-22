@@ -29,7 +29,11 @@ function JoinGame() {
     const checkSnapshot = (snapshot) => {
         if (!!snapshot.val()) {
             setGame({ gameId: gameId, ownName: ownName, gameMaster: snapshot.val().gameMaster });
+            sessionStorage.setItem("gameId", gameId);
+            sessionStorage.setItem("ownName", ownName);
+            sessionStorage.setItem("gameMaster", snapshot.val().gameMaster);
             setGamePhase(gamePhases.waitingRoom);
+            sessionStorage.setItem("gamePhase", "waitingRoom")
         } else {
             alert("Wrong ID!");
             setGameId("");
