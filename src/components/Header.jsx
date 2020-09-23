@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -46,13 +46,16 @@ export default function Header() {
         setGamePhase(gamePhases.joinGame);
     };
 
-    const handleGamePhaseResult = useCallback((snapshot) => {
+    const handleGamePhaseResult =(snapshot) => {
         const DBGamePhase = snapshot.val();
 
-        if (game? DBGamePhase !== game.gamePhase : false) {
-            setGamePhase(gamePhases[DBGamePhase]);
+        if (game && DBGamePhase !== game.gamePhase) {
+            if (DBGamePhase) {
+                setGamePhase(gamePhases[DBGamePhase]);
+                sessionStorage.setItem("gamePhase", DBGamePhase);
+            }
         }
-    });
+    };
 
     const updateDone = (err) => {
         if (!!err) console.log(err);
@@ -77,7 +80,7 @@ export default function Header() {
         }
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
-    }, [game && game.gameId]);
+    }, [game.gameId]);
 
     
 

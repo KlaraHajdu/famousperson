@@ -12,7 +12,6 @@ import PhaseHeader from "./PhaseHeader.jsx";
 import TeamContainer from "./TeamContainer.jsx";
 import PlayerOnTurn from "./PlayerOnTurn";
 import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
-import { useCallback } from "react";
 
 
 function PlayGame() {
@@ -23,26 +22,38 @@ function PlayGame() {
     const setScore = useContext(ScoreContext)[1];
 
 
-    const handleTeamOnTurnResult = useCallback((snapshot) => {
+    const handleTeamOnTurnResult = (snapshot) => {
         setGame({ ...game, teamOnTurn: snapshot.val() });
-    });
+        sessionStorage.setItem("teamOnTurn", snapshot.val());
+    };
 
-    const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
+    const handleGreenPlayerOnTurnIndexResult = (snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         setGreenTeamPlayerIndex(playerOnTurnIndex);
-    });
+        sessionStorage.setItem("greenTeamPlayerIndex", playerOnTurnIndex);
+    };
 
-    const handleBluePlayerOnTurnIndexResult = useCallback((snapshot) => {
+    const handleBluePlayerOnTurnIndexResult = (snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         setBlueTeamPlayerIndex(playerOnTurnIndex);
-    });
+        sessionStorage.setItem("blueTeamPlayerIndex", playerOnTurnIndex);
+    };
 
     const handleScoreResult = (snapshot) => {
-        setScore(snapshot.val());
+        let scores = snapshot.val()
+        setScore(scores);
     }
 
     const handleRoundResult = (snapshot) => {
         setRound(snapshot.val());
+        sessionStorage.setItem("round", snapshot.val())
+    }
+
+    const handleDelete = (err) => {
+        if (!!err) {
+            console.log(err)
+        }
+        else console.log("Successfully removed");
     }
 
     const updateDone = (err) => {
@@ -93,7 +104,7 @@ function PlayGame() {
             }
     }
 
-    const createStartDataDB = useCallback(() => {
+    const createStartDataDB = () => {
         appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
         appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
         appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
@@ -109,7 +120,13 @@ function PlayGame() {
         );
         appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
         appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");
-    });
+        if (game.gameId !== 8795) {
+            appFirebase.databaseApi.delete(`games/${game.gameId}/players`, handleDelete);
+            appFirebase.databaseApi.delete(`games/${game.gameId}/blueTeamNames`, handleDelete)
+            appFirebase.databaseApi.delete(`games/${game.gameId}/greenTeamNames`, handleDelete)
+        }
+
+    };
 
     useEffect(() => {
         if (game.ownName === game.gameMaster) {
