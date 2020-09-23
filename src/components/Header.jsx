@@ -49,8 +49,11 @@ export default function Header() {
     const handleGamePhaseResult = useCallback((snapshot) => {
         const DBGamePhase = snapshot.val();
 
-        if (game? DBGamePhase !== game.gamePhase : false) {
-            setGamePhase(gamePhases[DBGamePhase]);
+        if (game && DBGamePhase !== game.gamePhase) {
+            if (DBGamePhase) {
+                setGamePhase(gamePhases[DBGamePhase]);
+                sessionStorage.setItem("gamePhase", DBGamePhase);
+            }
         }
     });
 
