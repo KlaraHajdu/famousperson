@@ -1,68 +1,43 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Guess!
 
-In the project directory, you can run:
+An application created for playing a guessing game online by a group of 4-12 people. It enables to play this game with friends even within quarantine, with the additional use of a videoconferencing app. 
 
-### `npm start`
+It is built with React, Bootstrap and styled components, using Firebase Realtime Database. 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Project status
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+This project is currently in development. Players can play the game with all major functionalities from the beginning to the end. Minor functionailities, like removing player from the game and joining the game in a later phase is in progress, so as developing a test suite. 
 
-### `npm test`
+It will be deployed in the next iteration. 
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Screenshots
 
-### `npm run build`
+![Play game phase](/../screenshots/src/static/screenshot1.jpg?raw=true "Play game")
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation and Setup Instructions
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Clone down this repository. You will need node and npm installed globally on your machine.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To Install:
 
-### `npm run eject`
+`npm install`  
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To Run Test Suite:  
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`npm test`  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+To Start Server:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+`npm start`  
 
-## Learn More
+To Visit App:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`localhost:3000/`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Reflection
+      
+The main project goal was to deepen my knowledge in React, gaining experience with a NOSQL database and in deployment. Kicking it off with a team mate in the first two weeks, I delivered the project to the completion. 
 
-### Code Splitting
+I intended to deliver a stable application, which after deployment can be used for fun by anybody all over the world. Adding extra features, like simple animations was part of the learning process. The biggest challenges included managing a complex set of states in different players' browsers and restoring from session storage if needed in different game phases.  
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
