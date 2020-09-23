@@ -17,7 +17,6 @@ export default function GuessWord(props) {
     const round = useContext(RoundContext)[0];
 
     const selectRandomWord = (snapshot) => {
-        console.log("Select randomword called");
         if (snapshot.val() !== null) {
             let words = snapshot.val();
             let randomId = Math.floor(Math.random() * Object.keys(words).length);
@@ -32,11 +31,10 @@ export default function GuessWord(props) {
         }
     };
     const scoreWordGuessed = () => {
-        console.log("scorewordGuessed called")
         let updateO = {};
         updateO[word] = null;
         appFirebase.databaseApi.update(`games/${game.gameId}/${round}round`, updateO, updateDone);
-        
+
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/scores/${game.ownTeam}Score`, (snapshot) => {
             if (game.ownTeam === "greenTeam") {
                 appFirebase.databaseApi.update(

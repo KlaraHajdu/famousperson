@@ -162,11 +162,11 @@ function PlayGame() {
                         </div>
 
                         <div style={{ paddingTop: 20 }}>
-                            {game.ownName ===
-                                game.teams[game.teamOnTurn || "greenTeam"][
+                            {game.teamOnTurn && game.ownName ===
+                                game.teams[game.teamOnTurn ][
                                     game.teamOnTurn === "greenTeam"
-                                    ? greenTeamPlayerIndex || 0
-                                    : blueTeamPlayerIndex || 1
+                                    ? greenTeamPlayerIndex
+                                    : blueTeamPlayerIndex
                                 ] && <PlayerOnTurn endTurn={ endTurn } />}
                         </div>
                     </MiddleContainerInThreeColumns>
