@@ -13,6 +13,7 @@ import TeamContainer from "./TeamContainer.jsx";
 import PlayerOnTurn from "./PlayerOnTurn";
 import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
 import { useCallback } from "react";
+import PlayGameMasterPart from "./gameMasterComponents/PlayGameMasterPart.jsx";
 
 
 function PlayGame() {
@@ -168,7 +169,11 @@ function PlayGame() {
                                     ? greenTeamPlayerIndex || 0
                                     : blueTeamPlayerIndex || 1
                                 ] && <PlayerOnTurn endTurn={ endTurn } />}
-                        </div>
+                    </div>
+                    <div>
+                        {game.ownName === game.gameMaster ? 
+                        <PlayGameMasterPart/>: ""}
+                    </div>
                     </MiddleContainerInThreeColumns>
                 </Col>
                 <Col xs={12} md={3}>

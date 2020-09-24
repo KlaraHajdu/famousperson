@@ -69,11 +69,12 @@ export default function Header() {
         });
 
     }
-    
+
     useEffect(() => {
         
         if (game && game.gameId === 8795) {
             appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone); 
+            //appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
         }
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
