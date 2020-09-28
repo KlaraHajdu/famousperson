@@ -10,6 +10,8 @@ import { GameContext } from "./contextProviders/GameProvider";
 import HowToPlay from "./HowToPlay";
 import { gamePhases } from "../gamePhasesObject";
 import { appFirebase } from "../database.js";
+import { useSelector, useDispatch } from "react-redux";
+import { joinGame, joinOwnTeam, startGame } from "../actions";
 
 const Styles = styled.div`
     .navbar {
@@ -27,6 +29,8 @@ const Styles = styled.div`
 export default function Header() {
     const setGamePhase = useContext(GamePhaseContext)[1];
     const [game, setGame] = useContext(GameContext);
+    const gameR = useSelector((state) => state.gameReducer);
+    const dispatch = useDispatch();
 
     const setHowToPlayModalOpen = useContext(HowToPlayModalOpenContext)[1];
 
@@ -42,14 +46,14 @@ export default function Header() {
         setGamePhase(gamePhases.startGame);
     };
 
-    const joinGame = () => {
+    const joinGame0 = () => {
         setGamePhase(gamePhases.joinGame);
     };
 
     const handleGamePhaseResult = useCallback((snapshot) => {
         const DBGamePhase = snapshot.val();
 
-        if (game? DBGamePhase !== game.gamePhase : false) {
+        if (game ? DBGamePhase !== game.gamePhase : false) {
             setGamePhase(gamePhases[DBGamePhase]);
         }
     });
@@ -57,62 +61,62 @@ export default function Header() {
     const updateDone = (err) => {
         if (!!err) console.log(err);
         else console.log("Gamephase set to playGame in DB");
-    }
+    };
 
     function joinDummyGameAsGameMaster() {
+        dispatch(startGame("Master", 8795));
+        dispatch(joinOwnTeam("greenTeam"));
         setGame({
             ownName: "Master",
             gameId: 8795,
             ownTeam: "greenTeam",
             gameMaster: "Master",
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-            teamOnTurn:"greenTeam"
+            teamOnTurn: "greenTeam",
         });
-
     }
 
-    const setTeamInfos = (snapshot) => {
-        const teamsDB = snapshot.val(); 
-        const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
-        console.log(game);
-        console.log(game.teamOnTurn)
-        //let teamOnTurn = game.teamOnTurn ? game.teamOnTurn : "";
-        setGame({
-            ...game,
-            ownTeam,
-            teams : {
-                ...game.teams,
-                greenTeam: teamsDB.greenTeam,
-                blueTeam: teamsDB.blueTeam}
-        });
-    };
-
-    useEffect(() => {
-        
-        if (game && game.gameId === 8795) {
-            appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone); 
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
-        }
-        appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
-        
-    }, [game && game.gameId]);
-
-    
-
-    const joinDummyGameAsPlayer1 =  () => {
-
+    const joinDummyGameAsPlayer1 = () => {
+        dispatch(joinGame("Player1", 8795, "Master"));
+        dispatch(joinOwnTeam("blueTeam"));
         setGame({
             ownName: "Player1",
             gameId: 8795,
             ownTeam: "blueTeam",
             gameMaster: "Master",
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-        }); 
+        });
     };
 
-   
+    const setTeamInfos = (snapshot) => {
+        const teamsDB = snapshot.val();
+        const ownTeam = teamsDB.greenTeam.includes(gameR.ownName) ? "greenTeam" : "blueTeam";
 
-    const joinDummyGameAsPlayer2 =  () => {
+        //let teamOnTurn = game.teamOnTurn ? game.teamOnTurn : "";
+        setGame({
+            ...game,
+            ownTeam,
+            teams: {
+                ...game.teams,
+                greenTeam: teamsDB.greenTeam,
+                blueTeam: teamsDB.blueTeam,
+            },
+        });
+    };
+
+    useEffect(() => {
+        console.log(gameR && gameR.gameId);
+
+        if (gameR && gameR.gameId === 8795) {
+            appFirebase.databaseApi.update(`games/${game ? gameR.gameId : 0}`, { gamePhase: "playGame" }, updateDone);
+            //appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
+        }
+        appFirebase.databaseApi.readOn(`games/${gameR ? gameR.gameId : 0}/gamePhase`, handleGamePhaseResult);
+    }, [gameR && gameR.gameId]); //gameR && gameR.gameId
+
+    const joinDummyGameAsPlayer2 = () => {
+        dispatch(joinGame("Player2", 8795, "Master"));
+        dispatch(joinOwnTeam("greenTeam"));
         setGame({
             ownName: "Player2",
             gameId: 8795,
@@ -122,9 +126,9 @@ export default function Header() {
         });
     };
 
-   
-
-    const joinDummyGameAsPlayer3 =  () => {  
+    const joinDummyGameAsPlayer3 = () => {
+        dispatch(joinGame("Player3", 8795, "Master"));
+        dispatch(joinOwnTeam("blueTeam"));
         setGame({
             ownName: "Player3",
             gameId: 8795,
@@ -134,7 +138,6 @@ export default function Header() {
         });
     };
 
-
     return (
         <Styles>
             <Navbar expand="lg">
@@ -142,7 +145,7 @@ export default function Header() {
                 <Nav.Link onClick={clickOpenHowToPlayModal}>How to play</Nav.Link>
                 <NavDropdown title="Play" id="collapsible-nav-dropdown">
                     <NavDropdown.Item onClick={startGameAsMaster}>Start a new game as a game master</NavDropdown.Item>
-                    <NavDropdown.Item onClick={joinGame}>Join a game</NavDropdown.Item>
+                    <NavDropdown.Item onClick={joinGame0}>Join a game</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="For development" id="collapsible-nav-dropdown">
                     <NavDropdown.Item onClick={joinDummyGameAsGameMaster}>

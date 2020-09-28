@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
 import { GameContext } from "../contextProviders/GameProvider";
 import { shuffle } from "../../util/randomUtil";
 import { appFirebase } from "../../database.js";
+import { useSelector } from 'react-redux';
 
 export default function WaitingRoomGameMasterPart() {
   const game = useContext(GameContext)[0];
+  const gameR = useSelector((state) => state.gameReducer);
 
   const actAfterTeamsAdded = (err) => {
     if (!!err) {
@@ -32,12 +32,12 @@ export default function WaitingRoomGameMasterPart() {
     const greenTeam = shuffledPlayers.slice(middle);
 
     appFirebase.databaseApi.create(
-      `games/${game.gameId}/teams`,
+      `games/${gameR.gameId}/teams`,
       { blueTeam, greenTeam },
       actAfterTeamsAdded
     );
     appFirebase.databaseApi.create(
-      `games/${game.gameId}/gamePhase`,
+      `games/${gameR.gameId}/gamePhase`,
       "addNames",
       actAfterSetGamePhase
     );

@@ -6,6 +6,8 @@ import { GameContext } from "../contextProviders/GameProvider";
 import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import { gamePhases } from "../../gamePhasesObject";
 import { getRandomNumberFromTo } from "../../util/randomUtil.js";
+import { startGame } from '../../actions/index';
+import { useDispatch } from 'react-redux';
 
 export default function StartGame() {
     const [name, setName] = useState("");
@@ -14,6 +16,8 @@ export default function StartGame() {
     const setGame = useContext(GameContext)[1];
 
     const setGamePhase = useContext(GamePhaseContext)[1];
+
+    const dispatch = useDispatch();
 
     const saveName = (e) => {
         setName(e.target.value);
@@ -24,6 +28,7 @@ export default function StartGame() {
             console.log(err);
         } else {
             console.log("Game is successfully created");
+            dispatch(startGame(name, gameId));
             setGame({ gameMaster: name, gameId: gameId, ownName: name, players: [] });
             setGamePhase(gamePhases.waitingRoom);
         }

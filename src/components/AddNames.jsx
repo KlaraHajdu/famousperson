@@ -7,10 +7,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TeamContainer from "./TeamContainer";
 import { MiddleContainerInThreeColumns } from "../static/myStyle";
+import { useSelector } from 'react-redux';
 
 function AddNames() {
   const NUMBER_OF_NAMES_TO_START_GAME = 4;
   const game = useContext(GameContext)[0];
+  const gameR = useSelector(state => state.gameReducer);
 
   const actAfterSettingPlayGamePhase = (err) => {
     if (!!err) {
@@ -22,7 +24,7 @@ function AddNames() {
 
   const setPlayGamePhaseInDB = () => {
     appFirebase.databaseApi.update(
-      `games/${game.gameId}`,
+      `games/${gameR.gameId}`,
       { gamePhase: "playGame" },
       actAfterSettingPlayGamePhase
     );
@@ -40,13 +42,13 @@ function AddNames() {
 
   const followHowManyNamesAdded = () => {
     appFirebase.databaseApi.readOn(
-      `games/${game.gameId}/names`,
+      `games/${gameR.gameId}/names`,
       handleNamesResult
     );
   };
 
   useEffect(() => {
-    if (game.ownName === game.gameMaster) followHowManyNamesAdded();
+    if (gameR.ownName === gameR.gameMaster) followHowManyNamesAdded();
   }, []);
 
   return (

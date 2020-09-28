@@ -13,6 +13,7 @@ import { RoundContext } from "./contextProviders/RoundProvider";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { gamePhases } from "../gamePhasesObject";
 import SVGCircle from "./SVGCircle";
+import { useSelector } from 'react-redux';
 
 export default function PlayerOnTurn(props) {
     const [counter, setCounter] = useState(20);
@@ -22,7 +23,8 @@ export default function PlayerOnTurn(props) {
     const [greenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
     const [round] = useContext(RoundContext);
     const setGamePhase = useContext(GamePhaseContext)[1];
-
+    const gameR = useSelector((state) => state.gameReducer);
+    
     const updateDone = (err) => {
         if (!!err) console.log(err);
         else console.log("Update of team on turn /playerindex /gamePhase made successfully");
@@ -34,22 +36,22 @@ export default function PlayerOnTurn(props) {
             setGamePhase(gamePhases.endGame);
             let updatePhase = {};
             updatePhase["gamePhase"] = "endGame";
-            appFirebase.databaseApi.update(`games/${game.gameId}`, { gamePhase: "endGame" }, updateDone);
+            appFirebase.databaseApi.update(`games/${gameR.gameId}`, { gamePhase: "endGame" }, updateDone);
         }
         let updateRound = {};
         updateRound["round"] = +round + 1;
-        appFirebase.databaseApi.update(`games/${game.gameId}`, updateRound, updateDone);
+        appFirebase.databaseApi.update(`games/${gameR.gameId}`, updateRound, updateDone);
         let nextTeam = game.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
-        appFirebase.databaseApi.update(`games/${game.gameId}`, updateO, updateDone);
+        appFirebase.databaseApi.update(`games/${gameR.gameId}`, updateO, updateDone);
 
-        if (game.ownTeam === "greenTeam") {
+        if (gameR.ownTeam === "greenTeam") {
             if (greenTeamPlayerIndex === game.teams.greenTeam.length - 1) {
-                appFirebase.databaseApi.update(`games/${game.gameId}/`, { greenTeamTurnIndex: 0 }, updateDone);
+                appFirebase.databaseApi.update(`games/${gameR.gameId}/`, { greenTeamTurnIndex: 0 }, updateDone);
             } else {
                 appFirebase.databaseApi.update(
-                    `games/${game.gameId}/`,
+                    `games/${gameR.gameId}/`,
                     { greenTeamTurnIndex: +greenTeamPlayerIndex + 1 },
 
                     updateDone
@@ -57,10 +59,10 @@ export default function PlayerOnTurn(props) {
             }
         } else {
             if (blueTeamPlayerIndex === game.teams.blueTeam.length - 1) {
-                appFirebase.databaseApi.update(`games/${game.gameId}/`, { blueTeamTurnIndex: 0 }, updateDone);
+                appFirebase.databaseApi.update(`games/${gameR.gameId}/`, { blueTeamTurnIndex: 0 }, updateDone);
             } else
                 appFirebase.databaseApi.update(
-                    `games/${game.gameId}/`,
+                    `games/${gameR.gameId}/`,
                     { blueTeamTurnIndex: +blueTeamPlayerIndex + 1 },
                     updateDone
                 );

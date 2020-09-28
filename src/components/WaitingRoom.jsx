@@ -6,10 +6,15 @@ import PlayersTable from "./PlayersTable";
 import { gamePhases } from "../gamePhasesObject";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import PhaseHeader from "./PhaseHeader";
+import { useSelector, useDispatch } from 'react-redux';
+import { joinOwnTeam} from  '../actions/index';
+
 
 function WaitingRoom() {
     const [game, setGame] = useContext(GameContext);
     const setGamePhase = useContext(GamePhaseContext)[1];
+    const gameR = useSelector(state => state.gameReducer);
+    const dispatch = useDispatch();
 
     const handlePlayersResult = (snapshot) => {
         if (snapshot.val() && JSON.stringify(Object.keys(snapshot.val())) !== JSON.stringify(game.players)) {
@@ -20,10 +25,8 @@ function WaitingRoom() {
 
     const setTeamInfos = (snapshot) => {
         const teamsDB = snapshot.val(); 
-        const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
-        console.log(game);
-        console.log(game.teamOnTurn)
-        //let teamOnTurn = game.teamOnTurn ? game.teamOnTurn : "";
+        const ownTeam = teamsDB.greenTeam.includes(gameR.ownName) ? "greenTeam" : "blueTeam";
+        dispatch(joinOwnTeam(ownTeam));
         setGame({
             ...game,
             ownTeam,
@@ -36,7 +39,7 @@ function WaitingRoom() {
 
     const actAfterNewPlayerAdded = (err) => {
         if (!!err) console.log(err);
-        else console.log("New player added to team: " + game.ownName);
+        else console.log("New player added to team: " + gameR.ownName);
     };
 
     const addNewPlayerToTeams = (snapshot) => {
@@ -44,18 +47,18 @@ function WaitingRoom() {
         teamToGrow = snapshot.val().greenTeam.length > snapshot.val().blueTeam.length ? "blueTeam" : "greenTeam";
 
         appFirebase.databaseApi.create(
-            `games/${game.gameId}/teams/${teamToGrow}/${snapshot.val()[teamToGrow].length}`,
-            game.ownName,
+            `games/${gameR.gameId}/teams/${teamToGrow}/${snapshot.val()[teamToGrow].length}`,
+            gameR.ownName,
             actAfterNewPlayerAdded
         );
     };
     const checkIfPlayerIsPartOfTeam = async () => {
         let playerIsPart;
         try {
-            let teamsSnapshot = await appFirebase.database().ref(`games/${game.gameId}/teams`).once("value");
+            let teamsSnapshot = await appFirebase.database().ref(`games/${gameR.gameId}/teams`).once("value");
             playerIsPart =
-                teamsSnapshot.val().greenTeam.includes(game.ownName) ||
-                teamsSnapshot.val().blueTeam.includes(game.ownName);
+                teamsSnapshot.val().greenTeam.includes(gameR.ownName) ||
+                teamsSnapshot.val().blueTeam.includes(gameR.ownName);
         } catch (err) {
             console.log(err);
         }
@@ -68,11 +71,11 @@ function WaitingRoom() {
       if (DBGamePhase === "addNames") {
         let playerIsInTeam = await checkIfPlayerIsPartOfTeam();
         if (!playerIsInTeam) {
-          appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
+          appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/teams`, addNewPlayerToTeams);
           console.log("Player is checked and added");
         }
-          //appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, setTeamInfos); //kell ez is???
-          //appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
+          //appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/teams`, setTeamInfos); //kell ez is???
+          appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teams`, setTeamInfos);
         }
 
         if (DBGamePhase !== game.gamePhase) {
@@ -90,9 +93,9 @@ function WaitingRoom() {
 
 
     useEffect(() => {
-        appFirebase.databaseApi.create(`games/${game.gameId}/players/${game.ownName}`, true, actAfterAddNewPlayer);
-        appFirebase.databaseApi.readOn(`games/${game.gameId}/players`, handlePlayersResult);
-        appFirebase.databaseApi.readOn(`games/${game.gameId}/gamePhase`, handleGamePhaseResult);
+        appFirebase.databaseApi.create(`games/${gameR.gameId}/players/${gameR.ownName}`, true, actAfterAddNewPlayer);
+        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/players`, handlePlayersResult);
+        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/gamePhase`, handleGamePhaseResult);
     }, []);
 
     return (
@@ -102,7 +105,7 @@ function WaitingRoom() {
                 <h5>Joined players</h5>
                 <PlayersTable title={"Players"} content={game.players} />
             </div>
-            {game.ownName === game.gameMaster && <WaitingRoomGameMasterPart />}
+            {gameR.ownName === gameR.gameMaster && <WaitingRoomGameMasterPart />}
         </div>
     );
 }

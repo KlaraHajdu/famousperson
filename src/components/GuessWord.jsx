@@ -9,6 +9,7 @@ import { appFirebase } from "../database.js";
 import { GameContext } from "./contextProviders/GameProvider";
 import { RoundContext } from "./contextProviders/RoundProvider";
 import { ScoreContext } from "./contextProviders/ScoreProvider";
+import { useSelector } from 'react-redux';
 
 
 export default function GuessWord(props) {
@@ -16,6 +17,7 @@ export default function GuessWord(props) {
     const score = useContext(ScoreContext)[0];
     const game = useContext(GameContext)[0];
     const round = useContext(RoundContext)[0];
+    const gameR = useSelector(state => state.gameReducer);
 
 
     const selectRandomWord = (snapshot) => {
@@ -26,7 +28,7 @@ export default function GuessWord(props) {
             setWord(Object.keys(words)[randomId]);
             let updateO = {};
             updateO[Object.keys(words)[randomId]] = null;
-            appFirebase.databaseApi.update(`games/${game.gameId}/${round}round`,
+            appFirebase.databaseApi.update(`games/${gameR.gameId}/${round}round`,
             updateO,
             updateDone
             );
@@ -41,16 +43,16 @@ export default function GuessWord(props) {
         }
     };
     const scoreWordGuessed = () => {
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/scores/${game.ownTeam}Score`, (snapshot) => {
-            if (game.ownTeam === "greenTeam") {
+        appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/scores/${gameR.ownTeam}Score`, (snapshot) => {
+            if (gameR.ownTeam === "greenTeam") {
                 appFirebase.databaseApi.update(
-                    `games/${game.gameId}/scores/`,
+                    `games/${gameR.gameId}/scores/`,
                     { greenTeamScore: +snapshot.val() + 1 },
                     updateDone
                 );
             } else
                 appFirebase.databaseApi.update(
-                    `games/${game.gameId}/scores/`,
+                    `games/${gameR.gameId}/scores/`,
                     { blueTeamScore: +snapshot.val() + 1 },
                     updateDone
                 );
@@ -58,7 +60,7 @@ export default function GuessWord(props) {
     };
 
     useEffect(() => {
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round}round`, selectRandomWord);
+        appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/${round}round`, selectRandomWord);
         console.log("Guessword mounted")
     }, [ score]);
 

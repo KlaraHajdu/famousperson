@@ -4,6 +4,7 @@ import { GameContext } from "../contextProviders/GameProvider";
 import styled from "styled-components";
 import { appFirebase } from "../../database";
 import Dialog from "react-bootstrap-dialog";
+import { useSelector } from 'react-redux';
 
 const Styles = styled.div`
     table {
@@ -14,11 +15,12 @@ const Styles = styled.div`
 
 export default function DeletePlayer(props) {
     const game = useContext(GameContext)[0];
+    const gameR = useSelector((state) => state.gameReducer);
     const [greenPlayersToList] = useState(game.teams.greenTeam.filter((player) => {
-        return player !== game.gameMaster;
+        return player !== gameR.gameMaster;
     }));
     const [bluePlayersToList] = useState(game.teams.blueTeam.filter((player) => {
-        return player !== game.gameMaster;
+        return player !== gameR.gameMaster;
     }));
 
 
@@ -40,7 +42,7 @@ export default function DeletePlayer(props) {
         for (let p of reducedTeam) console.log(p);
         let updateO = {"blueTeam": reducedTeam}
 
-        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+        appFirebase.databaseApi.update(`games/${gameR.gameId}/teams/`, updateO, deleteDone);
         console.log(game);
         props.handleClosing();
     };
@@ -69,7 +71,7 @@ export default function DeletePlayer(props) {
         for (let p of reducedTeam) console.log(p);
         let updateO = {"greenTeam": reducedTeam}
 
-        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+        appFirebase.databaseApi.update(`games/${gameR.gameId}/teams/`, updateO, deleteDone);
         console.log(game);
         props.handleClosing();
     };
