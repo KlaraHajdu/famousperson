@@ -19,9 +19,19 @@ function WaitingRoom() {
     };
 
     const setTeamInfos = (snapshot) => {
-        const teams = snapshot.val(); 
-        const ownTeam = teams.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
-        setGame({ ...game, ownTeam, teams });
+        const teamsDB = snapshot.val(); 
+        const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
+        console.log(game);
+        console.log(game.teamOnTurn)
+        //let teamOnTurn = game.teamOnTurn ? game.teamOnTurn : "";
+        setGame({
+            ...game,
+            ownTeam,
+            teams : {
+                ...game.teams,
+                greenTeam: teamsDB.greenTeam,
+                blueTeam: teamsDB.blueTeam}
+        });
     };
 
     const actAfterNewPlayerAdded = (err) => {

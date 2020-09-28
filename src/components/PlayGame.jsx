@@ -25,7 +25,11 @@ function PlayGame() {
 
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
-        setGame({ ...game, teamOnTurn: snapshot.val() });
+        setGame({
+            ...game,
+            teams:{...game.teams},
+            teamOnTurn: snapshot.val()
+        });
     });
 
     const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {

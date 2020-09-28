@@ -36,15 +36,17 @@ export default function DeletePlayer(props) {
     };
 
     const deleteBluePlayer = (player) => {
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams/blueTeam/`, (snapshot) => {
-            let bluePlayers = snapshot.val();
-            let index = Object.keys(bluePlayers).find((key) => bluePlayers[key] === player.player);
-            appFirebase.databaseApi.delete(`games/${game.gameId}/teams/blueTeam/${index}`, deleteDone);
-        });
+        let reducedTeam = game.teams.blueTeam.filter((pl) => { return pl !== player.player })
+        for (let p of reducedTeam) console.log(p);
+        let updateO = {"blueTeam": reducedTeam}
+
+        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+        console.log(game);
         props.handleClosing();
     };
 
     const confirmBluePlayerDelete = (player) => {
+        console.log(game);
         dialog.show({
             body: `Are you sure you want to delete ${player.player}?`,
             actions: [
@@ -63,15 +65,17 @@ export default function DeletePlayer(props) {
     };
 
     const deleteGreenPlayer = (player) => {
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams/greenTeam/`, (snapshot) => {
-            let greenPlayers = snapshot.val();
-            let index = Object.keys(greenPlayers).find((key) => greenPlayers[key] === player.player);
-            appFirebase.databaseApi.delete(`games/${game.gameId}/teams/greenTeam/${index}`, deleteDone);
-        });
+        let reducedTeam = game.teams.greenTeam.filter((pl) => { return pl !== player.player })
+        for (let p of reducedTeam) console.log(p);
+        let updateO = {"greenTeam": reducedTeam}
+
+        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+        console.log(game);
         props.handleClosing();
     };
 
     const confirmGreenPlayerDelete = (player) => {
+        console.log(game);
         dialog.show({
             body: `Are you sure you want to delete ${player.player}?`,
             actions: [
