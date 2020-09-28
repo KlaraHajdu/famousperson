@@ -24,6 +24,7 @@ export default function PlayerOnTurn(props) {
     const [round] = useContext(RoundContext);
     const setGamePhase = useContext(GamePhaseContext)[1];
     const gameR = useSelector((state) => state.gameReducer);
+    const roundR = useSelector(state => state.roundReducer);
     
     const updateDone = (err) => {
         if (!!err) console.log(err);
@@ -41,29 +42,29 @@ export default function PlayerOnTurn(props) {
         let updateRound = {};
         updateRound["round"] = +round + 1;
         appFirebase.databaseApi.update(`games/${gameR.gameId}`, updateRound, updateDone);
-        let nextTeam = game.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
+        let nextTeam = roundR.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
         appFirebase.databaseApi.update(`games/${gameR.gameId}`, updateO, updateDone);
 
         if (gameR.ownTeam === "greenTeam") {
-            if (greenTeamPlayerIndex === game.teams.greenTeam.length - 1) {
+            if (roundR.greenPlayerIndex === game.teams.greenTeam.length - 1) {
                 appFirebase.databaseApi.update(`games/${gameR.gameId}/`, { greenTeamTurnIndex: 0 }, updateDone);
             } else {
                 appFirebase.databaseApi.update(
                     `games/${gameR.gameId}/`,
-                    { greenTeamTurnIndex: +greenTeamPlayerIndex + 1 },
+                    { greenTeamTurnIndex: +roundR.greenPlayerIndex + 1 },
 
                     updateDone
                 );
             }
         } else {
-            if (blueTeamPlayerIndex === game.teams.blueTeam.length - 1) {
+            if (roundR.bluePlayerIndex === game.teams.blueTeam.length - 1) {
                 appFirebase.databaseApi.update(`games/${gameR.gameId}/`, { blueTeamTurnIndex: 0 }, updateDone);
             } else
                 appFirebase.databaseApi.update(
                     `games/${gameR.gameId}/`,
-                    { blueTeamTurnIndex: +blueTeamPlayerIndex + 1 },
+                    { blueTeamTurnIndex: +roundR.bluePlayerIndex + 1 },
                     updateDone
                 );
         }

@@ -92,7 +92,7 @@ export default function Header() {
         const teamsDB = snapshot.val();
         const ownTeam = teamsDB.greenTeam.includes(gameR.ownName) ? "greenTeam" : "blueTeam";
 
-        //let teamOnTurn = game.teamOnTurn ? game.teamOnTurn : "";
+        
         setGame({
             ...game,
             ownTeam,

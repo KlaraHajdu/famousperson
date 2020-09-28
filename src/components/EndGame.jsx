@@ -7,13 +7,14 @@ import { ReactComponent as Balloon } from "../static/1524086080.svg";
 import { useSelector } from 'react-redux';
 
 export default function EndGame() {
-    const score = useContext(ScoreContext)[0];
+    //const score = useContext(ScoreContext)[0];
     //const game = useContext(GameContext)[0];
     const [winnerTeam, setWinnerTeam] = useState(false);
     const [balloonTop1, setBalloonTop1] = useState(410);
     const [balloonTop2, setBalloonTop2] = useState(390);
     const [balloonTop3, setBalloonTop3] = useState(410);
     const gameR = useSelector(state => state.gameReducer);
+    const score = useSelector(state => state.scoreReducer);
 
     useEffect(() => {
         score && score.blueTeamScore > score.greenTeamScore ? setWinnerTeam("blue team") : setWinnerTeam("green team");

@@ -15,6 +15,8 @@ import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
 import { useCallback } from "react";
 import PlayGameMasterPart from "./gameMasterComponents/PlayGameMasterPart.jsx";
 import { useSelector, useDispatch } from 'react-redux';
+import { finishBluePlayer, finishGreenPlayer, endRound, finishTeam } from '../actions/roundActions';
+import { increaseGreenScore, increaseBlueScore } from '../actions/scoreActions';
 
 
 
@@ -27,8 +29,11 @@ function PlayGame() {
     const setScore = useContext(ScoreContext)[1];
 
     const gameR = useSelector(state => state.gameReducer);
+    const roundR = useSelector(state => state.roundReducer);
+    const dispatch = useDispatch();
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
+        dispatch(finishTeam(snapshot.val()));
         setGame({
             ...game,
             teams:{...game.teams},
@@ -38,19 +43,24 @@ function PlayGame() {
 
     const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
         let playerOnTurnIndex = snapshot.val();
+        dispatch(finishGreenPlayer(playerOnTurnIndex));
         setGreenTeamPlayerIndex(playerOnTurnIndex);
     });
 
     const handleBluePlayerOnTurnIndexResult = useCallback((snapshot) => {
         let playerOnTurnIndex = snapshot.val();
+        dispatch(finishBluePlayer(playerOnTurnIndex));
         setBlueTeamPlayerIndex(playerOnTurnIndex);
     });
 
     const handleScoreResult = (snapshot) => {
+        dispatch(increaseBlueScore(snapshot.val().blueTeamScore))
+        dispatch(increaseGreenScore(snapshot.val().greenTeamScore))
         setScore(snapshot.val());
     }
 
     const handleRoundResult = (snapshot) => {
+        dispatch(endRound(snapshot.val()))
         setRound(snapshot.val());
     }
 
@@ -61,7 +71,7 @@ function PlayGame() {
     }
 
     const endTurn = () => {
-        let nextTeam = game.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
+        let nextTeam = roundR.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
         appFirebase.databaseApi.update(`games/${gameR.gameId}`,
@@ -70,7 +80,7 @@ function PlayGame() {
         );
 
         if (gameR.ownTeam === "greenTeam") {
-            if (greenTeamPlayerIndex === game.teams.greenTeam.length-1) {
+            if (roundR.greenPlayerIndex === game.teams.greenTeam.length-1) {
                 appFirebase.databaseApi.update(
                     `games/${gameR.gameId}/`,
                     { greenTeamTurnIndex: 0 },
@@ -80,13 +90,13 @@ function PlayGame() {
             else {
             appFirebase.databaseApi.update(
                 `games/${gameR.gameId}/`,
-                { greenTeamTurnIndex: +greenTeamPlayerIndex+ 1 },
+                { greenTeamTurnIndex: +roundR.greenPlayerIndex+ 1 },
                 
                 updateDone
             );
         }
         } else {
-            if (blueTeamPlayerIndex === game.teams.blueTeam.length-1) {
+            if (roundR.bluePlayerIndex === game.teams.blueTeam.length-1) {
                 appFirebase.databaseApi.update(
                     `games/${gameR.gameId}/`,
                     { blueTeamTurnIndex: 0 },
@@ -96,7 +106,7 @@ function PlayGame() {
             else
             appFirebase.databaseApi.update(
                 `games/${gameR.gameId}/`,
-                { blueTeamTurnIndex: + blueTeamPlayerIndex + 1 },
+                { blueTeamTurnIndex: + roundR.bluePlayerIndex + 1 },
                 updateDone
                 );
             }
@@ -124,6 +134,7 @@ function PlayGame() {
         if (gameR.ownName === gameR.gameMaster) {
             createStartDataDB();
         }
+
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teamOnTurn`, handleTeamOnTurnResult); //setGame
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); //setGreenplayer
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/scores`, handleScoreResult); //setScores
@@ -155,16 +166,16 @@ function PlayGame() {
                             />
                         <div>
                             The{" "}
-                            <Badge variant={game.teamOnTurn === "greenTeam" ? "success" : "primary"}>
+                            <Badge variant={roundR.teamOnTurn === "greenTeam" ? "success" : "primary"}>
                                 {" "}
-                                {game.teamOnTurn === "greenTeam" ? "green" : "blue"} team{" "}
+                                {roundR.teamOnTurn === "greenTeam" ? "green" : "blue"} team{" "}
                             </Badge>{" "}
                             is guessing. It is{" "}
                             <span style={{ fontWeight: "bold" }}>
                                 {" "}
-                                {game.teamOnTurn &&
-                                    game.teams[game.teamOnTurn][
-                                        game.teamOnTurn === "greenTeam" ? greenTeamPlayerIndex : blueTeamPlayerIndex
+                                {roundR.teamOnTurn &&
+                                    game.teams[roundR.teamOnTurn][
+                                        roundR.teamOnTurn === "greenTeam" ? roundR.greenPlayerIndex : roundR.bluePlayerIndex
                                     ]}
                             </span>
                             's turn now.
@@ -172,10 +183,10 @@ function PlayGame() {
 
                         <div style={{ paddingTop: 20 }}>
                             {gameR.ownName ===
-                                game.teams[game.teamOnTurn || "greenTeam"][
-                                    game.teamOnTurn === "greenTeam"
-                                    ? greenTeamPlayerIndex || 0
-                                    : blueTeamPlayerIndex || 1
+                                game.teams[roundR.teamOnTurn || "greenTeam"][
+                                    roundR.teamOnTurn === "greenTeam"
+                                    ? roundR.greenPlayerIndex || 0
+                                    : roundR.bluePlayerIndex || 1
                                 ] && <PlayerOnTurn endTurn={ endTurn } />}
                     </div>
                     <div>
