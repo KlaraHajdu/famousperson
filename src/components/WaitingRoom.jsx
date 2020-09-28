@@ -71,8 +71,8 @@ function WaitingRoom() {
           appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
           console.log("Player is checked and added");
         }
-          appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, setTeamInfos); //kell ez is???
-          appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
+          //appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, setTeamInfos); //kell ez is???
+          //appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
         }
 
         if (DBGamePhase !== game.gamePhase) {

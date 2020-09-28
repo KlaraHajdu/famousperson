@@ -66,15 +66,32 @@ export default function Header() {
             ownTeam: "greenTeam",
             gameMaster: "Master",
             teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
+            teamOnTurn:"greenTeam"
         });
 
     }
+
+    const setTeamInfos = (snapshot) => {
+        const teamsDB = snapshot.val(); 
+        const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
+        console.log(game);
+        console.log(game.teamOnTurn)
+        //let teamOnTurn = game.teamOnTurn ? game.teamOnTurn : "";
+        setGame({
+            ...game,
+            ownTeam,
+            teams : {
+                ...game.teams,
+                greenTeam: teamsDB.greenTeam,
+                blueTeam: teamsDB.blueTeam}
+        });
+    };
 
     useEffect(() => {
         
         if (game && game.gameId === 8795) {
             appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone); 
-            //appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
+            appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
         }
         appFirebase.databaseApi.readOn(`games/${game? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
         
