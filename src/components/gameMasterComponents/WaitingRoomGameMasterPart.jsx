@@ -1,13 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import Button from "react-bootstrap/Button";
-import { GameContext } from "../contextProviders/GameProvider";
 import { shuffle } from "../../util/randomUtil";
 import { appFirebase } from "../../database.js";
 import { useSelector } from 'react-redux';
 
 export default function WaitingRoomGameMasterPart() {
-  const game = useContext(GameContext)[0];
-  const gameR = useSelector((state) => state.gameReducer);
+
+  const game = useSelector((state) => state.gameReducer);
 
   const actAfterTeamsAdded = (err) => {
     if (!!err) {
@@ -32,12 +31,12 @@ export default function WaitingRoomGameMasterPart() {
     const greenTeam = shuffledPlayers.slice(middle);
 
     appFirebase.databaseApi.create(
-      `games/${gameR.gameId}/teams`,
+      `games/${game.gameId}/teams`,
       { blueTeam, greenTeam },
       actAfterTeamsAdded
     );
     appFirebase.databaseApi.create(
-      `games/${gameR.gameId}/gamePhase`,
+      `games/${game.gameId}/gamePhase`,
       "addNames",
       actAfterSetGamePhase
     );

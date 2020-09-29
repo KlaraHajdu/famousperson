@@ -1,10 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { appFirebase } from "../database.js";
-import { GameContext } from "./contextProviders/GameProvider";
-import { BlueTeamPlayerIndexContext } from "./contextProviders/BlueTeamPlayerProvider";
-import { GreenTeamPlayerIndexContext } from "./contextProviders/GreenTeamPlayerProvider";
-import { ScoreContext } from "./contextProviders/ScoreProvider";
-import { RoundContext } from "./contextProviders/RoundProvider";
 import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
 import Col from "react-bootstrap/Col";
@@ -22,37 +17,24 @@ import { increaseGreenScore, increaseBlueScore } from '../actions/scoreActions';
 
 
 function PlayGame() {
-    const [game, setGame] = useContext(GameContext);
-    const [blueTeamPlayerIndex, setBlueTeamPlayerIndex] = useContext(BlueTeamPlayerIndexContext);
-    const [greenTeamPlayerIndex, setGreenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
-    const [round, setRound] = useContext(RoundContext);
-    const setScore = useContext(ScoreContext)[1];
     const greenTeam = useSelector(state => state.teamReducer.greenTeam);
     const blueTeam = useSelector(state => state.teamReducer.blueTeam);
-
-    const gameR = useSelector(state => state.gameReducer);
-    const roundR = useSelector(state => state.roundReducer);
+    const game = useSelector(state => state.gameReducer);
+    const round = useSelector(state => state.roundReducer);
     const dispatch = useDispatch();
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
         dispatch(finishTeam(snapshot.val()));
-        // setGame({
-        //     ...game,
-        //     teams:{...game.teams},
-        //     teamOnTurn: snapshot.val()
-        // });
     });
 
     const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         dispatch(finishGreenPlayer(playerOnTurnIndex));
-        setGreenTeamPlayerIndex(playerOnTurnIndex);
     });
 
     const handleBluePlayerOnTurnIndexResult = useCallback((snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         dispatch(finishBluePlayer(playerOnTurnIndex));
-        setBlueTeamPlayerIndex(playerOnTurnIndex);
     });
 
     const handleBlueScoreResult = (snapshot) => {
@@ -68,7 +50,6 @@ function PlayGame() {
     const handleRoundResult = (snapshot) => {
         console.log(snapshot.val());
         dispatch(endRound(snapshot.val()))
-        setRound(snapshot.val());
     }
 
     const updateDone = (err) => {
@@ -78,76 +59,76 @@ function PlayGame() {
     }
 
     const endTurn = () => {
-        let nextTeam = roundR.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
+        let nextTeam = round.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
-        appFirebase.databaseApi.update(`games/${gameR.gameId}`,
+        appFirebase.databaseApi.update(`games/${game.gameId}`,
             updateO,
             updateDone
         );
 
-        if (gameR.ownTeam === "greenTeam") {
-            if (roundR.greenPlayerIndex === greenTeam.length-1) {
+        if (game.ownTeam === "greenTeam") {
+            if (round.greenPlayerIndex === greenTeam.length-1) {
                 appFirebase.databaseApi.update(
-                    `games/${gameR.gameId}/`,
+                    `games/${game.gameId}/`,
                     { greenTeamTurnIndex: 0 },
                     updateDone
                 );
             }
             else {
             appFirebase.databaseApi.update(
-                `games/${gameR.gameId}/`,
-                { greenTeamTurnIndex: +roundR.greenPlayerIndex+ 1 },
+                `games/${game.gameId}/`,
+                { greenTeamTurnIndex: +round.greenPlayerIndex+ 1 },
                 
                 updateDone
             );
         }
         } else {
-            if (roundR.bluePlayerIndex === blueTeam.length-1) {
+            if (round.bluePlayerIndex === blueTeam.length-1) {
                 appFirebase.databaseApi.update(
-                    `games/${gameR.gameId}/`,
+                    `games/${game.gameId}/`,
                     { blueTeamTurnIndex: 0 },
                     updateDone
                     );
             }
             else
             appFirebase.databaseApi.update(
-                `games/${gameR.gameId}/`,
-                { blueTeamTurnIndex: + roundR.bluePlayerIndex + 1 },
+                `games/${game.gameId}/`,
+                { blueTeamTurnIndex: + round.bluePlayerIndex + 1 },
                 updateDone
                 );
             }
     }
 
     const createStartDataDB = useCallback(() => {
-        appFirebase.databaseApi.create(`games/${gameR.gameId}/teamOnTurn`, "greenTeam");
-        appFirebase.databaseApi.create(`games/${gameR.gameId}/greenTeamTurnIndex`, "0");
-        appFirebase.databaseApi.create(`games/${gameR.gameId}/blueTeamTurnIndex`, "0");
-        appFirebase.databaseApi.create(`games/${gameR.gameId}/round`, 1);
-        appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/names`, (snapshot) =>
-            appFirebase.databaseApi.create(`games/${gameR.gameId}/1round`, snapshot.val())
+        appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
+        appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
+        appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
+        appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+            appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
         );
-        appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/names`, (snapshot) =>
-            appFirebase.databaseApi.create(`games/${gameR.gameId}/2round`, snapshot.val())
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+            appFirebase.databaseApi.create(`games/${game.gameId}/2round`, snapshot.val())
         );
-        appFirebase.databaseApi.readOnce(`games/${gameR.gameId}/names`, (snapshot) =>
-            appFirebase.databaseApi.create(`games/${gameR.gameId}/3round`, snapshot.val())
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+            appFirebase.databaseApi.create(`games/${game.gameId}/3round`, snapshot.val())
         );
-        appFirebase.databaseApi.create(`games/${gameR.gameId}/scores/blueTeamScore`, "0");
-        appFirebase.databaseApi.create(`games/${gameR.gameId}/scores/greenTeamScore`, "0");
+        appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
+        appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");
     });
 
     useEffect(() => {
-        if (gameR.ownName === gameR.gameMaster) {
+        if (game.ownName === game.gameMaster) {
             createStartDataDB();
         }
 
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teamOnTurn`, handleTeamOnTurnResult); //setGame
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); //setGreenplayer
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/scores/blueTeamScore`, handleBlueScoreResult); //setScores
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/scores/greenTeamScore`, handleGreenScoreResult); //setScores
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/round`, handleRoundResult); //setRound
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult); //setBluePlayer
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult);
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); 
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/scores/blueTeamScore`, handleBlueScoreResult); 
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/scores/greenTeamScore`, handleGreenScoreResult);
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/round`, handleRoundResult);
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult);
 
 
     }, [
@@ -165,38 +146,38 @@ function PlayGame() {
                         <PhaseHeader
                             title=""
                             more={
-                                roundR.round === 1
+                                round.round === 1
                                 ? "1st round: Explain in detail"
-                                    : roundR.round === 2
+                                    : round.round === 2
                                     ? "2nd round: explain with one word"
                                     : "3rd round: pantomime"
                             }
                             />
                         <div>
                             The{" "}
-                            <Badge variant={roundR.teamOnTurn === "greenTeam" ? "success" : "primary"}>
+                            <Badge variant={round.teamOnTurn === "greenTeam" ? "success" : "primary"}>
                                 {" "}
-                                {roundR.teamOnTurn === "greenTeam" ? "green" : "blue"} team{" "}
+                                {round.teamOnTurn === "greenTeam" ? "green" : "blue"} team{" "}
                             </Badge>{" "}
                             is guessing. It is{" "}
                             <span style={{ fontWeight: "bold" }}>
                                 {" "}
-                                {roundR.teamOnTurn &&
-                                        roundR.teamOnTurn === "greenTeam" ? greenTeam[roundR.greenPlayerIndex] : blueTeam[roundR.bluePlayerIndex]
+                                {round.teamOnTurn &&
+                                        round.teamOnTurn === "greenTeam" ? greenTeam[round.greenPlayerIndex] : blueTeam[round.bluePlayerIndex]
                                     }
                             </span>
                             's turn now.
                         </div>
 
                         <div style={{ paddingTop: 20 }}>
-                            {gameR.ownName ===
-                                (roundR.teamOnTurn === "greenTeam"
-                                    ? greenTeam[roundR.greenPlayerIndex] 
-                                    : blueTeam[roundR.bluePlayerIndex]) 
+                            {game.ownName ===
+                                (round.teamOnTurn === "greenTeam"
+                                    ? greenTeam[round.greenPlayerIndex] 
+                                    : blueTeam[round.bluePlayerIndex]) 
                                  && <PlayerOnTurn endTurn={ endTurn } />}
                     </div>
                     <div>
-                        {gameR.ownName === gameR.gameMaster ? 
+                        {game.ownName === game.gameMaster ? 
                         <PlayGameMasterPart/>: ""}
                     </div>
                     </MiddleContainerInThreeColumns>

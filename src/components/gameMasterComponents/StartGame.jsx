@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { appFirebase } from "../../database.js";
-import { GameContext } from "../contextProviders/GameProvider";
 import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import { gamePhases } from "../../gamePhasesObject";
 import { getRandomNumberFromTo } from "../../util/randomUtil.js";
@@ -11,9 +10,8 @@ import { useDispatch } from 'react-redux';
 
 export default function StartGame() {
     const [name, setName] = useState("");
+    
     let gameId;
-
-    const setGame = useContext(GameContext)[1];
 
     const setGamePhase = useContext(GamePhaseContext)[1];
 
@@ -29,7 +27,6 @@ export default function StartGame() {
         } else {
             console.log("Game is successfully created");
             dispatch(startGame(name, gameId));
-            setGame({ gameMaster: name, gameId: gameId, ownName: name, players: [] });
             setGamePhase(gamePhases.waitingRoom);
         }
     };

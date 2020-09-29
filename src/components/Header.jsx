@@ -6,7 +6,6 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import styled from "styled-components";
 import { HowToPlayModalOpenContext } from "./contextProviders/HowToPlayModalOpenProvider";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
-import { GameContext } from "./contextProviders/GameProvider";
 import HowToPlay from "./HowToPlay";
 import { gamePhases } from "../gamePhasesObject";
 import { appFirebase } from "../database.js";
@@ -29,8 +28,7 @@ const Styles = styled.div`
 
 export default function Header() {
     const setGamePhase = useContext(GamePhaseContext)[1];
-    const [game, setGame] = useContext(GameContext);
-    const gameR = useSelector((state) => state.gameReducer);
+    const game = useSelector((state) => state.gameReducer);
     const dispatch = useDispatch();
 
     const setHowToPlayModalOpen = useContext(HowToPlayModalOpenContext)[1];
@@ -69,14 +67,6 @@ export default function Header() {
         dispatch(joinOwnTeam("greenTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
-        setGame({
-            ownName: "Master",
-            gameId: 8795,
-            ownTeam: "greenTeam",
-            gameMaster: "Master",
-            teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-            teamOnTurn: "greenTeam",
-        });
     }
 
     const joinDummyGameAsPlayer1 = () => {
@@ -84,53 +74,13 @@ export default function Header() {
         dispatch(joinOwnTeam("blueTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
-        setGame({
-            ownName: "Player1",
-            gameId: 8795,
-            ownTeam: "blueTeam",
-            gameMaster: "Master",
-            teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-        });
     };
-
-    const setTeamInfos = (snapshot) => {
-        const teamsDB = snapshot.val();
-        const ownTeam = teamsDB.greenTeam.includes(gameR.ownName) ? "greenTeam" : "blueTeam";
-
-        
-        setGame({
-            ...game,
-            ownTeam,
-            teams: {
-                ...game.teams,
-                greenTeam: teamsDB.greenTeam,
-                blueTeam: teamsDB.blueTeam,
-            },
-        });
-    };
-
-    useEffect(() => {
-        console.log(gameR && gameR.gameId);
-
-        if (gameR && gameR.gameId === 8795) {
-            appFirebase.databaseApi.update(`games/${game ? gameR.gameId : 0}`, { gamePhase: "playGame" }, updateDone);
-            appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
-        }
-        appFirebase.databaseApi.readOn(`games/${gameR ? gameR.gameId : 0}/gamePhase`, handleGamePhaseResult);
-    }, [gameR && gameR.gameId]); //gameR && gameR.gameId
 
     const joinDummyGameAsPlayer2 = () => {
         dispatch(joinGame("Player2", 8795, "Master"));
         dispatch(joinOwnTeam("greenTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
-        setGame({
-            ownName: "Player2",
-            gameId: 8795,
-            ownTeam: "greenTeam",
-            gameMaster: "Master",
-            teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-        });
     };
 
     const joinDummyGameAsPlayer3 = () => {
@@ -138,14 +88,28 @@ export default function Header() {
         dispatch(joinOwnTeam("blueTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
-        setGame({
-            ownName: "Player3",
-            gameId: 8795,
-            ownTeam: "blueTeam",
-            gameMaster: "Master",
-            teams: { blueTeam: ["Player3", "Player1"], greenTeam: ["Player2", "Master"] },
-        });
     };
+
+
+    const setTeamInfos = (snapshot) => {
+        const teamsDB = snapshot.val();
+        const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
+        dispatch(joinOwnTeam(ownTeam));
+        dispatch(setGreenTeam(snapshot.val().greenTeam));
+        dispatch(setBlueTeam(snapshot.val().blueTeam));
+
+    };
+
+    useEffect(() => {
+        console.log(game && game.gameId);
+
+        if (game && game.gameId === 8795) {
+            appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone);
+            appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); 
+        }
+        appFirebase.databaseApi.readOn(`games/${game ? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
+    }, [game && game.gameId]); //gameR && gameR.gameId
+
 
     return (
         <Styles>

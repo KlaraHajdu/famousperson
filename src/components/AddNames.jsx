@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from "react";
-import { GameContext } from "./contextProviders/GameProvider";
+import React, { useEffect } from "react";
 import { appFirebase } from "../database.js";
 import NameInputForm from "./NameInputForm";
 import PhaseHeader from "./PhaseHeader";
@@ -10,9 +9,10 @@ import { MiddleContainerInThreeColumns } from "../static/myStyle";
 import { useSelector } from 'react-redux';
 
 function AddNames() {
+
   const NUMBER_OF_NAMES_TO_START_GAME = 4;
-  const game = useContext(GameContext)[0];
-  const gameR = useSelector(state => state.gameReducer);
+
+  const game = useSelector(state => state.gameReducer);
 
   const actAfterSettingPlayGamePhase = (err) => {
     if (!!err) {
@@ -24,7 +24,7 @@ function AddNames() {
 
   const setPlayGamePhaseInDB = () => {
     appFirebase.databaseApi.update(
-      `games/${gameR.gameId}`,
+      `games/${game.gameId}`,
       { gamePhase: "playGame" },
       actAfterSettingPlayGamePhase
     );
@@ -42,13 +42,13 @@ function AddNames() {
 
   const followHowManyNamesAdded = () => {
     appFirebase.databaseApi.readOn(
-      `games/${gameR.gameId}/names`,
+      `games/${game.gameId}/names`,
       handleNamesResult
     );
   };
 
   useEffect(() => {
-    if (gameR.ownName === gameR.gameMaster) followHowManyNamesAdded();
+    if (game.ownName === game.gameMaster) followHowManyNamesAdded();
   }, []);
 
   return (

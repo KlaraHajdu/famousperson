@@ -1,10 +1,10 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Table, Button } from "react-bootstrap";
-import { GameContext } from "../contextProviders/GameProvider";
 import styled from "styled-components";
 import { appFirebase } from "../../database";
 import Dialog from "react-bootstrap-dialog";
 import { useSelector } from 'react-redux';
+
 
 const Styles = styled.div`
     table {
@@ -14,13 +14,16 @@ const Styles = styled.div`
 `;
 
 export default function DeletePlayer(props) {
-    const game = useContext(GameContext)[0];
-    const gameR = useSelector((state) => state.gameReducer);
-    const [greenPlayersToList] = useState(game.teams.greenTeam.filter((player) => {
-        return player !== gameR.gameMaster;
+    
+    const game = useSelector((state) => state.gameReducer);
+    const greenTeam = useSelector(state => state.teamReducer.greenTeam);
+    const blueTeam = useSelector(state => state.teamReducer.blueTeam);
+
+    const [greenPlayersToList] = useState(greenTeam.filter((player) => {
+        return player !== game.gameMaster;
     }));
-    const [bluePlayersToList] = useState(game.teams.blueTeam.filter((player) => {
-        return player !== gameR.gameMaster;
+    const [bluePlayersToList] = useState(blueTeam.filter((player) => {
+        return player !== game.gameMaster;
     }));
 
 
@@ -38,17 +41,17 @@ export default function DeletePlayer(props) {
     };
 
     const deleteBluePlayer = (player) => {
-        let reducedTeam = game.teams.blueTeam.filter((pl) => { return pl !== player.player })
+        let reducedTeam = blueTeam.filter((pl) => { return pl !== player.player })
         for (let p of reducedTeam) console.log(p);
         let updateO = {"blueTeam": reducedTeam}
 
-        appFirebase.databaseApi.update(`games/${gameR.gameId}/teams/`, updateO, deleteDone);
-        console.log(game);
+        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+
         props.handleClosing();
     };
 
     const confirmBluePlayerDelete = (player) => {
-        console.log(game);
+
         dialog.show({
             body: `Are you sure you want to delete ${player.player}?`,
             actions: [
@@ -67,17 +70,17 @@ export default function DeletePlayer(props) {
     };
 
     const deleteGreenPlayer = (player) => {
-        let reducedTeam = game.teams.greenTeam.filter((pl) => { return pl !== player.player })
+        let reducedTeam = greenTeam.filter((pl) => { return pl !== player.player })
         for (let p of reducedTeam) console.log(p);
         let updateO = {"greenTeam": reducedTeam}
 
-        appFirebase.databaseApi.update(`games/${gameR.gameId}/teams/`, updateO, deleteDone);
-        console.log(game);
+        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+
         props.handleClosing();
     };
 
     const confirmGreenPlayerDelete = (player) => {
-        console.log(game);
+
         dialog.show({
             body: `Are you sure you want to delete ${player.player}?`,
             actions: [
@@ -105,8 +108,7 @@ export default function DeletePlayer(props) {
                         <col style={{ width: "10%" }}></col>
                     </colgroup>
                     <tbody>
-                        {game.teams &&
-                            greenPlayersToList.map((player, index) => {
+                        {greenPlayersToList.map((player, index) => {
                                 return (
                                     <tr key={index}>
                                         <td> {player}</td>
@@ -121,8 +123,7 @@ export default function DeletePlayer(props) {
                                     </tr>
                                 );
                             })}
-                        {game.teams &&
-                            bluePlayersToList.map((player, index) => {
+                        {bluePlayersToList.map((player, index) => {
                                 return (
                                     <tr key={index}>
                                         <td> {player}</td>

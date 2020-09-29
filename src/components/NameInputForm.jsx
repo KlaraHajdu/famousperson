@@ -1,16 +1,14 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { appFirebase } from "../database.js";
-import { GameContext } from "./contextProviders/GameProvider";
 import { useSelector } from 'react-redux';
 
 export default function NameInputForm(props) {
   const nameNumber = props.nameNumber;
-  const game = useContext(GameContext)[0];
   const [nameToSubmit, setNameToSubmit] = useState("");
   const [teamNamesNumber, setTeamNamesNumber] = useState(0);
-  const gameR = useSelector((state) => state.gameReducer);
+  const game = useSelector((state) => state.gameReducer);
 
   const saveNameToSubmit = (e) => {
     setNameToSubmit(e.target.value);
@@ -30,7 +28,7 @@ export default function NameInputForm(props) {
       console.log(err);
     } else {
       console.log(
-        `Name ${nameToSubmit} added successfully to the ${gameR.ownTeam} names`
+        `Name ${nameToSubmit} added successfully to the ${game.ownTeam} names`
       );
       setNameToSubmit("");
     }
@@ -39,12 +37,12 @@ export default function NameInputForm(props) {
   const submitName = () => {
     if (nameToSubmit !== "") {
       appFirebase.databaseApi.create(
-        `games/${gameR.gameId}/names/${nameToSubmit}`,
+        `games/${game.gameId}/names/${nameToSubmit}`,
         true,
         actAfterNameSubmittedToAllNames
       );
       appFirebase.databaseApi.create(
-        `games/${gameR.gameId}/${gameR.ownTeam}Names/${nameToSubmit}`,
+        `games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`,
         true,
         actAfterNameSubmittedToTheTeamNames
       );
@@ -62,14 +60,14 @@ export default function NameInputForm(props) {
 
   const checkHowManyNamesSentByMyTeam = () => {
     appFirebase.databaseApi.readOn(
-      `games/${gameR.gameId}/${gameR.ownTeam}Names`,
+      `games/${game.gameId}/${game.ownTeam}Names`,
       handleTeamNamesResult
     );
   };
 
   useEffect(() => {
-    if (gameR.ownTeam) checkHowManyNamesSentByMyTeam();
-  }, [gameR.ownTeam]);
+    if (game.ownTeam) checkHowManyNamesSentByMyTeam();
+  }, [game.ownTeam]);
 
   return (
       teamNamesNumber === nameNumber / 2 ? (

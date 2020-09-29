@@ -1,19 +1,16 @@
 import React from "react";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "react-bootstrap";
-//import { GameContext } from "./contextProviders/GameProvider";
-import { ScoreContext } from "./contextProviders/ScoreProvider";
 import { ReactComponent as Balloon } from "../static/1524086080.svg";
 import { useSelector } from 'react-redux';
 
 export default function EndGame() {
-    //const score = useContext(ScoreContext)[0];
-    //const game = useContext(GameContext)[0];
+
     const [winnerTeam, setWinnerTeam] = useState(false);
     const [balloonTop1, setBalloonTop1] = useState(410);
     const [balloonTop2, setBalloonTop2] = useState(390);
     const [balloonTop3, setBalloonTop3] = useState(410);
-    const gameR = useSelector(state => state.gameReducer);
+    const game = useSelector(state => state.gameReducer);
     const score = useSelector(state => state.scoreReducer);
 
     useEffect(() => {
@@ -47,15 +44,15 @@ export default function EndGame() {
                 </h4>
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 30 }}>
                     <h3>
-                        {(gameR.ownTeam === "greenTeam" && winnerTeam === "green team") ||
-                        (gameR.ownTeam === "blueTeam" && winnerTeam === "blue team")
+                        {(game.ownTeam === "greenTeam" && winnerTeam === "green team") ||
+                        (game.ownTeam === "blueTeam" && winnerTeam === "blue team")
                             ? "Congratulations!"
                             : ""}
                     </h3>
                 </div>
             </div>
-            {(gameR.ownTeam === "greenTeam" && winnerTeam === "green team") ||
-                        (gameR.ownTeam === "blueTeam" && winnerTeam === "blue team")
+            {(game.ownTeam === "greenTeam" && winnerTeam === "green team") ||
+                        (game.ownTeam === "blueTeam" && winnerTeam === "blue team")
                             ? <div> <Balloon
                             id="balloon1"
                             style={{
