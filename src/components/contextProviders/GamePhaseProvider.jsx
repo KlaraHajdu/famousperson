@@ -1,11 +1,27 @@
 import React, { useState } from "react";
+import { gamePhases } from "../../gamePhasesObject";
 
 export const GamePhaseContext = React.createContext();
 
-export const GamePhaseProvider = props => {
-    const [GamePhase, setGamePhase] = useState(null);
+export const GamePhaseProvider = (props) => {
+   
+    const parseFromSessionStorage = () => {
+        let gamePhaseFromSS = sessionStorage.getItem("gamePhase");
+        
+            switch (gamePhaseFromSS) {
+                case "waitingRoom":
+                    return gamePhases.waitingRoom;
+                case "addNames":
+                    return gamePhases.addNames;
+                case "playGame":
+                    return gamePhases.playGame;
+                default:
+                    return null;
+            }
+        
+    };
 
-    return (
-        <GamePhaseContext.Provider value={[GamePhase, setGamePhase]}>{props.children}</GamePhaseContext.Provider>
-    );
+    const [GamePhase, setGamePhase] = useState(parseFromSessionStorage() || null);
+
+    return <GamePhaseContext.Provider value={[GamePhase, setGamePhase]}>{props.children}</GamePhaseContext.Provider>;
 };

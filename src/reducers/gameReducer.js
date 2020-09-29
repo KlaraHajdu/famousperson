@@ -1,4 +1,12 @@
-const gameReducer = (state=null, action) => {
+const initialState = {
+    gameId: sessionStorage.getItem("gameId") || null,
+    ownName: sessionStorage.getItem("ownName") || null,
+    gameMaster: sessionStorage.getItem("gameMaster") || null,
+    ownTeam: sessionStorage.getItem("ownTeam") || null,
+    players: sessionStorage.getItem("players") && sessionStorage.getItem("players").split(",") || null,
+}
+
+const gameReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case 'GAME_CREATED':

@@ -1,4 +1,9 @@
-const teamReducer = (state = null, action) => {
+const initialState = {
+    greenTeam: sessionStorage.getItem("greenTeam") && sessionStorage.getItem("greenTeam").split(","),
+    blueTeam: sessionStorage.getItem("blueTeam") && sessionStorage.getItem("blueTeam").split(","),
+}
+
+const teamReducer = (state = initialState, action) => {
     switch (action.type) {
         case "GREEN_TEAM_SET":
             return {

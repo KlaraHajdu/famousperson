@@ -1,4 +1,9 @@
-const scoreReducer = (state = {blueTeamScore: "0", greenTeamScore: "0"}, action) => {
+const inititalState = {
+    blueTeamScore: sessionStorage.getItem("blueTeamScore") || "0",
+    greenTeamScore: sessionStorage.getItem("greenTeamScore") || "0"
+}
+
+const scoreReducer = (state = inititalState, action) => {
     
     switch (action.type) {
         case 'GREEN_TEAM_SCORED':

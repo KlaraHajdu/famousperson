@@ -8,22 +8,18 @@ import { useEffect } from "react";
 import { appFirebase } from "../database.js";
 import { useSelector } from 'react-redux';
 
-
 export default function GuessWord(props) {
     const [word, setWord] = useState();
     const game = useSelector(state => state.gameReducer);
     const score = useSelector(state => state.scoreReducer);
     const round = useSelector(state => state.roundReducer);
 
-
     const selectRandomWord = (snapshot) => {
-        
         if (snapshot.val() !== null) {
             let words = snapshot.val();
             let randomId = Math.floor(Math.random() * Object.keys(words).length);
             setWord(Object.keys(words)[randomId]);
-        }
-        else props.endRound();
+        } else props.endRound();
     };
     const updateDone = (err) => {
         if (!!err) {
@@ -65,14 +61,20 @@ export default function GuessWord(props) {
         <Row>
             <Col>
                 <h2>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf:"center" }}>
-                        <Badge style={{ height: 36 }}  variant="warning">{word}</Badge>
-                        </div>
+                    <div
+                        style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf: "center" }}
+                    >
+                        <Badge style={{ height: 36 }} variant="warning">
+                            {word}
+                        </Badge>
+                    </div>
                 </h2>
             </Col>
             <Col>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf:"center" }}>
-                    <Button style={{ height: 36 }} onClick={scoreWordGuessed}>Guessed</Button>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
+                    <Button style={{ height: 36 }} onClick={scoreWordGuessed}>
+                        Guessed
+                    </Button>
                 </div>
             </Col>
         </Row>

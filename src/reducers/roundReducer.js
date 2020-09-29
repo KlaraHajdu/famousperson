@@ -1,8 +1,8 @@
 const initialState = {
-    round: 1,
-    teamOnTurn: "greenTeam",
-    greenPlayerIndex: "0",
-    bluePlayerIndex: "0"
+    round: sessionStorage.getItem("round") || 1,
+    teamOnTurn: sessionStorage.getItem("teamOnTurn") || "greenTeam",
+    greenPlayerIndex: sessionStorage.getItem("greenTeamPlayerIndex") || "0",
+    bluePlayerIndex: sessionStorage.getItem("blueTeamPlayerIndex") || "0"
 } 
 
 const roundReducer = (state = initialState, action) => {

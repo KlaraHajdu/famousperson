@@ -15,27 +15,33 @@ import { setGreenTeam, setBlueTeam } from '../actions/teamActions';
 
 const Styles = styled.div`
     .navbar {
-        background-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(70, 70, 70, 0.3);
     }
-    #collapsible-nav-dropdown {
-        color: darkgrey;
+    .navbar-brand {
+        color: silver;
+        font-weight: semibold;
+        font-size: 2em;
     }
 
-    .nav-link {
-        color: darkgrey;
+    .navbar-brand:hover {
+        color: silver;
+    }
+
+    #collapsible-nav-dropdown {
+        color: silver;
+    }
+
+    #nav-link {
+        color: silver;
     }
 `;
 
 export default function Header() {
-    const setGamePhase = useContext(GamePhaseContext)[1];
+    const [gamePhase, setGamePhase] = useContext(GamePhaseContext);
     const game = useSelector((state) => state.gameReducer);
     const dispatch = useDispatch();
 
     const setHowToPlayModalOpen = useContext(HowToPlayModalOpenContext)[1];
-
-    const goToHome = () => {
-        setGamePhase(null);
-    };
 
     const clickOpenHowToPlayModal = () => {
         setHowToPlayModalOpen(true);
@@ -45,15 +51,18 @@ export default function Header() {
         setGamePhase(gamePhases.startGame);
     };
 
-    const joinGame0 = () => {
+    const joinNewGame = () => {
         setGamePhase(gamePhases.joinGame);
     };
 
     const handleGamePhaseResult = useCallback((snapshot) => {
         const DBGamePhase = snapshot.val();
 
-        if (game ? DBGamePhase !== game.gamePhase : false) {
-            setGamePhase(gamePhases[DBGamePhase]);
+        if (game && DBGamePhase !== gamePhase) {
+            if (DBGamePhase) {
+                setGamePhase(gamePhases[DBGamePhase]);
+                sessionStorage.setItem("gamePhase", DBGamePhase);
+            }
         }
     });
 
@@ -110,24 +119,40 @@ export default function Header() {
         appFirebase.databaseApi.readOn(`games/${game ? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
     }, [game && game.gameId]); //gameR && gameR.gameId
 
-
     return (
         <Styles>
-            <Navbar expand="lg">
-                <Nav.Link onClick={goToHome}>Famous person guessing game</Nav.Link>
-                <Nav.Link onClick={clickOpenHowToPlayModal}>How to play</Nav.Link>
-                <NavDropdown title="Play" id="collapsible-nav-dropdown">
-                    <NavDropdown.Item onClick={startGameAsMaster}>Start a new game as a game master</NavDropdown.Item>
-                    <NavDropdown.Item onClick={joinGame0}>Join a game</NavDropdown.Item>
-                </NavDropdown>
-                <NavDropdown title="For development" id="collapsible-nav-dropdown">
-                    <NavDropdown.Item onClick={joinDummyGameAsGameMaster}>
-                        Join a dummy game as game master
-                    </NavDropdown.Item>
-                    <NavDropdown.Item onClick={joinDummyGameAsPlayer1}>Join a dummy game as 1</NavDropdown.Item>
-                    <NavDropdown.Item onClick={joinDummyGameAsPlayer2}>Join a dummy game as 2</NavDropdown.Item>
-                    <NavDropdown.Item onClick={joinDummyGameAsPlayer3}>Join a dummy game as 3</NavDropdown.Item>
-                </NavDropdown>
+            <Navbar expand="lg" className="justify-content-between">
+                <Nav>
+                    <Navbar.Brand>Guess!</Navbar.Brand>
+                </Nav>
+                <Nav>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav.Link id="nav-link" onClick={clickOpenHowToPlayModal}>How to play</Nav.Link>
+                        <Nav>
+                            <NavDropdown alignRight title="Play" id="collapsible-nav-dropdown">
+                                <NavDropdown.Item onClick={startGameAsMaster}>
+                                    Start a new game as a game master
+                                </NavDropdown.Item>
+                                <NavDropdown.Item onClick={joinNewGame}>Join a game</NavDropdown.Item>
+                            </NavDropdown>
+                            <NavDropdown alignRight title="For development" id="collapsible-nav-dropdown">
+                                <NavDropdown.Item onClick={joinDummyGameAsGameMaster}>
+                                    Join a dummy game as game master
+                                </NavDropdown.Item>
+                                <NavDropdown.Item onClick={joinDummyGameAsPlayer1}>
+                                    Join a dummy game as 1
+                                </NavDropdown.Item>
+                                <NavDropdown.Item onClick={joinDummyGameAsPlayer2}>
+                                    Join a dummy game as 2
+                                </NavDropdown.Item>
+                                <NavDropdown.Item onClick={joinDummyGameAsPlayer3}>
+                                    Join a dummy game as 3
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Nav>
             </Navbar>
             <HowToPlay />
         </Styles>

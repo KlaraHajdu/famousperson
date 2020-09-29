@@ -25,31 +25,34 @@ function PlayGame() {
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
         dispatch(finishTeam(snapshot.val()));
+        sessionStorage.setItem("teamOnTurn", snapshot.val());
     });
 
     const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         dispatch(finishGreenPlayer(playerOnTurnIndex));
+        sessionStorage.setItem("greenTeamPlayerIndex", playerOnTurnIndex);
     });
 
     const handleBluePlayerOnTurnIndexResult = useCallback((snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         dispatch(finishBluePlayer(playerOnTurnIndex));
+        sessionStorage.setItem("blueTeamPlayerIndex", playerOnTurnIndex);
     });
 
     const handleBlueScoreResult = (snapshot) => {
         dispatch(increaseBlueScore(snapshot.val()))
-
+        sessionStorage.setItem("blueTeamScore", snapshot.val());
     }
 
     const handleGreenScoreResult = (snapshot) => {
         dispatch(increaseGreenScore(snapshot.val()))
-
+        sessionStorage.setItem("greenTeamScore", snapshot.val());
     }
 
     const handleRoundResult = (snapshot) => {
-        console.log(snapshot.val());
         dispatch(endRound(snapshot.val()))
+        sessionStorage.setItem("round", snapshot.val())
     }
 
     const updateDone = (err) => {

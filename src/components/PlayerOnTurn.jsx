@@ -71,7 +71,6 @@ export default function PlayerOnTurn(props) {
     let counterRadius = mapNumber(counter, 60, 0, 0, 360);
 
     useEffect(() => {
-        console.log(counter);
         let unmounted = false;
         if (!unmounted) {
             if (counter === 0) props.endTurn();

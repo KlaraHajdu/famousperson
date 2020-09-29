@@ -27,6 +27,9 @@ export default function StartGame() {
         } else {
             console.log("Game is successfully created");
             dispatch(startGame(name, gameId));
+            sessionStorage.setItem("gameId", gameId);
+            sessionStorage.setItem("gameMaster", name);
+            sessionStorage.setItem("ownName", name);
             setGamePhase(gamePhases.waitingRoom);
         }
     };
@@ -36,7 +39,7 @@ export default function StartGame() {
         console.log(err);
     };
 
-    const isGameIdAlreadyExists = (snapshot) => {
+    const doesGameIdAlreadyExist = (snapshot) => {
         return !!snapshot.val();
     };
 
@@ -44,7 +47,7 @@ export default function StartGame() {
         let generatedId;
         do {
             generatedId = getRandomNumberFromTo(1000, 10000);
-        } while (appFirebase.databaseApi.readOnce(`games/${generatedId}`, isGameIdAlreadyExists, handleIdCheckError));
+        } while (appFirebase.databaseApi.readOnce(`games/${generatedId}`, doesGameIdAlreadyExist, handleIdCheckError));
         gameId = generatedId;
     };
 
