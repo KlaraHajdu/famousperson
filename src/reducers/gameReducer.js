@@ -6,7 +6,7 @@ const gameReducer = (state=null, action) => {
                 gameId: action.payload.gameId,
                 ownName: action.payload.ownName,
                 gameMaster: action.payload.gameMaster,
-                players: []
+                
             }
         
             case 'GAME_JOINED':
@@ -20,6 +20,12 @@ const gameReducer = (state=null, action) => {
                 return {
                     ...state,
                     ownTeam: action.payload.ownTeam
+            }
+        
+            case 'PLAYERS_UPDATED':
+                return {
+                    ...state,
+                    players: action.payload.players
             }
                         
         default:

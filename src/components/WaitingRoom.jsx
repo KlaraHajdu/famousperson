@@ -7,7 +7,7 @@ import { gamePhases } from "../gamePhasesObject";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import PhaseHeader from "./PhaseHeader";
 import { useSelector, useDispatch } from 'react-redux';
-import { joinOwnTeam } from '../actions/index';
+import { joinOwnTeam, updatePlayers } from '../actions/index';
 import { setGreenTeam, setBlueTeam } from '../actions/teamActions';
 
 
@@ -18,7 +18,8 @@ function WaitingRoom() {
     const dispatch = useDispatch();
 
     const handlePlayersResult = (snapshot) => {
-        if (snapshot.val() && JSON.stringify(Object.keys(snapshot.val())) !== JSON.stringify(game.players)) {
+        if (snapshot.val() && JSON.stringify(Object.keys(snapshot.val())) !== JSON.stringify(gameR.players)) {
+            dispatch(updatePlayers(Object.keys(snapshot.val())))
             setGame({ ...game, players: Object.keys(snapshot.val()) });
             console.log("setGame: players set");
         }
@@ -81,9 +82,9 @@ function WaitingRoom() {
           appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teams`, setTeamInfos);
         }
 
-        if (DBGamePhase !== game.gamePhase) {
-            setGamePhase(gamePhases[DBGamePhase]);
-        }
+        // if (DBGamePhase !== game.gamePhase) {
+        //     setGamePhase(gamePhases[DBGamePhase]);
+        // }
     };
 
     const actAfterAddNewPlayer = (err) => {
@@ -106,7 +107,7 @@ function WaitingRoom() {
             <PhaseHeader title="Waiting room" />
             <div>
                 <h5>Joined players</h5>
-                <PlayersTable title={"Players"} content={game.players} />
+                <PlayersTable title={"Players"} content={gameR.players} />
             </div>
             {gameR.ownName === gameR.gameMaster && <WaitingRoomGameMasterPart />}
         </div>

@@ -29,3 +29,12 @@ export const joinOwnTeam = (ownTeam) => {
     };
 };
 
+export const updatePlayers = (players) => {
+    return {
+        type: 'PLAYERS_UPDATED',
+        payload: {
+            players
+        }
+    };
+};
+
