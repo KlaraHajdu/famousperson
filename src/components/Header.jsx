@@ -11,7 +11,8 @@ import HowToPlay from "./HowToPlay";
 import { gamePhases } from "../gamePhasesObject";
 import { appFirebase } from "../database.js";
 import { useSelector, useDispatch } from "react-redux";
-import { joinGame, joinOwnTeam, startGame } from "../actions";
+import { joinGame, joinOwnTeam, startGame } from "../actions/index";
+import { setGreenTeam, setBlueTeam } from '../actions/teamActions';
 
 const Styles = styled.div`
     .navbar {
@@ -66,6 +67,8 @@ export default function Header() {
     function joinDummyGameAsGameMaster() {
         dispatch(startGame("Master", 8795));
         dispatch(joinOwnTeam("greenTeam"));
+        dispatch(setGreenTeam(["Player2", "Master"]));
+        dispatch(setBlueTeam(["Player3", "Player1"]))
         setGame({
             ownName: "Master",
             gameId: 8795,
@@ -79,6 +82,8 @@ export default function Header() {
     const joinDummyGameAsPlayer1 = () => {
         dispatch(joinGame("Player1", 8795, "Master"));
         dispatch(joinOwnTeam("blueTeam"));
+        dispatch(setGreenTeam(["Player2", "Master"]));
+        dispatch(setBlueTeam(["Player3", "Player1"]))
         setGame({
             ownName: "Player1",
             gameId: 8795,
@@ -109,7 +114,7 @@ export default function Header() {
 
         if (gameR && gameR.gameId === 8795) {
             appFirebase.databaseApi.update(`games/${game ? gameR.gameId : 0}`, { gamePhase: "playGame" }, updateDone);
-            //appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
+            appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teams`, setTeamInfos); //párhuzamosan nem tudom módosítani a game-et, de emiatt nem fog frissülni a delete player táblázat dev módban
         }
         appFirebase.databaseApi.readOn(`games/${gameR ? gameR.gameId : 0}/gamePhase`, handleGamePhaseResult);
     }, [gameR && gameR.gameId]); //gameR && gameR.gameId
@@ -117,6 +122,8 @@ export default function Header() {
     const joinDummyGameAsPlayer2 = () => {
         dispatch(joinGame("Player2", 8795, "Master"));
         dispatch(joinOwnTeam("greenTeam"));
+        dispatch(setGreenTeam(["Player2", "Master"]));
+        dispatch(setBlueTeam(["Player3", "Player1"]))
         setGame({
             ownName: "Player2",
             gameId: 8795,
@@ -129,6 +136,8 @@ export default function Header() {
     const joinDummyGameAsPlayer3 = () => {
         dispatch(joinGame("Player3", 8795, "Master"));
         dispatch(joinOwnTeam("blueTeam"));
+        dispatch(setGreenTeam(["Player2", "Master"]));
+        dispatch(setBlueTeam(["Player3", "Player1"]))
         setGame({
             ownName: "Player3",
             gameId: 8795,

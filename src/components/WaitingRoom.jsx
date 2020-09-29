@@ -7,7 +7,8 @@ import { gamePhases } from "../gamePhasesObject";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import PhaseHeader from "./PhaseHeader";
 import { useSelector, useDispatch } from 'react-redux';
-import { joinOwnTeam} from  '../actions/index';
+import { joinOwnTeam } from '../actions/index';
+import { setGreenTeam, setBlueTeam } from '../actions/teamActions';
 
 
 function WaitingRoom() {
@@ -27,6 +28,8 @@ function WaitingRoom() {
         const teamsDB = snapshot.val(); 
         const ownTeam = teamsDB.greenTeam.includes(gameR.ownName) ? "greenTeam" : "blueTeam";
         dispatch(joinOwnTeam(ownTeam));
+        dispatch(setGreenTeam(snapshot.val().greenTeam));
+        dispatch(setBlueTeam(snapshot.val().blueTeam));
         setGame({
             ...game,
             ownTeam,

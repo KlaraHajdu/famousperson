@@ -27,6 +27,8 @@ function PlayGame() {
     const [greenTeamPlayerIndex, setGreenTeamPlayerIndex] = useContext(GreenTeamPlayerIndexContext);
     const [round, setRound] = useContext(RoundContext);
     const setScore = useContext(ScoreContext)[1];
+    const greenTeam = useSelector(state => state.teamReducer.greenTeam);
+    const blueTeam = useSelector(state => state.teamReducer.blueTeam);
 
     const gameR = useSelector(state => state.gameReducer);
     const roundR = useSelector(state => state.roundReducer);
@@ -34,11 +36,11 @@ function PlayGame() {
 
     const handleTeamOnTurnResult = useCallback((snapshot) => {
         dispatch(finishTeam(snapshot.val()));
-        setGame({
-            ...game,
-            teams:{...game.teams},
-            teamOnTurn: snapshot.val()
-        });
+        // setGame({
+        //     ...game,
+        //     teams:{...game.teams},
+        //     teamOnTurn: snapshot.val()
+        // });
     });
 
     const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
@@ -53,13 +55,18 @@ function PlayGame() {
         setBlueTeamPlayerIndex(playerOnTurnIndex);
     });
 
-    const handleScoreResult = (snapshot) => {
-        dispatch(increaseBlueScore(snapshot.val().blueTeamScore))
-        dispatch(increaseGreenScore(snapshot.val().greenTeamScore))
-        setScore(snapshot.val());
+    const handleBlueScoreResult = (snapshot) => {
+        dispatch(increaseBlueScore(snapshot.val()))
+
+    }
+
+    const handleGreenScoreResult = (snapshot) => {
+        dispatch(increaseGreenScore(snapshot.val()))
+
     }
 
     const handleRoundResult = (snapshot) => {
+        console.log(snapshot.val());
         dispatch(endRound(snapshot.val()))
         setRound(snapshot.val());
     }
@@ -80,7 +87,7 @@ function PlayGame() {
         );
 
         if (gameR.ownTeam === "greenTeam") {
-            if (roundR.greenPlayerIndex === game.teams.greenTeam.length-1) {
+            if (roundR.greenPlayerIndex === greenTeam.length-1) {
                 appFirebase.databaseApi.update(
                     `games/${gameR.gameId}/`,
                     { greenTeamTurnIndex: 0 },
@@ -96,7 +103,7 @@ function PlayGame() {
             );
         }
         } else {
-            if (roundR.bluePlayerIndex === game.teams.blueTeam.length-1) {
+            if (roundR.bluePlayerIndex === blueTeam.length-1) {
                 appFirebase.databaseApi.update(
                     `games/${gameR.gameId}/`,
                     { blueTeamTurnIndex: 0 },
@@ -137,7 +144,8 @@ function PlayGame() {
 
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/teamOnTurn`, handleTeamOnTurnResult); //setGame
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); //setGreenplayer
-        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/scores`, handleScoreResult); //setScores
+        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/scores/blueTeamScore`, handleBlueScoreResult); //setScores
+        appFirebase.databaseApi.readOn(`games/${gameR.gameId}/scores/greenTeamScore`, handleGreenScoreResult); //setScores
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/round`, handleRoundResult); //setRound
         appFirebase.databaseApi.readOn(`games/${gameR.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult); //setBluePlayer
 
@@ -157,9 +165,9 @@ function PlayGame() {
                         <PhaseHeader
                             title=""
                             more={
-                                round === 1
+                                roundR.round === 1
                                 ? "1st round: Explain in detail"
-                                    : round === 2
+                                    : roundR.round === 2
                                     ? "2nd round: explain with one word"
                                     : "3rd round: pantomime"
                             }
@@ -174,20 +182,18 @@ function PlayGame() {
                             <span style={{ fontWeight: "bold" }}>
                                 {" "}
                                 {roundR.teamOnTurn &&
-                                    game.teams[roundR.teamOnTurn][
-                                        roundR.teamOnTurn === "greenTeam" ? roundR.greenPlayerIndex : roundR.bluePlayerIndex
-                                    ]}
+                                        roundR.teamOnTurn === "greenTeam" ? greenTeam[roundR.greenPlayerIndex] : blueTeam[roundR.bluePlayerIndex]
+                                    }
                             </span>
                             's turn now.
                         </div>
 
                         <div style={{ paddingTop: 20 }}>
                             {gameR.ownName ===
-                                game.teams[roundR.teamOnTurn || "greenTeam"][
-                                    roundR.teamOnTurn === "greenTeam"
-                                    ? roundR.greenPlayerIndex || 0
-                                    : roundR.bluePlayerIndex || 1
-                                ] && <PlayerOnTurn endTurn={ endTurn } />}
+                                (roundR.teamOnTurn === "greenTeam"
+                                    ? greenTeam[roundR.greenPlayerIndex || 0] 
+                                    : blueTeam[roundR.bluePlayerIndex || 1]) 
+                                 && <PlayerOnTurn endTurn={ endTurn } />}
                     </div>
                     <div>
                         {gameR.ownName === gameR.gameMaster ? 

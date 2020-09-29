@@ -1,8 +1,8 @@
-export const endRound = (round) => {
+export const endRound = (nextRound) => {
     return {
         type: 'ROUND_ENDED',
         payload: {
-            round
+            nextRound
         }
         
     };

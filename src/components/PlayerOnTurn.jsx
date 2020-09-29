@@ -25,6 +25,8 @@ export default function PlayerOnTurn(props) {
     const setGamePhase = useContext(GamePhaseContext)[1];
     const gameR = useSelector((state) => state.gameReducer);
     const roundR = useSelector(state => state.roundReducer);
+    const greenTeam = useSelector(state => state.teamReducer.greenTeam);
+    const blueTeam = useSelector(state => state.teamReducer.blueTeam);
     
     const updateDone = (err) => {
         if (!!err) console.log(err);
@@ -48,7 +50,7 @@ export default function PlayerOnTurn(props) {
         appFirebase.databaseApi.update(`games/${gameR.gameId}`, updateO, updateDone);
 
         if (gameR.ownTeam === "greenTeam") {
-            if (roundR.greenPlayerIndex === game.teams.greenTeam.length - 1) {
+            if (roundR.greenPlayerIndex === greenTeam.length - 1) {
                 appFirebase.databaseApi.update(`games/${gameR.gameId}/`, { greenTeamTurnIndex: 0 }, updateDone);
             } else {
                 appFirebase.databaseApi.update(
@@ -59,7 +61,7 @@ export default function PlayerOnTurn(props) {
                 );
             }
         } else {
-            if (roundR.bluePlayerIndex === game.teams.blueTeam.length - 1) {
+            if (roundR.bluePlayerIndex === blueTeam.length - 1) {
                 appFirebase.databaseApi.update(`games/${gameR.gameId}/`, { blueTeamTurnIndex: 0 }, updateDone);
             } else
                 appFirebase.databaseApi.update(

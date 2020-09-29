@@ -11,7 +11,7 @@ const roundReducer = (state = initialState, action) => {
         case 'ROUND_ENDED':
             return {
                 ...state,
-                round: state.round + 1,
+                round: action.payload.nextRound,
 
             }
         case 'BLUEPLAYER_FINISHED':
