@@ -191,8 +191,8 @@ function PlayGame() {
                         <div style={{ paddingTop: 20 }}>
                             {gameR.ownName ===
                                 (roundR.teamOnTurn === "greenTeam"
-                                    ? greenTeam[roundR.greenPlayerIndex || 0] 
-                                    : blueTeam[roundR.bluePlayerIndex || 1]) 
+                                    ? greenTeam[roundR.greenPlayerIndex] 
+                                    : blueTeam[roundR.bluePlayerIndex]) 
                                  && <PlayerOnTurn endTurn={ endTurn } />}
                     </div>
                     <div>
