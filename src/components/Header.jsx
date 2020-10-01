@@ -51,7 +51,7 @@ export default function Header() {
         setGamePhase(gamePhases.startGame);
     };
 
-    const joinNewGame = () => {
+    const joinNewGame = (e) => {
         setGamePhase(gamePhases.joinGame);
     };
 
