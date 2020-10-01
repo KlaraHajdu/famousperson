@@ -85,6 +85,7 @@ export default function NameInputForm(props) {
                 value={nameToSubmit}
                 type='text'
                 placeholder='Someone to be guessed in the game'
+                autocomplete="off"
               />
             </Form.Group>
             <Button variant='warning' onClick={submitName}>
