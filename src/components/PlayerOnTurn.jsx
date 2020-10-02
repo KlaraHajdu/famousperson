@@ -12,7 +12,7 @@ import SVGCircle from "./SVGCircle";
 import { useSelector } from 'react-redux';
 
 export default function PlayerOnTurn(props) {
-    const [counter, setCounter] = useState(20);
+    const [counter, setCounter] = useState(10);
     const [turnStarted, setTurnStarted] = useState(false);
     const setGamePhase = useContext(GamePhaseContext)[1];
     const game = useSelector((state) => state.gameReducer);
@@ -101,7 +101,7 @@ export default function PlayerOnTurn(props) {
                 </Col>
             </Row>
             <Row className="justify-content-md-center">
-                {20 >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
+                {10 >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
             </Row>
             <Row className="justify-content-md-center">
                 <div>
