@@ -69,12 +69,12 @@ function WaitingRoom() {
         const DBGamePhase = snapshot.val();
 
       if (DBGamePhase === "addNames") {
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
         let playerIsInTeam = await checkIfPlayerIsPartOfTeam();
         if (!playerIsInTeam) {
           appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
           console.log("Player is checked and added");
         }
-          appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos);
         }
 
     };

@@ -17,7 +17,7 @@ export default function TeamContainer(props) {
       }
     >
       <h4>{props.team === "greenTeam" ? "Green team" : "Blue team"}</h4>
-     <div>Members: {greenTeam && props.team === "greenTeam" ? greenTeam.join(", "): blueTeam.join(", ")}</div>
+     <div>Members: {props.team === "greenTeam" ? greenTeam && greenTeam.join(", "): blueTeam && blueTeam.join(", ")}</div>
 
       <div>Score: {score && props.team === "greenTeam" ? score && score.greenTeamScore : score && score.blueTeamScore}</div>
     </TeamContainerInThreeColumns>
