@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { act } from 'react-test-renderer';
-import TestRenderer from 'react-test-renderer'; 
+import {act} from 'react-dom/test-utils';
+//import TestRenderer from 'react-test-renderer'; 
 import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import StartGame from './StartGame';
 import { gamePhases } from "../../gamePhasesObject";
-import ShallowRenderer from 'react-test-renderer/shallow'; 
+//import ShallowRenderer from 'react-test-renderer/shallow'; 
 
 // render is not a function
 //with React DOM
