@@ -1,21 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { render } from '@testing-library/react';
 import App from "../app";
-import { createStore } from 'redux';
-import allReducers from '../reducers/allReducers';
+import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux';
 
 
-const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const mockStore = configureStore();
+const store = mockStore({});
 
 
 it("renders without crashing", () => {
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={store}>
-      <App />
-      </Provider>,
-    
-    div);
-  ReactDOM.unmountComponentAtNode(div);
+  const { getByText } = render(<Provider store={store}><App /></Provider>)
+  const linkElement = getByText(/Play/);
+  expect(linkElement).toBeInTheDocument();
 });
