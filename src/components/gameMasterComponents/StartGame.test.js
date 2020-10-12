@@ -1,3 +1,4 @@
+import { Provider } from 'react-redux';
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
@@ -6,10 +7,18 @@ import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import StartGame from "./StartGame";
 import { gamePhases } from "../../gamePhasesObject";
 //import ShallowRenderer from 'react-test-renderer/shallow';
+import { createStore } from 'redux';
+import allReducers from '../../reducers/allReducers';
+//import {  } from "@testing-library/react";
+import { render, screen, cleanup } from "../../__tests__/test-utils";
+
 
 // render is not a function
 //with React DOM
 let container;
+
+const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
 
 beforeEach(() => {
     container = document.createElement("div");
@@ -21,17 +30,34 @@ afterEach(() => {
     container = null;
 });
 
-test("with ReactDOM", () => {
-    act(() => {
-        ReactDOM.render(
-            <GamePhaseContext value={gamePhases.startGame}>
-                <StartGame />
-            </GamePhaseContext>,
-            container
-        );
-    });
-    expect(container.findByType("h4").children).toEqual("Start a new game as a game master");
+afterEach(cleanup)
+
+
+it("shows the text for starting the game", () => {
+    const { findByType } = render(<Provider store={store}>
+                                        <StartGame />
+                                    </Provider>);
+
+    const node = screen.findByType("h4");
+
+    expect(node.children).toEqual("Start a new game as a game master");
 });
+
+
+
+// test("with ReactDOM", () => {
+//     act(() => {
+//         ReactDOM.render(
+//             <Provider store={store}>
+//             <GamePhaseContext value={gamePhases.startGame}>
+//                 <StartGame />
+//                 </GamePhaseContext>
+//             </Provider>,
+//             container
+//         );
+//     });
+//     expect(container.findByType("h4").children).toEqual("Start a new game as a game master");
+// });
 
 // cannot refer specifically to the usecontext hook (of the many)
 // // 1. Shallow renderer to inject a mock hook:
