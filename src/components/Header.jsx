@@ -87,11 +87,11 @@ export default function Header() {
     
     
     useEffect(() => {
-        const updateDone = (err) => {
-            if (!!err) console.log(err);
-            else console.log("Gamephase set to playGame in DB");
-        };
-        
+    const updateDone = (err) => {
+        if (!!err) console.log(err);
+        else console.log("Gamephase set to playGame in DB");
+    };
+    
         const handleGamePhaseResult = (snapshot) => {
             const DBGamePhase = snapshot.val();
     
@@ -117,7 +117,7 @@ export default function Header() {
             appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); 
         }
         appFirebase.databaseApi.readOn(`games/${game ? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
-    }, [game]); //game 
+    }, [game && game.gameId]); //game && game.gameId
     
     return (
         <Styles>
