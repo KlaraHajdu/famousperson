@@ -3,7 +3,7 @@ const initialState = {
     ownName: sessionStorage.getItem("ownName") || null,
     gameMaster: sessionStorage.getItem("gameMaster") || null,
     ownTeam: sessionStorage.getItem("ownTeam") || null,
-    players: sessionStorage.getItem("players") && sessionStorage.getItem("players").split(",") || null,
+    players: (sessionStorage.getItem("players") && sessionStorage.getItem("players").split(",")) || null,
 }
 
 const gameReducer = (state = initialState, action) => {
