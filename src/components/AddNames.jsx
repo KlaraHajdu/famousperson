@@ -13,41 +13,42 @@ function AddNames() {
   const NUMBER_OF_NAMES_TO_START_GAME = 4;
 
   const game = useSelector(state => state.gameReducer);
-
-  const actAfterSettingPlayGamePhase = (err) => {
-    if (!!err) {
-      console.log(err);
-    } else {
-      console.log("Play game phase was set successfully in db");
-    }
-  };
-
-  const setPlayGamePhaseInDB = () => {
-    appFirebase.databaseApi.update(
-      `games/${game.gameId}`,
-      { gamePhase: "playGame" },
-      actAfterSettingPlayGamePhase
-    );
-  };
-
-  const handleNamesResult = (snapshot) => {
-    if (snapshot.val()) {
-      if (
-        Object.keys(snapshot.val()).length === NUMBER_OF_NAMES_TO_START_GAME
-      ) {
-        setPlayGamePhaseInDB();
-      }
-    }
-  };
-
-  const followHowManyNamesAdded = () => {
-    appFirebase.databaseApi.readOn(
-      `games/${game.gameId}/names`,
-      handleNamesResult
-    );
-  };
-
+  
+  
   useEffect(() => {
+    const actAfterSettingPlayGamePhase = (err) => {
+      if (!!err) {
+        console.log(err);
+      } else {
+        console.log("Play game phase was set successfully in db");
+      }
+    };
+  
+    const setPlayGamePhaseInDB = () => {
+      appFirebase.databaseApi.update(
+        `games/${game.gameId}`,
+        { gamePhase: "playGame" },
+        actAfterSettingPlayGamePhase
+      );
+    };
+  
+    const handleNamesResult = (snapshot) => {
+      if (snapshot.val()) {
+        if (
+          Object.keys(snapshot.val()).length === NUMBER_OF_NAMES_TO_START_GAME
+        ) {
+          setPlayGamePhaseInDB();
+        }
+      }
+    };
+
+    const followHowManyNamesAdded = () => {
+      appFirebase.databaseApi.readOn(
+        `games/${game.gameId}/names`,
+        handleNamesResult
+      );
+    };
+
     if (game.ownName === game.gameMaster) followHowManyNamesAdded();
   }, []);
 
