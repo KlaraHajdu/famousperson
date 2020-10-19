@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -55,70 +55,70 @@ export default function Header() {
         setGamePhase(gamePhases.joinGame);
     };
 
-    const handleGamePhaseResult = useCallback((snapshot) => {
-        const DBGamePhase = snapshot.val();
-
-        if (game && DBGamePhase !== gamePhase) {
-            if (DBGamePhase) {
-                setGamePhase(gamePhases[DBGamePhase]);
-                sessionStorage.setItem("gamePhase", DBGamePhase);
-            }
-        }
-    });
-
-    const updateDone = (err) => {
-        if (!!err) console.log(err);
-        else console.log("Gamephase set to playGame in DB");
-    };
-
+    
     function joinDummyGameAsGameMaster() {
         dispatch(startGame("Master", 8795));
         dispatch(joinOwnTeam("greenTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
     }
-
+    
     const joinDummyGameAsPlayer1 = () => {
         dispatch(joinGame("Player1", 8795, "Master"));
         dispatch(joinOwnTeam("blueTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
     };
-
+    
     const joinDummyGameAsPlayer2 = () => {
         dispatch(joinGame("Player2", 8795, "Master"));
         dispatch(joinOwnTeam("greenTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
     };
-
+    
     const joinDummyGameAsPlayer3 = () => {
         dispatch(joinGame("Player3", 8795, "Master"));
         dispatch(joinOwnTeam("blueTeam"));
         dispatch(setGreenTeam(["Player2", "Master"]));
         dispatch(setBlueTeam(["Player3", "Player1"]))
     };
-
-
-    const setTeamInfos = (snapshot) => {
-        const teamsDB = snapshot.val();
-        const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
-        dispatch(joinOwnTeam(ownTeam));
-        dispatch(setGreenTeam(snapshot.val().greenTeam));
-        dispatch(setBlueTeam(snapshot.val().blueTeam));
-
-    };
-
+    
+    
+    
     useEffect(() => {
-        console.log(game && game.gameId);
-
+        const updateDone = (err) => {
+            if (!!err) console.log(err);
+            else console.log("Gamephase set to playGame in DB");
+        };
+        
+        const handleGamePhaseResult = (snapshot) => {
+            const DBGamePhase = snapshot.val();
+    
+            if (game && DBGamePhase !== gamePhase) {
+                if (DBGamePhase) {
+                    setGamePhase(gamePhases[DBGamePhase]);
+                    sessionStorage.setItem("gamePhase", DBGamePhase);
+                }
+            }
+        };
+        
+        const setTeamInfos = (snapshot) => {
+            const teamsDB = snapshot.val();
+            const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
+            dispatch(joinOwnTeam(ownTeam));
+            dispatch(setGreenTeam(snapshot.val().greenTeam));
+            dispatch(setBlueTeam(snapshot.val().blueTeam));
+            
+        };
+        
         if (game && game.gameId === 8795) {
             appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone);
             appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); 
         }
         appFirebase.databaseApi.readOn(`games/${game ? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
-    }, [game && game.gameId]); //gameR && gameR.gameId
-
+    }, [game]); //game 
+    
     return (
         <Styles>
             <Navbar expand="lg" className="justify-content-between">
