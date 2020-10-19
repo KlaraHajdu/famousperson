@@ -14,13 +14,6 @@ export default function GuessWord(props) {
     const score = useSelector(state => state.scoreReducer);
     const round = useSelector(state => state.roundReducer);
 
-    const selectRandomWord = (snapshot) => {
-        if (snapshot.val() !== null) {
-            let words = snapshot.val();
-            let randomId = Math.floor(Math.random() * Object.keys(words).length);
-            setWord(Object.keys(words)[randomId]);
-        } else props.endRound();
-    };
     const updateDone = (err) => {
         if (!!err) {
             console.log(err);
@@ -47,11 +40,19 @@ export default function GuessWord(props) {
                     `games/${game.gameId}/scores/`,
                     { blueTeamScore: +snapshot.val() + 1 },
                     updateDone
-                );
+                    );
         });
     };
-
+    
     useEffect(() => {      
+        const selectRandomWord = (snapshot) => {
+            if (snapshot.val() !== null) {
+                let words = snapshot.val();
+                let randomId = Math.floor(Math.random() * Object.keys(words).length);
+                setWord(Object.keys(words)[randomId]);
+            } else props.endRound();
+        };
+        
         appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round.round}round`, selectRandomWord);
         console.log("Guessword mounted")
     }, [ score]);
