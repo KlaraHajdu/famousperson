@@ -12,6 +12,9 @@ import SVGCircle from "./SVGCircle";
 import { useSelector } from 'react-redux';
 
 export default function PlayerOnTurn(props) {
+    const mapNumber = (number, in_min, in_max, out_min, out_max) => {
+        return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+    };
     const [counter, setCounter] = useState(10);
     const [turnStarted, setTurnStarted] = useState(false);
     const [counterRadius, setCounterRadius] = useState(mapNumber(counter, 60, 0, 0, 360));
@@ -65,9 +68,6 @@ export default function PlayerOnTurn(props) {
         }
     };
 
-    const mapNumber = (number, in_min, in_max, out_min, out_max) => {
-        return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
-    };
 
 
     useEffect(() => {
