@@ -64,6 +64,7 @@ function JoinGame() {
                         type="text"
                         placeholder="Your name that will appear during the game"
                         style={{ width: "100%" }}
+                        autocomplete="off"
                     />
                 </Form.Group>
                 <Form.Group controlId="formGameID">
@@ -74,6 +75,7 @@ function JoinGame() {
                         type="text"
                         placeholder="The game ID you received from the game master"
                         style={{ width: "100%" }}
+                        autocomplete="off"
                     />
                 </Form.Group>
                 <Button variant="warning" onClick={handleJoinGame}>

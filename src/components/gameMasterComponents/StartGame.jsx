@@ -72,6 +72,7 @@ export default function StartGame() {
                         onChange={saveName}
                         type="text"
                         placeholder="Your name that will appear during the game"
+                        autocomplete="off"
                     />
                 </Form.Group>
                 <Button variant="warning" onClick={createNewGame}>
