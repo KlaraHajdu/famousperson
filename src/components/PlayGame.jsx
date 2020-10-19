@@ -22,38 +22,7 @@ function PlayGame() {
     const round = useSelector(state => state.roundReducer);
     const dispatch = useDispatch();
 
-    const handleTeamOnTurnResult = (snapshot) => {
-        dispatch(finishTeam(snapshot.val()));
-        sessionStorage.setItem("teamOnTurn", snapshot.val());
-    };
-
-    const handleGreenPlayerOnTurnIndexResult = (snapshot) => {
-        let playerOnTurnIndex = snapshot.val();
-        dispatch(finishGreenPlayer(playerOnTurnIndex));
-        sessionStorage.setItem("greenTeamPlayerIndex", playerOnTurnIndex);
-    };
-
-    const handleBluePlayerOnTurnIndexResult = (snapshot) => {
-        let playerOnTurnIndex = snapshot.val();
-        dispatch(finishBluePlayer(playerOnTurnIndex));
-        sessionStorage.setItem("blueTeamPlayerIndex", playerOnTurnIndex);
-    };
-
-    const handleBlueScoreResult = (snapshot) => {
-        dispatch(increaseBlueScore(snapshot.val()))
-        sessionStorage.setItem("blueTeamScore", snapshot.val());
-    }
-
-    const handleGreenScoreResult = (snapshot) => {
-        dispatch(increaseGreenScore(snapshot.val()))
-        sessionStorage.setItem("greenTeamScore", snapshot.val());
-    }
-
-    const handleRoundResult = (snapshot) => {
-        dispatch(endRound(snapshot.val()))
-        sessionStorage.setItem("round", snapshot.val())
-    }
-
+    
     const updateDone = (err) => {
 
         if (!!err) console.log(err)
@@ -68,7 +37,7 @@ function PlayGame() {
             updateO,
             updateDone
         );
-
+        
         if (game.ownTeam === "greenTeam") {
             if (round.greenPlayerIndex === greenTeam.length-1) {
                 appFirebase.databaseApi.update(
@@ -78,13 +47,13 @@ function PlayGame() {
                 );
             }
             else {
-            appFirebase.databaseApi.update(
+                appFirebase.databaseApi.update(
                 `games/${game.gameId}/`,
                 { greenTeamTurnIndex: +round.greenPlayerIndex+ 1 },
                 
                 updateDone
-            );
-        }
+                );
+            }
         } else {
             if (round.bluePlayerIndex === blueTeam.length-1) {
                 appFirebase.databaseApi.update(
@@ -92,7 +61,7 @@ function PlayGame() {
                     { blueTeamTurnIndex: 0 },
                     updateDone
                     );
-            }
+                }
             else
             appFirebase.databaseApi.update(
                 `games/${game.gameId}/`,
@@ -100,32 +69,64 @@ function PlayGame() {
                 updateDone
                 );
             }
-    }
-
-    
-    useEffect(() => {
+        }
+        
+        
+        useEffect(() => {
         const createStartDataDB = () => {
             appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
             appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
             appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
             appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-                appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
+            appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
             );
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
                 appFirebase.databaseApi.create(`games/${game.gameId}/2round`, snapshot.val())
-            );
-            appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+                );
+                appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
                 appFirebase.databaseApi.create(`games/${game.gameId}/3round`, snapshot.val())
-            );
+                );
             appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
             appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");
         };
-
+        
         if (game.ownName === game.gameMaster) {
             createStartDataDB();
         }
-
+        
+        const handleTeamOnTurnResult = (snapshot) => {
+            dispatch(finishTeam(snapshot.val()));
+            sessionStorage.setItem("teamOnTurn", snapshot.val());
+        };
+    
+        const handleGreenPlayerOnTurnIndexResult = (snapshot) => {
+            let playerOnTurnIndex = snapshot.val();
+            dispatch(finishGreenPlayer(playerOnTurnIndex));
+            sessionStorage.setItem("greenTeamPlayerIndex", playerOnTurnIndex);
+        };
+    
+        const handleBluePlayerOnTurnIndexResult = (snapshot) => {
+            let playerOnTurnIndex = snapshot.val();
+            dispatch(finishBluePlayer(playerOnTurnIndex));
+            sessionStorage.setItem("blueTeamPlayerIndex", playerOnTurnIndex);
+        };
+    
+        const handleBlueScoreResult = (snapshot) => {
+            dispatch(increaseBlueScore(snapshot.val()))
+            sessionStorage.setItem("blueTeamScore", snapshot.val());
+        }
+    
+        const handleGreenScoreResult = (snapshot) => {
+            dispatch(increaseGreenScore(snapshot.val()))
+            sessionStorage.setItem("greenTeamScore", snapshot.val());
+        }
+    
+        const handleRoundResult = (snapshot) => {
+            dispatch(endRound(snapshot.val()))
+            sessionStorage.setItem("round", snapshot.val())
+            }
+            
         appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult); 
         appFirebase.databaseApi.readOn(`games/${game.gameId}/scores/blueTeamScore`, handleBlueScoreResult); 
@@ -133,7 +134,7 @@ function PlayGame() {
         appFirebase.databaseApi.readOn(`games/${game.gameId}/round`, handleRoundResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult);
 
-
+        
     }, []); // []
 
     return (
