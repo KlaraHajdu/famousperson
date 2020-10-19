@@ -58,14 +58,15 @@ export default function NameInputForm(props) {
     }
   };
 
-  const checkHowManyNamesSentByMyTeam = () => {
-    appFirebase.databaseApi.readOn(
-      `games/${game.gameId}/${game.ownTeam}Names`,
-      handleTeamNamesResult
-    );
-  };
-
+  
   useEffect(() => {
+    const checkHowManyNamesSentByMyTeam = () => {
+      appFirebase.databaseApi.readOn(
+        `games/${game.gameId}/${game.ownTeam}Names`,
+        handleTeamNamesResult
+      );
+    };
+
     if (game.ownTeam) checkHowManyNamesSentByMyTeam();
   }, [game.ownTeam]);
 
