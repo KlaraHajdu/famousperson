@@ -103,25 +103,26 @@ function PlayGame() {
             }
     }
 
-    const createStartDataDB = useCallback(() => {
-        appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
-        appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
-        appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
-        appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-            appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
-        );
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-            appFirebase.databaseApi.create(`games/${game.gameId}/2round`, snapshot.val())
-        );
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-            appFirebase.databaseApi.create(`games/${game.gameId}/3round`, snapshot.val())
-        );
-        appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
-        appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");
-    });
-
+    
     useEffect(() => {
+        const createStartDataDB = () => {
+            appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
+            appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
+            appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
+            appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
+            appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+                appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
+            );
+            appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+                appFirebase.databaseApi.create(`games/${game.gameId}/2round`, snapshot.val())
+            );
+            appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
+                appFirebase.databaseApi.create(`games/${game.gameId}/3round`, snapshot.val())
+            );
+            appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
+            appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");
+        };
+
         if (game.ownName === game.gameMaster) {
             createStartDataDB();
         }
@@ -134,10 +135,7 @@ function PlayGame() {
         appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult);
 
 
-    }, [
-    ]); //ha save-re automatikusan formázza, akkor berakja a dependency arrayba az összes fenti függvényt és objektumot és folyton újrarenderelődik...
-
-
+    }, []); // []
 
     return (
             <Row style={{width:"100vw"}}>
