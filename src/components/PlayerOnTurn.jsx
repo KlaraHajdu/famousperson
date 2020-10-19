@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 export default function PlayerOnTurn(props) {
     const [counter, setCounter] = useState(10);
     const [turnStarted, setTurnStarted] = useState(false);
+    const [counterRadius, setCounterRadius] = useState(mapNumber(counter, 60, 0, 0, 360));
     const setGamePhase = useContext(GamePhaseContext)[1];
     const game = useSelector((state) => state.gameReducer);
     const round = useSelector(state => state.roundReducer);
@@ -68,14 +69,13 @@ export default function PlayerOnTurn(props) {
         return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
 
-    let counterRadius = mapNumber(counter, 60, 0, 0, 360);
 
     useEffect(() => {
         let unmounted = false;
         if (!unmounted) {
             if (counter === 0) props.endTurn();
             counter > 0 && turnStarted && setTimeout(() => setCounter(counter - 1), 1000);
-            counterRadius = mapNumber(counter, 60, 0, 0, 360);
+            setCounterRadius(mapNumber(counter, 60, 0, 0, 360));
         }
         return () => {
             unmounted = true;
