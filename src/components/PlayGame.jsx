@@ -23,22 +23,22 @@ function PlayGame() {
     const round = useSelector(state => state.roundReducer);
     const dispatch = useDispatch();
 
-    const handleTeamOnTurnResult = useCallback((snapshot) => {
+    const handleTeamOnTurnResult = (snapshot) => {
         dispatch(finishTeam(snapshot.val()));
         sessionStorage.setItem("teamOnTurn", snapshot.val());
-    });
+    };
 
-    const handleGreenPlayerOnTurnIndexResult = useCallback((snapshot) => {
+    const handleGreenPlayerOnTurnIndexResult = (snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         dispatch(finishGreenPlayer(playerOnTurnIndex));
         sessionStorage.setItem("greenTeamPlayerIndex", playerOnTurnIndex);
-    });
+    };
 
-    const handleBluePlayerOnTurnIndexResult = useCallback((snapshot) => {
+    const handleBluePlayerOnTurnIndexResult = (snapshot) => {
         let playerOnTurnIndex = snapshot.val();
         dispatch(finishBluePlayer(playerOnTurnIndex));
         sessionStorage.setItem("blueTeamPlayerIndex", playerOnTurnIndex);
-    });
+    };
 
     const handleBlueScoreResult = (snapshot) => {
         dispatch(increaseBlueScore(snapshot.val()))
