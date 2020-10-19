@@ -7,7 +7,6 @@ import PhaseHeader from "./PhaseHeader.jsx";
 import TeamContainer from "./TeamContainer.jsx";
 import PlayerOnTurn from "./PlayerOnTurn";
 import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
-import { useCallback } from "react";
 import PlayGameMasterPart from "./gameMasterComponents/PlayGameMasterPart.jsx";
 import { useSelector, useDispatch } from 'react-redux';
 import { finishBluePlayer, finishGreenPlayer, endRound, finishTeam } from '../actions/roundActions';
