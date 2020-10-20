@@ -34,26 +34,33 @@ export default function NameInputForm(props) {
     }
   };
 
+  const checkIfNameIsAlreadySubmitted = (snapshot) => {
+    if (!snapshot.exists()) createNewName();
+    else setNameToSubmit("");;
+  }
+
+  const createNewName = () => {
+    appFirebase.databaseApi.create(
+      `games/${game.gameId}/names/${nameToSubmit}`,
+      true,
+      actAfterNameSubmittedToAllNames
+    );
+    appFirebase.databaseApi.create(
+      `games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`,
+      true,
+      actAfterNameSubmittedToTheTeamNames
+    );
+  }
+
   const submitName = () => {
     if (nameToSubmit !== "") {
-      appFirebase.databaseApi.create(
-        `games/${game.gameId}/names/${nameToSubmit}`,
-        true,
-        actAfterNameSubmittedToAllNames
-      );
-      appFirebase.databaseApi.create(
-        `games/${game.gameId}/${game.ownTeam}Names/${nameToSubmit}`,
-        true,
-        actAfterNameSubmittedToTheTeamNames
-      );
+      appFirebase.databaseApi.readOnce( `games/${game.gameId}/names/${nameToSubmit}`, checkIfNameIsAlreadySubmitted)
+
     }
   };
 
   const handleTeamNamesResult = (snapshot) => {
     if (snapshot.val()) {
-      console.log(
-        "from handle team names result: " + Object.keys(snapshot.val())
-      );
       setTeamNamesNumber(Object.keys(snapshot.val()).length);
     }
   };
@@ -73,7 +80,7 @@ export default function NameInputForm(props) {
   return (
       teamNamesNumber === nameNumber / 2 ? (
         <div>
-          <p>Your team already submitted {nameNumber / 2} names.</p>
+          <p>Your team has already submitted {nameNumber / 2} names.</p>
           <p>Please wait for the other team to finish uploading their names.</p>
         </div>
       ) : (
@@ -86,7 +93,7 @@ export default function NameInputForm(props) {
                 value={nameToSubmit}
                 type='text'
                 placeholder='Someone to be guessed in the game'
-                autocomplete="off"
+                autoComplete="off"
               />
             </Form.Group>
             <Button variant='warning' onClick={submitName}>
