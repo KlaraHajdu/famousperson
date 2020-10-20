@@ -3,6 +3,8 @@ import { appFirebase } from "../database.js";
 import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
 import Col from "react-bootstrap/Col";
+import UIfx from 'uifx';
+import toneAudio from '../static/tone.mp3';
 import PhaseHeader from "./PhaseHeader.jsx";
 import TeamContainer from "./TeamContainer.jsx";
 import PlayerOnTurn from "./PlayerOnTurn";
@@ -21,6 +23,7 @@ function PlayGame() {
     const game = useSelector(state => state.gameReducer);
     const round = useSelector(state => state.roundReducer);
     const dispatch = useDispatch();
+    const tone = new UIfx(toneAudio);
 
     
     const updateDone = (err) => {
@@ -30,6 +33,7 @@ function PlayGame() {
     }
 
     const endTurn = () => {
+        tone.play();
         let nextTeam = round.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
