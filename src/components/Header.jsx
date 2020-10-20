@@ -16,6 +16,7 @@ import { setGreenTeam, setBlueTeam } from '../actions/teamActions';
 const Styles = styled.div`
     .navbar {
         background-color: rgba(70, 70, 70, 0.3);
+        height: 3.5em;
     }
     .navbar-brand {
         color: silver;
