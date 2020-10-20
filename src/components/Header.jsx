@@ -56,36 +56,7 @@ export default function Header() {
         setGamePhase(gamePhases.joinGame);
     };
 
-    
-    function joinDummyGameAsGameMaster() {
-        dispatch(startGame("Master", 8795));
-        dispatch(joinOwnTeam("greenTeam"));
-        dispatch(setGreenTeam(["Player2", "Master"]));
-        dispatch(setBlueTeam(["Player3", "Player1"]))
-    }
-    
-    const joinDummyGameAsPlayer1 = () => {
-        dispatch(joinGame("Player1", 8795, "Master"));
-        dispatch(joinOwnTeam("blueTeam"));
-        dispatch(setGreenTeam(["Player2", "Master"]));
-        dispatch(setBlueTeam(["Player3", "Player1"]))
-    };
-    
-    const joinDummyGameAsPlayer2 = () => {
-        dispatch(joinGame("Player2", 8795, "Master"));
-        dispatch(joinOwnTeam("greenTeam"));
-        dispatch(setGreenTeam(["Player2", "Master"]));
-        dispatch(setBlueTeam(["Player3", "Player1"]))
-    };
-    
-    const joinDummyGameAsPlayer3 = () => {
-        dispatch(joinGame("Player3", 8795, "Master"));
-        dispatch(joinOwnTeam("blueTeam"));
-        dispatch(setGreenTeam(["Player2", "Master"]));
-        dispatch(setBlueTeam(["Player3", "Player1"]))
-    };
-    
-    
+ 
     
     useEffect(() => {
     const updateDone = (err) => {
@@ -113,10 +84,6 @@ export default function Header() {
             
         };
         
-        if (game && game.gameId === 8795) {
-            appFirebase.databaseApi.update(`games/${game ? game.gameId : 0}`, { gamePhase: "playGame" }, updateDone);
-            appFirebase.databaseApi.readOn(`games/${game.gameId}/teams`, setTeamInfos); 
-        }
         appFirebase.databaseApi.readOn(`games/${game ? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
     }, [game && game.gameId]); //game && game.gameId
     
@@ -137,20 +104,7 @@ export default function Header() {
                                 </NavDropdown.Item>
                                 <NavDropdown.Item onClick={joinNewGame}>Join a game</NavDropdown.Item>
                             </NavDropdown>
-                            <NavDropdown alignRight title="For development" id="collapsible-nav-dropdown">
-                                <NavDropdown.Item onClick={joinDummyGameAsGameMaster}>
-                                    Join a dummy game as game master
-                                </NavDropdown.Item>
-                                <NavDropdown.Item onClick={joinDummyGameAsPlayer1}>
-                                    Join a dummy game as 1
-                                </NavDropdown.Item>
-                                <NavDropdown.Item onClick={joinDummyGameAsPlayer2}>
-                                    Join a dummy game as 2
-                                </NavDropdown.Item>
-                                <NavDropdown.Item onClick={joinDummyGameAsPlayer3}>
-                                    Join a dummy game as 3
-                                </NavDropdown.Item>
-                            </NavDropdown>
+                            
                         </Nav>
                     </Navbar.Collapse>
                 </Nav>
