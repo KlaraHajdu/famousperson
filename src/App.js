@@ -1,6 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Header from "./components/Header.jsx";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import { HowToPlayModalOpenProvider } from "./components/contextProviders/HowToPlayModalOpenProvider";
 import { GamePhaseProvider } from "./components/contextProviders/GamePhaseProvider";
 import { GameProvider } from "./components/contextProviders/GameProvider";
@@ -24,6 +25,7 @@ function App() {
                                         <Header />
                                     </HowToPlayModalOpenProvider>
                                     <GamePhases />
+                                    <Footer />
                                     <GlobalStyle />
                                 </BlueTeamPlayerProvider>
                             </GreenTeamPlayerProvider>
