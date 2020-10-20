@@ -9,9 +9,8 @@ import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import HowToPlay from "./HowToPlay";
 import { gamePhases } from "../gamePhasesObject";
 import { appFirebase } from "../database.js";
-import { useSelector, useDispatch } from "react-redux";
-import { joinGame, joinOwnTeam, startGame } from "../actions/index";
-import { setGreenTeam, setBlueTeam } from '../actions/teamActions';
+import { useSelector } from "react-redux";
+
 
 const Styles = styled.div`
     .navbar {
@@ -40,7 +39,7 @@ const Styles = styled.div`
 export default function Header() {
     const [gamePhase, setGamePhase] = useContext(GamePhaseContext);
     const game = useSelector((state) => state.gameReducer);
-    const dispatch = useDispatch();
+ 
 
     const setHowToPlayModalOpen = useContext(HowToPlayModalOpenContext)[1];
 
@@ -59,10 +58,6 @@ export default function Header() {
  
     
     useEffect(() => {
-    const updateDone = (err) => {
-        if (!!err) console.log(err);
-        else console.log("Gamephase set to playGame in DB");
-    };
     
         const handleGamePhaseResult = (snapshot) => {
             const DBGamePhase = snapshot.val();
@@ -74,16 +69,7 @@ export default function Header() {
                 }
             }
         };
-        
-        const setTeamInfos = (snapshot) => {
-            const teamsDB = snapshot.val();
-            const ownTeam = teamsDB.greenTeam.includes(game.ownName) ? "greenTeam" : "blueTeam";
-            dispatch(joinOwnTeam(ownTeam));
-            dispatch(setGreenTeam(snapshot.val().greenTeam));
-            dispatch(setBlueTeam(snapshot.val().blueTeam));
-            
-        };
-        
+      
         appFirebase.databaseApi.readOn(`games/${game ? game.gameId : 0}/gamePhase`, handleGamePhaseResult);
     }, [game && game.gameId]); //game && game.gameId
     
