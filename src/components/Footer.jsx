@@ -20,7 +20,7 @@ export default function Footer() {
     return (
         <Styles>
             <div className="footer-container">
-                <p className="footer-main">Klára Hajdu, Eszter Kóbor - CodeCool {new Date().getFullYear()} </p>
+                <p className="footer-main">Klára Hajdu - CodeCool {new Date().getFullYear()} </p>
             </div>
         </Styles>
     );
