@@ -38,8 +38,8 @@ export default function HowToPlay() {
                     </p>
                     <p>
                         <strong>Three rounds: </strong>
-                        In the first round the players can explain the persons in detail, without telling the name. In
-                        the second round the players are only allowed to say one, single word, which will help their
+                        In the first round the players explain the persons in detail, without telling the name. In
+                        the second round the players are only allowed to say a single word, which will help their
                         teammates to guess the person. In the third round the player on turn can only pantomime without
                         saying anything. After the three rounds the team with higher scores wins.
                     </p>
