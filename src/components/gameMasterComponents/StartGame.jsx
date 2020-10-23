@@ -5,12 +5,13 @@ import { appFirebase } from "../../database.js";
 import { GamePhaseContext } from "../contextProviders/GamePhaseProvider";
 import { gamePhases } from "../../gamePhasesObject";
 import { getRandomNumberFromTo } from "../../util/randomUtil.js";
-import { startGame } from '../../actions/index';
-import { useDispatch } from 'react-redux';
+import { startGame } from "../../actions/index";
+import { useDispatch } from "react-redux";
 
 export default function StartGame() {
     const [name, setName] = useState("");
-    
+    const [helperText, setHelperText] = useState();
+
     let gameId;
 
     const setGamePhase = useContext(GamePhaseContext)[1];
@@ -18,7 +19,13 @@ export default function StartGame() {
     const dispatch = useDispatch();
 
     const saveName = (e) => {
-        setName(e.target.value);
+        let name = e.target.value;
+        if (name.length === 0) setHelperText("Name cannot be empty!")
+        else if (name.length > 15) setHelperText("Name too long!");
+        else {
+            setName(e.target.value);
+            setHelperText(null);
+        }
     };
 
     const handleNewGameCreation = (err) => {
@@ -52,7 +59,7 @@ export default function StartGame() {
     };
 
     const createNewGame = () => {
-        if (name !== "") {
+        if (helperText === null) {
             generateId();
             let body = {
                 gameMaster: name,
@@ -74,6 +81,9 @@ export default function StartGame() {
                         placeholder="Your name that will appear during the game"
                         autoComplete="off"
                     />
+                    <Form.Text muted>
+                        {helperText}
+                    </Form.Text>
                 </Form.Group>
                 <Button variant="warning" onClick={createNewGame}>
                     Start a new game
