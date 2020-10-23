@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 function AddNames() {
 
-  const NUMBER_OF_NAMES_TO_START_GAME = 4;
+  const NUMBER_OF_NAMES_TO_START_GAME = 30;
 
   const game = useSelector(state => state.gameReducer);
   

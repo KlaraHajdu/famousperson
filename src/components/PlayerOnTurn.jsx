@@ -15,9 +15,10 @@ export default function PlayerOnTurn(props) {
     const mapNumber = (number, in_min, in_max, out_min, out_max) => {
         return ((number - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
-    const [counter, setCounter] = useState(10);
+    const ROUND_LENGTH = 60;
+    const [counter, setCounter] = useState(ROUND_LENGTH);
     const [turnStarted, setTurnStarted] = useState(false);
-    const [counterRadius, setCounterRadius] = useState(mapNumber(counter, 60, 0, 0, 360));
+    const [counterRadius, setCounterRadius] = useState(mapNumber(counter, ROUND_LENGTH, 0, 0, 360));
     const setGamePhase = useContext(GamePhaseContext)[1];
     const game = useSelector((state) => state.gameReducer);
     const round = useSelector(state => state.roundReducer);
@@ -75,7 +76,7 @@ export default function PlayerOnTurn(props) {
         if (!unmounted) {
             if (counter === 0) props.endTurn();
             counter > 0 && turnStarted && setTimeout(() => setCounter(counter - 1), 1000);
-            setCounterRadius(mapNumber(counter, 60, 0, 0, 360));
+            setCounterRadius(mapNumber(counter, ROUND_LENGTH, 0, 0, 360));
         }
         return () => {
             unmounted = true;
@@ -101,7 +102,7 @@ export default function PlayerOnTurn(props) {
                 </Col>
             </Row>
             <Row className="justify-content-md-center">
-                {10 >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
+                {ROUND_LENGTH >= counter && counter > 0 && turnStarted ? <GuessWord endRound={endRound} /> : ""}
             </Row>
             <Row className="justify-content-md-center">
                 <div>
