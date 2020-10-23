@@ -20,7 +20,7 @@ export default function Footer() {
     return (
         <Styles>
             <div className="footer-container">
-                <p className="footer-main">Klára Hajdu - CodeCool {new Date().getFullYear()} </p>
+                <p className="footer-main">Klára Hajdu - CodeCool 2020 </p>
             </div>
         </Styles>
     );
