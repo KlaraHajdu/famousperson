@@ -4,11 +4,10 @@ import Button from "react-bootstrap/Button";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
 import { gamePhases } from "../gamePhasesObject";
-import { useDispatch } from 'react-redux';
-import { joinGame } from '../actions/index';
+import { useDispatch } from "react-redux";
+import { joinGame } from "../actions/index";
 
 function JoinGame() {
-
     const dispatch = useDispatch();
 
     const setGamePhase = useContext(GamePhaseContext)[1];
@@ -17,27 +16,39 @@ function JoinGame() {
 
     const [gameId, setGameId] = useState("");
 
-    const [error, setError] = useState("");
+    const [helperText, setHelperText] = useState("");
+
+    const [gameIdHelperText, setGameIdHelperText] = useState("");
 
     const saveOwnName = (e) => {
-        if (ownName) setError("");
-        setOwnName(e.target.value);
+        let nameInput = e.target.value;
+        if (nameInput.length === 0) setHelperText("Name cannot be empty!");
+        else if (nameInput.length > 15) setHelperText("Name too long!");
+        else {
+            setHelperText(null);
+            setOwnName(nameInput);
+        }
     };
 
     const saveGameId = (e) => {
-        setGameId(e.target.value);
+        let gameIdInput = e.target.value;
+        if (gameIdInput === "") setGameIdHelperText("Game ID cannot be empty!")
+        else {
+            setGameId(gameIdInput);
+            setGameIdHelperText(null);
+        }
     };
 
     const checkSnapshot = (snapshot) => {
         if (!!snapshot.val()) {
-            dispatch(joinGame(ownName, gameId, snapshot.val().gameMaster ));
+            dispatch(joinGame(ownName, gameId, snapshot.val().gameMaster));
             sessionStorage.setItem("gameId", gameId);
             sessionStorage.setItem("ownName", ownName);
             sessionStorage.setItem("gameMaster", snapshot.val().gameMaster);
             setGamePhase(gamePhases.waitingRoom);
-            sessionStorage.setItem("gamePhase", "waitingRoom")
+            sessionStorage.setItem("gamePhase", "waitingRoom");
         } else {
-            alert("Wrong ID!");
+            setGameIdHelperText("Wrong game ID!");
             setGameId("");
         }
     };
@@ -47,8 +58,7 @@ function JoinGame() {
     };
 
     const handleJoinGame = () => {
-        if (!ownName) setError("Please write your name");
-        if (gameId && ownName) verifyGameId(`games/${gameId}`);
+        if (helperText === null && gameIdHelperText === null) verifyGameId(`games/${gameId}`);
     };
 
     return (
@@ -56,9 +66,7 @@ function JoinGame() {
             <h4>Join a game</h4>
             <Form>
                 <Form.Group controlId="formPlayerName">
-                    <Form.Label>
-                        Your name {error && <div style={{ color: "red", fontSize: "8" }}> {error}</div>}
-                    </Form.Label>
+                    <Form.Label>Your name</Form.Label>
                     <Form.Control
                         onChange={saveOwnName}
                         type="text"
@@ -66,6 +74,7 @@ function JoinGame() {
                         style={{ width: "100%" }}
                         autoComplete="off"
                     />
+                    <Form.Text muted>{helperText}</Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formGameID">
                     <Form.Label>Game ID</Form.Label>
@@ -77,6 +86,7 @@ function JoinGame() {
                         style={{ width: "100%" }}
                         autoComplete="off"
                     />
+                    <Form.Text muted>{gameIdHelperText}</Form.Text>
                 </Form.Group>
                 <Button variant="warning" onClick={handleJoinGame}>
                     Join the game
