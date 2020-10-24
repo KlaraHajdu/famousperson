@@ -46,9 +46,14 @@ export default function GuessWord(props) {
     };
 
     useEffect(() => {
+        let buttonEnableTimeout;
         if (!buttonActive) {
-            setTimeout(() => setButtonActive(true), 1500);
+            buttonEnableTimeout = setTimeout(() => setButtonActive(true), 1500);
         }
+
+        return () => {
+            clearTimeout(buttonEnableTimeout);
+        };
     }, [buttonActive]);
 
     useEffect(() => {
