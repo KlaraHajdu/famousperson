@@ -73,13 +73,17 @@ export default function PlayerOnTurn(props) {
 
     useEffect(() => {
         let unmounted = false;
+        let counterTimeout;
         if (!unmounted) {
             if (counter === 0) props.endTurn();
-            counter > 0 && turnStarted && setTimeout(() => setCounter(counter - 1), 1000);
-            setCounterRadius(mapNumber(counter, ROUND_LENGTH, 0, 0, 360));
+            if (counter > 0 && turnStarted) {
+
+                counterTimeout = setTimeout(() => setCounter(counter - 1), 1000);
+                setCounterRadius(mapNumber(counter, ROUND_LENGTH, 0, 0, 360));
+            }
         }
         return () => {
-            unmounted = true;
+            clearTimeout(counterTimeout);
         };
     }, [turnStarted, counter]);
 
