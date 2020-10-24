@@ -3,14 +3,11 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { GamePhaseContext } from "./contextProviders/GamePhaseProvider";
 import { appFirebase } from "../database.js";
-import { gamePhases } from "../gamePhasesObject";
 import { useDispatch } from "react-redux";
 import { joinGame } from "../actions/index";
 
 function JoinGame() {
     const dispatch = useDispatch();
-
-    const setGamePhase = useContext(GamePhaseContext)[1];
 
     const [ownName, setOwnName] = useState("");
 
@@ -39,17 +36,22 @@ function JoinGame() {
         }
     };
 
-    const checkSnapshot = (snapshot) => {
+    
+    const checkSnapshot = async (snapshot) => {
         if (!!snapshot.val()) {
-            dispatch(joinGame(ownName, gameId, snapshot.val().gameMaster));
-            sessionStorage.setItem("gameId", gameId);
-            sessionStorage.setItem("ownName", ownName);
-            sessionStorage.setItem("gameMaster", snapshot.val().gameMaster);
-            setGamePhase(gamePhases.waitingRoom);
-            sessionStorage.setItem("gamePhase", "waitingRoom");
+            let playersSnapshot = await appFirebase.database().ref(`games/${gameId}/players`).once("value");
+            let playersLowerCase = Object.keys(playersSnapshot.val()).map((name) => name.toLowerCase());
+            if (playersLowerCase.includes(ownName.toLowerCase())) {
+                setHelperText("This name is already taken, please choose another!");
+            }
+            else {
+                dispatch(joinGame(ownName, gameId, snapshot.val().gameMaster));
+                sessionStorage.setItem("gameId", gameId);
+                sessionStorage.setItem("ownName", ownName);
+                sessionStorage.setItem("gameMaster", snapshot.val().gameMaster);
+            }
         } else {
             setGameIdHelperText("Wrong game ID!");
-            setGameId("");
         }
     };
 
@@ -80,7 +82,6 @@ function JoinGame() {
                     <Form.Label>Game ID</Form.Label>
                     <Form.Control
                         onChange={saveGameId}
-                        value={gameId}
                         type="text"
                         placeholder="The game ID you received from the game master"
                         style={{ width: "100%" }}
