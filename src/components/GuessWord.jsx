@@ -6,13 +6,14 @@ import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 import { useEffect } from "react";
 import { appFirebase } from "../database.js";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 
 export default function GuessWord(props) {
     const [word, setWord] = useState();
-    const game = useSelector(state => state.gameReducer);
-    const score = useSelector(state => state.scoreReducer);
-    const round = useSelector(state => state.roundReducer);
+    const [buttonActive, setButtonActive] = useState(true);
+    const game = useSelector((state) => state.gameReducer);
+    const score = useSelector((state) => state.scoreReducer);
+    const round = useSelector((state) => state.roundReducer);
 
     const updateDone = (err) => {
         if (!!err) {
@@ -22,29 +23,35 @@ export default function GuessWord(props) {
         }
     };
     const scoreWordGuessed = () => {
-        let updateO = {};
-        updateO[word] = null;
-        appFirebase.databaseApi.update(`games/${game.gameId}/${round.round}round`,
-        updateO,
-        updateDone
-        );
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/scores/${game.ownTeam}Score`, (snapshot) => {
-            if (game.ownTeam === "greenTeam") {
-                appFirebase.databaseApi.update(
-                    `games/${game.gameId}/scores/`,
-                    { greenTeamScore: +snapshot.val() + 1 },
-                    updateDone
-                );
-            } else
-                appFirebase.databaseApi.update(
-                    `games/${game.gameId}/scores/`,
-                    { blueTeamScore: +snapshot.val() + 1 },
-                    updateDone
+        if (buttonActive) {
+            setButtonActive(false);
+            let updateO = {};
+            updateO[word] = null;
+            appFirebase.databaseApi.update(`games/${game.gameId}/${round.round}round`, updateO, updateDone);
+            appFirebase.databaseApi.readOnce(`games/${game.gameId}/scores/${game.ownTeam}Score`, (snapshot) => {
+                if (game.ownTeam === "greenTeam") {
+                    appFirebase.databaseApi.update(
+                        `games/${game.gameId}/scores/`,
+                        { greenTeamScore: +snapshot.val() + 1 },
+                        updateDone
                     );
-        });
+                } else
+                    appFirebase.databaseApi.update(
+                        `games/${game.gameId}/scores/`,
+                        { blueTeamScore: +snapshot.val() + 1 },
+                        updateDone
+                    );
+            });
+        }
     };
-    
-    useEffect(() => {      
+
+    useEffect(() => {
+        if (!buttonActive) {
+            setTimeout(() => setButtonActive(true), 1500);
+        }
+    }, [buttonActive]);
+
+    useEffect(() => {
         const selectRandomWord = (snapshot) => {
             if (snapshot.val() !== null) {
                 let words = snapshot.val();
@@ -52,11 +59,10 @@ export default function GuessWord(props) {
                 setWord(Object.keys(words)[randomId]);
             } else props.endRound();
         };
-        
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round.round}round`, selectRandomWord);
-        console.log("Guessword mounted")
-    }, [ score]);
 
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round.round}round`, selectRandomWord);
+        console.log("Guessword mounted");
+    }, [score]); // score
 
     return (
         <Row>
