@@ -13,7 +13,7 @@ The app is deployed at: https://famous-person-guessing-game.web.app/
 
 ## Project Screenshots
 
-![Play game phase](/../screenshots/src/static/screenShot2.jpg?raw=true "Play game")
+![Play game phase](/../master/src/static/screenShot2.jpg?raw=true "Play game")
 
 ## Installation and Setup Instructions
 
