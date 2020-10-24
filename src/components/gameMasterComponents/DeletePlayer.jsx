@@ -16,6 +16,7 @@ export default function DeletePlayer(props) {
     const game = useSelector((state) => state.gameReducer);
     const greenTeam = useSelector((state) => state.teamReducer.greenTeam);
     const blueTeam = useSelector((state) => state.teamReducer.blueTeam);
+    const round = useSelector((state) => state.roundReducer)
 
     const [greenPlayersToList] = useState(
         greenTeam.length > 2
@@ -46,6 +47,7 @@ export default function DeletePlayer(props) {
     };
 
     const deleteBluePlayer = (player) => {
+        if (player.player === blueTeam[round.bluePlayerIndex]) props.updateBluePlayerIndex(); 
         let reducedTeam = blueTeam.filter((pl) => {
             return pl !== player.player;
         });
@@ -76,6 +78,7 @@ export default function DeletePlayer(props) {
     };
 
     const deleteGreenPlayer = (player) => {
+        if (player.player === greenTeam[round.greenPlayerIndex]) props.updateGreenPlayerIndex(); 
         let reducedTeam = greenTeam.filter((pl) => {
             return pl !== player.player;
         });
