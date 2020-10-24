@@ -63,10 +63,8 @@ function WaitingRoom() {
             if (snapshot.val() && JSON.stringify(Object.keys(snapshot.val())) !== JSON.stringify(game.players)) {
                 let playersList = [];
                 playersList.push(Object.keys(snapshot.val()));
-                console.log(playersList);
                 dispatch(updatePlayers(Object.keys(snapshot.val())));
                 sessionStorage.setItem("players", playersList);
-                console.log([sessionStorage.getItem("players")]);
             }
         };
         const handleGamePhaseResult = async (snapshot) => {
@@ -77,7 +75,6 @@ function WaitingRoom() {
                 let playerIsInTeam = await checkIfPlayerIsPartOfTeam();
                 if (!playerIsInTeam) {
                     appFirebase.databaseApi.readOnce(`games/${game.gameId}/teams`, addNewPlayerToTeams);
-                    console.log("Player is checked and added");
                 }
             }
         };
