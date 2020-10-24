@@ -3,8 +3,7 @@ import { Table, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { appFirebase } from "../../database";
 import Dialog from "react-bootstrap-dialog";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const Styles = styled.div`
     table {
@@ -14,18 +13,24 @@ const Styles = styled.div`
 `;
 
 export default function DeletePlayer(props) {
-    
     const game = useSelector((state) => state.gameReducer);
-    const greenTeam = useSelector(state => state.teamReducer.greenTeam);
-    const blueTeam = useSelector(state => state.teamReducer.blueTeam);
+    const greenTeam = useSelector((state) => state.teamReducer.greenTeam);
+    const blueTeam = useSelector((state) => state.teamReducer.blueTeam);
 
-    const [greenPlayersToList] = useState(greenTeam.filter((player) => {
-        return player !== game.gameMaster;
-    }));
-    const [bluePlayersToList] = useState(blueTeam.filter((player) => {
-        return player !== game.gameMaster;
-    }));
-
+    const [greenPlayersToList] = useState(
+        greenTeam.length > 2
+            ? greenTeam.filter((player) => {
+                  return player !== game.gameMaster;
+              })
+            : null
+    );
+    const [bluePlayersToList] = useState(
+        blueTeam.length > 2
+            ? blueTeam.filter((player) => {
+                  return player !== game.gameMaster;
+              })
+            : null
+    );
 
     let dialog = useRef();
 
@@ -41,9 +46,11 @@ export default function DeletePlayer(props) {
     };
 
     const deleteBluePlayer = (player) => {
-        let reducedTeam = blueTeam.filter((pl) => { return pl !== player.player })
+        let reducedTeam = blueTeam.filter((pl) => {
+            return pl !== player.player;
+        });
         for (let p of reducedTeam) console.log(p);
-        let updateO = {"blueTeam": reducedTeam}
+        let updateO = { blueTeam: reducedTeam };
 
         appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
 
@@ -51,7 +58,6 @@ export default function DeletePlayer(props) {
     };
 
     const confirmBluePlayerDelete = (player) => {
-
         dialog.show({
             body: `Are you sure you want to delete ${player.player}?`,
             actions: [
@@ -70,9 +76,11 @@ export default function DeletePlayer(props) {
     };
 
     const deleteGreenPlayer = (player) => {
-        let reducedTeam = greenTeam.filter((pl) => { return pl !== player.player })
+        let reducedTeam = greenTeam.filter((pl) => {
+            return pl !== player.player;
+        });
         for (let p of reducedTeam) console.log(p);
-        let updateO = {"greenTeam": reducedTeam}
+        let updateO = { greenTeam: reducedTeam };
 
         appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
 
@@ -80,7 +88,6 @@ export default function DeletePlayer(props) {
     };
 
     const confirmGreenPlayerDelete = (player) => {
-
         dialog.show({
             body: `Are you sure you want to delete ${player.player}?`,
             actions: [
@@ -98,7 +105,6 @@ export default function DeletePlayer(props) {
         });
     };
 
-    
     return (
         <Styles>
             <div>
@@ -108,7 +114,8 @@ export default function DeletePlayer(props) {
                         <col style={{ width: "10%" }}></col>
                     </colgroup>
                     <tbody>
-                        {greenPlayersToList.map((player, index) => {
+                        {greenPlayersToList &&
+                            greenPlayersToList.map((player, index) => {
                                 return (
                                     <tr key={index}>
                                         <td> {player}</td>
@@ -123,7 +130,8 @@ export default function DeletePlayer(props) {
                                     </tr>
                                 );
                             })}
-                        {bluePlayersToList.map((player, index) => {
+                        {bluePlayersToList &&
+                            bluePlayersToList.map((player, index) => {
                                 return (
                                     <tr key={index}>
                                         <td> {player}</td>
@@ -140,7 +148,9 @@ export default function DeletePlayer(props) {
                             })}
                     </tbody>
                 </Table>
-                <Button onClick={props.handleClosing} variant="info">Cancel</Button>
+                <Button onClick={props.handleClosing} variant="info">
+                    Cancel
+                </Button>
                 <Dialog
                     ref={(component) => {
                         dialog = component;

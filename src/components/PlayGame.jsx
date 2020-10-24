@@ -182,7 +182,7 @@ function PlayGame() {
                                  && <PlayerOnTurn endTurn={ endTurn } />}
                     </div>
                     <div>
-                        {game.ownName === game.gameMaster ? 
+                        {game.ownName === game.gameMaster && (greenTeam.length + blueTeam.length > 4) ? 
                         <PlayGameMasterPart/>: ""}
                     </div>
                     </MiddleContainerInThreeColumns>
