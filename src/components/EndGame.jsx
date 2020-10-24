@@ -58,17 +58,23 @@ export default function EndGame() {
                 {score && score.blueTeamScore === score.greenTeamScore ? (
                     <h4 style={{ alignSelf: "center", textAlign: "center", flex: 1 }}>("It is a draw!")</h4>
                 ) : (
-                    <h4 style={{ alignSelf: "center", textAlign: "center", flex: 1 }}>
-                        {" "}
-                        The{" "}
-                        <Badge
-                            variant={score && score.blueTeamScore > score.greenTeamScore ? "primary" : "success"}
-                            style={{ topPadding: 20, alignSelf: "center", textAlign: "center", flex: 1 }}
-                        >
-                            {winnerTeam}
-                        </Badge>{" "}
-                        has won!
-                    </h4>
+                    <React.Fragment>
+                        <h4 style={{ alignSelf: "center", textAlign: "center", flex: 1 }}>
+                            {" "}
+                            The{" "}
+                            <Badge
+                                variant={score && score.blueTeamScore > score.greenTeamScore ? "primary" : "success"}
+                                style={{ topPadding: 20, alignSelf: "center", textAlign: "center", flex: 1 }}
+                            >
+                                {winnerTeam}
+                            </Badge>{" "}
+                            has won!
+                        </h4>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+                            <Badge variant="primary" style={{marginRight:3}}> {score.blueTeamScore}</Badge>{" "} :{" "}
+                            <Badge variant="success" style={{marginLeft:3}}> {score.greenTeamScore}</Badge>{" "}
+                        </div>
+                    </React.Fragment>
                 )}
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 30 }}>
                     {(game.ownTeam === "greenTeam" && winnerTeam === "green team") ||
