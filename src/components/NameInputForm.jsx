@@ -13,7 +13,7 @@ export default function NameInputForm(props) {
 
     const saveNameToSubmit = (e) => {
         let name = e.target.value;
-        if (name.length > 30) setHelperText("Name too long!");
+        if (name.length > 20) setHelperText("Name too long!");
         else {
             setNameToSubmit(e.target.value);
             setHelperText(null);
