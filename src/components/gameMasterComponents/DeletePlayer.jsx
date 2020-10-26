@@ -41,20 +41,32 @@ export default function DeletePlayer(props) {
         primaryClassName: "btn-warning",
     });
 
-    const deleteDone = (err) => {
+    const greenPlayerDeleteDone = (err, needsIndexUpdate) => {
         if (!!err) console.log(err);
-        else console.log("Player deleted");
+        else {
+            if (needsIndexUpdate) props.updateGreenPlayerIndex(); 
+            console.log("Green player deleted");
+        }
+    };
+
+    const bluePlayerDeleteDone = (err, needsIndexUpdate) => {
+        if (!!err) console.log(err);
+        else {
+            if (needsIndexUpdate) props.updateBluePlayerIndex()
+            console.log("Blue player deleted");
+        }
     };
 
     const deleteBluePlayer = (player) => {
-        if (player.player === blueTeam[round.bluePlayerIndex]) props.updateBluePlayerIndex(); 
+        let needsIndexUpdate = false;
+        if (player.player === blueTeam[round.bluePlayerIndex] && round.bluePlayerIndex === blueTeam.length-1) needsIndexUpdate = true; 
         let reducedTeam = blueTeam.filter((pl) => {
             return pl !== player.player;
         });
         for (let p of reducedTeam) console.log(p);
         let updateO = { blueTeam: reducedTeam };
 
-        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, (err) => bluePlayerDeleteDone(err, needsIndexUpdate));
 
         props.handleClosing();
     };
@@ -78,14 +90,15 @@ export default function DeletePlayer(props) {
     };
 
     const deleteGreenPlayer = (player) => {
-        if (player.player === greenTeam[round.greenPlayerIndex]) props.updateGreenPlayerIndex(); 
+        let needsIndexUpdate = false;
+        if (player.player === greenTeam[round.greenPlayerIndex]&& round.greenPlayerIndex === greenTeam.length-1) needsIndexUpdate = true;
         let reducedTeam = greenTeam.filter((pl) => {
             return pl !== player.player;
         });
         for (let p of reducedTeam) console.log(p);
         let updateO = { greenTeam: reducedTeam };
-
-        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, deleteDone);
+        
+        appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, (err) => greenPlayerDeleteDone(err, needsIndexUpdate));
 
         props.handleClosing();
     };
