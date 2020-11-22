@@ -16,6 +16,7 @@ export let appFirebase = {};
 
   firebase.initializeApp(firebaseConfig);
   appFirebase = firebase;
+  firebase.analytics();
 
   function fnCreate(path, body, callback) {
     if (!path || !body) return;
