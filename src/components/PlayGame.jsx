@@ -125,10 +125,6 @@ function PlayGame() {
         };
 
         const handleEndOfTurn = (snapshot) => {
-            console.log(sessionStorage.getItem("turnOngoing"))
-            console.log(snapshot.val())
-            console.log("conditional:")
-            console.log(sessionStorage.getItem("turnOngoing") === "1" && snapshot.val() === 0)
             if (sessionStorage.getItem("turnOngoing") === "1" && snapshot.val() === 0)  tone.play();
             dispatch(finishTurn(snapshot.val()));
             sessionStorage.setItem("turnOngoing", snapshot.val());
