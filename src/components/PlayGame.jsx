@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import moment from 'moment';
 import { appFirebase } from "../database.js";
 import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
@@ -11,7 +12,7 @@ import PlayerOnTurn from "./PlayerOnTurn";
 import { MiddleContainerInThreeColumns } from "../static/myStyle.jsx";
 import PlayGameMasterPart from "./gameMasterComponents/PlayGameMasterPart.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import { finishBluePlayer, finishGreenPlayer, endRound, finishTeam } from "../actions/roundActions";
+import { finishBluePlayer, finishGreenPlayer, endRound, finishTeam, finishTurn } from "../actions/roundActions";
 import { increaseGreenScore, increaseBlueScore } from "../actions/scoreActions";
 
 function PlayGame() {
@@ -52,7 +53,7 @@ function PlayGame() {
     };
 
     const endTurn = () => {
-        tone.play();
+        appFirebase.databaseApi.update(`games/${game.gameId}/`, { turnOngoing: 0 });
         let nextTeam = round.teamOnTurn === "greenTeam" ? "blueTeam" : "greenTeam";
         let updateO = {};
         updateO["teamOnTurn"] = nextTeam;
@@ -67,10 +68,13 @@ function PlayGame() {
 
     useEffect(() => {
         const createStartDataDB = () => {
+            const date = moment().format('LLLL').toString()
+            appFirebase.databaseApi.create(`games/${game.gameId}/_date`, date);
             appFirebase.databaseApi.create(`games/${game.gameId}/teamOnTurn`, "greenTeam");
             appFirebase.databaseApi.create(`games/${game.gameId}/greenTeamTurnIndex`, "0");
             appFirebase.databaseApi.create(`games/${game.gameId}/blueTeamTurnIndex`, "0");
             appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
+            appFirebase.databaseApi.create(`games/${game.gameId}/turnOngoing`, 0);
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
                 appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
             );
@@ -120,12 +124,22 @@ function PlayGame() {
             sessionStorage.setItem("round", snapshot.val());
         };
 
+        const handleEndOfTurn = (snapshot) => {
+            console.log(sessionStorage.getItem("turnOngoing"))
+            console.log(snapshot.val())
+            console.log("conditional:")
+            console.log(sessionStorage.getItem("turnOngoing") === "1" && snapshot.val() === 0)
+            if (sessionStorage.getItem("turnOngoing") === "1" && snapshot.val() === 0)  tone.play();
+            dispatch(finishTurn(snapshot.val()));
+            sessionStorage.setItem("turnOngoing", snapshot.val());
+        };
         appFirebase.databaseApi.readOn(`games/${game.gameId}/teamOnTurn`, handleTeamOnTurnResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/greenTeamTurnIndex`, handleGreenPlayerOnTurnIndexResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/scores/blueTeamScore`, handleBlueScoreResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/scores/greenTeamScore`, handleGreenScoreResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/round`, handleRoundResult);
         appFirebase.databaseApi.readOn(`games/${game.gameId}/blueTeamTurnIndex`, handleBluePlayerOnTurnIndexResult);
+        appFirebase.databaseApi.readOn(`games/${game.gameId}/turnOngoing`, handleEndOfTurn);
     }, []); // []
 
     return (

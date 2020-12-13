@@ -30,8 +30,14 @@ export default function PlayerOnTurn(props) {
         else console.log("Update of team on turn /playerindex /gamePhase made successfully");
     };
 
+    const startTurn = () => {
+        setTurnStarted(true);
+        appFirebase.databaseApi.update(`games/${game.gameId}/`, { turnOngoing: 1 })
+    }
+
     const endRound = () => {
         setTurnStarted(false);
+        appFirebase.databaseApi.update(`games/${game.gameId}/`, { turnOngoing: 0 });
         if (round.round === 3) {
             setGamePhase(gamePhases.endGame);
             let updatePhase = {};
@@ -98,7 +104,7 @@ export default function PlayerOnTurn(props) {
                         {turnStarted ? (
                             ""
                         ) : (
-                            <Button style={{ width: 140 }} onClick={() => setTurnStarted(true)}>
+                            <Button style={{ width: 140 }} onClick={startTurn}>
                                 Start your turn
                             </Button>
                         )}

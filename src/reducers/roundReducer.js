@@ -2,7 +2,8 @@ const initialState = {
     round: sessionStorage.getItem("round") || 1,
     teamOnTurn: sessionStorage.getItem("teamOnTurn") || "greenTeam",
     greenPlayerIndex: sessionStorage.getItem("greenTeamPlayerIndex") || "0",
-    bluePlayerIndex: sessionStorage.getItem("blueTeamPlayerIndex") || "0"
+    bluePlayerIndex: sessionStorage.getItem("blueTeamPlayerIndex") || "0",
+    turnOngoing: sessionStorage.getItem("turnOngoing") || "0",
 } 
 
 const roundReducer = (state = initialState, action) => {
@@ -30,6 +31,12 @@ const roundReducer = (state = initialState, action) => {
             return {
                 ...state,
                 teamOnTurn: action.payload.nextTeam
+            }
+        
+        case 'TURN_ONGOING':
+            return {
+                ...state,
+                turnOngoing: action.payload.finished
             }
         
         default:

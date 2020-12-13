@@ -36,3 +36,12 @@ export const finishTeam = (nextTeam) => {
         }
     };
 };
+
+export const finishTurn = (finished) => {
+    return {
+        type: 'TURN_ONGOING',
+        payload: {
+            finished
+        }
+    };
+};
