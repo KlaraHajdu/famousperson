@@ -7,6 +7,7 @@ import Badge from "react-bootstrap/Badge";
 import { useEffect } from "react";
 import { appFirebase } from "../database.js";
 import { useSelector } from "react-redux";
+import DeleteDuplicateWord from "./DeleteDuplicateWord";
 
 export default function GuessWord(props) {
     const [word, setWord] = useState();
@@ -14,6 +15,7 @@ export default function GuessWord(props) {
     const game = useSelector((state) => state.gameReducer);
     const score = useSelector((state) => state.scoreReducer);
     const round = useSelector((state) => state.roundReducer);
+    const [wordDeleted, setWordDeleted] = useState(0);
 
     const updateDone = (err) => {
         if (!!err) {
@@ -27,7 +29,7 @@ export default function GuessWord(props) {
             setButtonActive(false);
             let updateO = {};
             updateO[word] = null;
-            appFirebase.databaseApi.update(`games/${game.gameId}/${round.round}round`, updateO, updateDone);
+            appFirebase.databaseApi.update(`games/${game.gameId}/round${round.round}`, updateO, updateDone);
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/scores/${game.ownTeam}Score`, (snapshot) => {
                 if (game.ownTeam === "greenTeam") {
                     appFirebase.databaseApi.update(
@@ -44,6 +46,10 @@ export default function GuessWord(props) {
             });
         }
     };
+
+    const getNewWord = () => { 
+        setWordDeleted(wordDeleted + 1)
+    } 
 
     useEffect(() => {
         let buttonEnableTimeout;
@@ -65,30 +71,40 @@ export default function GuessWord(props) {
             } else props.endRound();
         };
 
-        appFirebase.databaseApi.readOnce(`games/${game.gameId}/${round.round}round`, selectRandomWord);
+        appFirebase.databaseApi.readOnce(`games/${game.gameId}/round${round.round}`, selectRandomWord);
         console.log("Guessword mounted");
-    }, [score]); // score
+    }, [score, wordDeleted]); // score, wordDeleted
 
     return (
-        <Row>
-            <Col>
-                <h2>
+        <>
+            <Row>
+                <Col>
+                    <h2>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignSelf: "center",
+                            }}
+                        >
+                            <Badge style={{ height: 36 }} variant="warning">
+                                {word}
+                            </Badge>
+                        </div>
+                    </h2>
+                </Col>
+                <Col>
                     <div
                         style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf: "center" }}
                     >
-                        <Badge style={{ height: 36 }} variant="warning">
-                            {word}
-                        </Badge>
+                        <Button style={{ height: 36 }} onClick={scoreWordGuessed}>
+                            Guessed
+                        </Button>
                     </div>
-                </h2>
-            </Col>
-            <Col>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
-                    <Button style={{ height: 36 }} onClick={scoreWordGuessed}>
-                        Guessed
-                    </Button>
-                </div>
-            </Col>
-        </Row>
+                </Col>
+            </Row>
+            <Row>{round.round === 1 && <DeleteDuplicateWord wordToDelete={word} getNewWord={ getNewWord}/>}</Row>
+        </>
     );
 }

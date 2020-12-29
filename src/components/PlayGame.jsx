@@ -76,13 +76,13 @@ function PlayGame() {
             appFirebase.databaseApi.create(`games/${game.gameId}/round`, 1);
             appFirebase.databaseApi.create(`games/${game.gameId}/turnOngoing`, 0);
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-                appFirebase.databaseApi.create(`games/${game.gameId}/1round`, snapshot.val())
+                appFirebase.databaseApi.create(`games/${game.gameId}/round1`, snapshot.val())
             );
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-                appFirebase.databaseApi.create(`games/${game.gameId}/2round`, snapshot.val())
+                appFirebase.databaseApi.create(`games/${game.gameId}/round2`, snapshot.val())
             );
             appFirebase.databaseApi.readOnce(`games/${game.gameId}/names`, (snapshot) =>
-                appFirebase.databaseApi.create(`games/${game.gameId}/3round`, snapshot.val())
+                appFirebase.databaseApi.create(`games/${game.gameId}/round3`, snapshot.val())
             );
             appFirebase.databaseApi.create(`games/${game.gameId}/scores/blueTeamScore`, "0");
             appFirebase.databaseApi.create(`games/${game.gameId}/scores/greenTeamScore`, "0");

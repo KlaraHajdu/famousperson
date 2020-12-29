@@ -63,7 +63,6 @@ export default function DeletePlayer(props) {
         let reducedTeam = blueTeam.filter((pl) => {
             return pl !== player.player;
         });
-        for (let p of reducedTeam) console.log(p);
         let updateO = { blueTeam: reducedTeam };
 
         appFirebase.databaseApi.update(`games/${game.gameId}/teams/`, updateO, (err) => bluePlayerDeleteDone(err, needsIndexUpdate));
